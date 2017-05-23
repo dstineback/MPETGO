@@ -1,0 +1,1 @@
+<%@ Application Codebehind="Global.asax.cs" Inherits="MPETGO.Global_asax" Language="C#" %>
