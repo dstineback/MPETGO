@@ -7,6 +7,9 @@
         <dx:ASPxGridView ID="ASPxGridView1" runat="server"
             AutoGenerateColumns="False" DataSourceID="WorkRequestListDS"
             KeyFieldName="n_Jobid">
+            
+            <SettingsAdaptivity AdaptivityMode="HideDataCells" AllowOnlyOneAdaptiveDetailExpanded="true" AdaptiveDetailColumnCount="2"></SettingsAdaptivity>
+            
             <Columns>
                 <dx:GridViewDataTextColumn FieldName="n_Jobid" ReadOnly="True"
                     VisibleIndex="0">

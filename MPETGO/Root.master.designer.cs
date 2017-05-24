@@ -58,6 +58,24 @@ namespace MPETGO {
         protected global::DevExpress.Web.ASPxMenu HeaderMenu;
         
         /// <summary>
+        /// logonLable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxLabel logonLable;
+        
+        /// <summary>
+        /// userNameLable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxLabel userNameLable;
+        
+        /// <summary>
         /// MainPane control.
         /// </summary>
         /// <remarks>

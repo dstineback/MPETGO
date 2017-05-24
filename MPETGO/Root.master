@@ -33,9 +33,14 @@
         <dx:MenuItem Text="Work Requst" NavigateUrl="Pages/WorkRequestForm.aspx"></dx:MenuItem>
         <dx:MenuItem Text="Work Request List" NavigateUrl="Pages/WorkRequestList.aspx"></dx:MenuItem>
         <dx:MenuItem Text="Contact US"></dx:MenuItem>
+
     </Items>
 </dx:ASPxMenu>
                         </div>
+                    <div>
+                        <dx:ASPxLabel runat="server" ID="logonLable" Text="Signed in as: "></dx:ASPxLabel>
+                        <dx:ASPxLabel runat="server" ID="userNameLable" Text=""></dx:ASPxLabel>
+                    </div>
                 </dx:PanelContent>
             </PanelCollection>
             <ExpandBarTemplate>

@@ -107,6 +107,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Logon.aspx" />
     <Content Include="Pages\WorkRequestForm.aspx" />
     <Content Include="Pages\WorkRequestList.aspx" />
   </ItemGroup>
@@ -152,6 +153,14 @@
     <Compile Include="Light.master.designer.cs">
       <DependentUpon>Light.master</DependentUpon>
     </Compile>
+    <Compile Include="Logon.aspx.cs">
+      <DependentUpon>Logon.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Logon.aspx.designer.cs">
+      <DependentUpon>Logon.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="LogonObject.cs" />
     <Compile Include="Main.master.cs">
       <DependentUpon>Main.master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -183,6 +192,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Code\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
