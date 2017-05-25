@@ -8,20 +8,23 @@
             AutoGenerateColumns="False" DataSourceID="WorkRequestListDS"
             KeyFieldName="n_Jobid">
             
-            <SettingsAdaptivity AdaptivityMode="HideDataCells" AllowOnlyOneAdaptiveDetailExpanded="true" AdaptiveDetailColumnCount="2"></SettingsAdaptivity>
+            <SettingsAdaptivity AdaptivityMode="HideDataCells" 
+                AllowOnlyOneAdaptiveDetailExpanded="true" 
+                
+                AdaptiveDetailColumnCount="1"></SettingsAdaptivity>
             
             <Columns>
-                <dx:GridViewDataTextColumn FieldName="n_Jobid" ReadOnly="True"
+                <dx:GridViewDataTextColumn FieldName="n_Jobid" ReadOnly="True" Visible="false"
                     VisibleIndex="0">
                     <EditFormSettings Visible="False"></EditFormSettings>
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="Jobid" VisibleIndex="1">
+                <dx:GridViewDataTextColumn FieldName="Jobid" VisibleIndex="1" FixedStyle="Left">
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="Title" VisibleIndex="2">
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="TypeOfJob" VisibleIndex="3">
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="n_MaintObjectID"
+                <dx:GridViewDataTextColumn FieldName="n_MaintObjectID" Visible="false"
                     VisibleIndex="4"></dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="n_GPSObjectID"
                     VisibleIndex="5"></dx:GridViewDataTextColumn>

@@ -19,8 +19,12 @@
                         <dx:LayoutItem Caption="Object ID" Width="100%">
                             <LayoutItemNestedControlCollection>
                                 <dx:LayoutItemNestedControlContainer runat="server">
-                                    <dx:ASPxComboBox ID="ObjectIDCombo" OnItemRequestedByValue="ASPxComboBox_OnItemRequestedByValue_SQL" OnItemsRequestedByFilterCondition="ASPxComboBox_OnItemsRequestedByFilterCondition_SQL"
-                                        runat="server" TextFormatString="{0} - {1} - {2} - {3} - {4} - {5} - {6} - {7} - {8}" EnableCallbackMode="true" CallbackPageSize="10" ValueType="System.String" ValueField="n_objectid" DropDownStyle="DropDown" TextField="objectid" AutoPostBack="false" DropDownButton-Enabled="true" ClientInstanceName="ObjectIDCombo"  >
+                                    <dx:ASPxComboBox ID="ObjectIDCombo" 
+                                        OnItemRequestedByValue="ASPxComboBox_OnItemRequestedByValue_SQL" 
+                                        OnItemsRequestedByFilterCondition="ASPxComboBox_OnItemsRequestedByFilterCondition_SQL"
+                                        runat="server" TextFormatString="{0} - {1} - {2} - {3} - {4} - {5} - {6} - {7} - {8}" 
+                                        EnableCallbackMode="true" CallbackPageSize="10" ValueType="System.String" ValueField="n_objectid" 
+                                        DropDownStyle="DropDown" TextField="objectid" AutoPostBack="false" DropDownButton-Enabled="true" ClientInstanceName="ObjectIDCombo"  >
                                         <ClientSideEvents ValueChanged="function(s, e) { 
                                             var objectHasValue = ObjectIDCombo.GetValue();
                                                                                                     var selectedItem = s.GetSelectedItem();
@@ -61,7 +65,7 @@
                             <LayoutItemNestedControlCollection>
                                 <dx:LayoutItemNestedControlContainer runat="server">
                                     <dx:ASPxTextBox ID="txtObjectDescription" ReadOnly="true"
-                                        runat="server">
+                                        runat="server" AutoPostBack="false">
                                     </dx:ASPxTextBox>
                                 </dx:LayoutItemNestedControlContainer>
                             </LayoutItemNestedControlCollection>
@@ -80,26 +84,38 @@
                                 <dx:ListBoxColumn FieldName="UserID" Visible="False" />
                                 <dx:ListBoxColumn FieldName="Username" Caption="Username" Width="75px" ToolTip="M-PET.NET User's Username"/>
                                 <dx:ListBoxColumn FieldName="FullName" Caption="Full Name" Width="150px" ToolTip="M-PET.NET User's Full Name"/>
-                            </Columns>
-                            
+                            </Columns>                        
                             </dx:ASPxComboBox>
-
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
                 <dx:LayoutItem Caption="Created Date" Width="100%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
-                            <dx:ASPxDateEdit runat="server" ID="startDate"></dx:ASPxDateEdit>
-
-
+                            <dx:ASPxDateEdit runat="server" ID="startDate" AutoPostBack="false"></dx:ASPxDateEdit>
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
                 <dx:LayoutItem Caption="Priority" Width="100%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
-                            <dx:ASPxComboBox runat="server" ID="ComboPriority" DataSourceID="PrioritySqlDatasource" OnItemRequestedByValue="ComboPriority_OnItemRequestedByValue_SQL" OnItemsRequestedByFilterCondition="ComboPriority_OnItemsRequestedByFilterCondition_SQL">
+                            <dx:ASPxComboBox runat="server" ID="ComboPriority" 
+                                OnItemRequestedByValue="ComboPriority_OnItemRequestedByValue_SQL" 
+                                OnItemsRequestedByFilterCondition="ComboPriority_OnItemsRequestedByFilterCondition_SQL" 
+                                DropDownButton-Enabled="true" DropDownStyle="DropDown" CallbackPageSize="10" 
+                                EnableCallbackMode="true" TextField="priorityid" ValueField="n_priorityid" ValueType="System.String" 
+                                TextFormatString="{0} - {1}" ClientInstanceName="ComboPriority" AutoPostBack="false">
+
+                                 <Columns>
+                                    <dx:ListBoxColumn FieldName="n_priorityid" Visible="False">
+                                    </dx:ListBoxColumn>
+                                    <dx:ListBoxColumn FieldName="priorityid" Width="75px"
+                                        Caption="Priority ID" ToolTip="M-PET.NET Priority ID">
+                                    </dx:ListBoxColumn>
+                                    <dx:ListBoxColumn FieldName="description" Width="150px"
+                                        Caption="Description" ToolTip="M-PET.NET Priority Description">
+                                    </dx:ListBoxColumn>
+                                </Columns>
                             </dx:ASPxComboBox>
 
                         </dx:LayoutItemNestedControlContainer>
@@ -108,7 +124,20 @@
                 <dx:LayoutItem Caption="Reason">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
-                            <dx:ASPxComboBox runat="server" ID="ComboReason" OnItemRequestedByValue="comboReason_OnItemRequestedByValue_SQL" OnItemsRequestedByFilterCondition="comboReason_OnItemsRequestedByFilterCondition_SQL" DataSourceID="ReasonSqlDatasource">
+                            <dx:ASPxComboBox runat="server" ID="ComboReason" 
+                                OnItemRequestedByValue="comboReason_OnItemRequestedByValue_SQL" 
+                                OnItemsRequestedByFilterCondition="comboReason_OnItemsRequestedByFilterCondition_SQL" 
+                                EnableCallbackMode="true" CallbackPageSize="10" ValueType="System.String" 
+                                ValueField="n_reasonid" TextFormatString="{0} - {1}" DropDownStyle="DropDown" DropDownButton-Enabled="true" 
+                                TextField="reasonid" AutoPostBack="false" ClientInstanceName="ComboReason">
+
+                                <Columns>
+                                    <dx:ListBoxColumn FieldName="n_reasonid" Visible="False" />
+                                    <dx:ListBoxColumn FieldName="reasonid" Caption="Reason ID"
+                                        Width="75px" ToolTip="M-PET.NET Reason ID" />
+                                    <dx:ListBoxColumn FieldName="description" Caption="Description"
+                                        Width="150px" ToolTip="M-PET.NET Reason Description" />
+                                </Columns>
                             </dx:ASPxComboBox>
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>

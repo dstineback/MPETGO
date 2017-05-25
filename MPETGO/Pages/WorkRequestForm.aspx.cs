@@ -2143,7 +2143,7 @@ namespace MPETGO.Pages
 
             var savedID = Session["AssignedJobID"];
 
-            Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');window.location='./../../main.aspx';</script>");
+            Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');window.location='./../../index.aspx';</script>");
         }
 
         protected void saveBtn_Click(object sender, EventArgs e)

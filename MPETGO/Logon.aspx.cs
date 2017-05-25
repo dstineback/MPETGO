@@ -13,6 +13,8 @@ namespace MPETGO
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
+
             if (!IsPostBack)
             {
                 if (Session["LogonInfo"] == null)
@@ -42,7 +44,7 @@ namespace MPETGO
                 //Add New Session State For Logon
                 HttpContext.Current.Session.Add("LogonInfo", _oLogon);
 
-                Response.Redirect("/Default.aspx");
+                Response.Redirect("/index.aspx");
 
             }
             else

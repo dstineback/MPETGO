@@ -29,7 +29,7 @@
                             <%-- DXCOMMENT: Configure the header menu --%>
 <dx:ASPxMenu ID="HeaderMenu" runat="server" CssClass="headerMenu" ClientInstanceName="headerMenu" ItemAutoWidth="False" Width="100%">
     <Items>
-        <dx:MenuItem Text="Home" NavigateUrl="Default.aspx"></dx:MenuItem>
+        <dx:MenuItem Text="Home" NavigateUrl="index.aspx"></dx:MenuItem>
         <dx:MenuItem Text="Work Requst" NavigateUrl="Pages/WorkRequestForm.aspx"></dx:MenuItem>
         <dx:MenuItem Text="Work Request List" NavigateUrl="Pages/WorkRequestList.aspx"></dx:MenuItem>
         <dx:MenuItem Text="Contact US"></dx:MenuItem>
@@ -43,9 +43,12 @@
                     </div>
                 </dx:PanelContent>
             </PanelCollection>
+           <%-- this is the Collasped header--%>
             <ExpandBarTemplate>
                 <div class="templateTitle">
                     <a id="TitleLink" href="~/" runat="server">M-PET Go</a>
+                    <dx:ASPxLabel runat="server" ID="logonLable" Text="Signed in as: "></dx:ASPxLabel>
+                    <dx:ASPxLabel runat="server" ID="userNameLable" Text=""></dx:ASPxLabel>
                 </div>
             </ExpandBarTemplate>
         </dx:ASPxPanel>
