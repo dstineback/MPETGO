@@ -15,13 +15,20 @@ namespace MPETGO
         {
 
 
+
             if (!IsPostBack)
             {
                 if (Session["LogonInfo"] == null)
                 {
                     txtUsername.Focus();
 
-                } 
+                } else
+                {
+                    if(Session["LogonInfo"] != null)
+                    {
+                        Response.Redirect("/index.aspx");
+                    }
+                }
 
             }
         }

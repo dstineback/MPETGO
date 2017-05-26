@@ -9,7 +9,10 @@
                 <dx:LayoutItem Caption="Work Request Issue" Width="100%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
-                            <dx:ASPxMemo runat="server" ID="txtWorkDescription">
+                            <dx:ASPxMemo runat="server" ID="txtWorkDescription" MaxLength="250" AutoPostBack="false" Width="100">
+                                <ValidationSettings ErrorText="Description required">
+                                    <RequiredField IsRequired="true" />
+                                </ValidationSettings>
                             </dx:ASPxMemo>
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
@@ -28,6 +31,8 @@
                                         <ClientSideEvents ValueChanged="function(s, e) { 
                                             var objectHasValue = ObjectIDCombo.GetValue();
                                                                                                     var selectedItem = s.GetSelectedItem();
+                                                                                                    console.log('object', objectHasValue);
+                                                                                                    console.log('selected object', selectedItem);
                                                                                                     if(objectHasValue!=null)
                                                                                                     {
                                                                                                         txtObjectDescription.SetText(selectedItem.GetColumnText('description'));
@@ -64,7 +69,7 @@
                         <dx:LayoutItem Caption="Object Description" Width="100%">
                             <LayoutItemNestedControlCollection>
                                 <dx:LayoutItemNestedControlContainer runat="server">
-                                    <dx:ASPxTextBox ID="txtObjectDescription" ReadOnly="true"
+                                    <dx:ASPxTextBox ID="txtObjectDescription" ClientInstanceName="txtObjectDescription" ReadOnly="true"
                                         runat="server" AutoPostBack="false">
                                     </dx:ASPxTextBox>
                                 </dx:LayoutItemNestedControlContainer>
@@ -143,16 +148,17 @@
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
 
-                <dx:LayoutItem >
+                <dx:LayoutItem Caption="">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
-                            
-                            <dx:ASPxButton runat="server" Text="Submit" ID="submitBtn" OnClick="submitBtn_Click">
+
+                            <dx:ASPxButton runat="server" Text="Submit" ID="submitBtn"
+                                OnClick="submitBtn_Click">
                             </dx:ASPxButton>
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
-                <dx:LayoutItem  >
+                <dx:LayoutItem Caption="">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
                             

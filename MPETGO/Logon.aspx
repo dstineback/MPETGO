@@ -6,10 +6,10 @@
                                <Items>
                                    <dx:LayoutGroup>
                                        <Items>
-                                           <dx:LayoutItem Caption="Sign In">
+                                           <dx:LayoutItem Caption="Username">
                                                <LayoutItemNestedControlCollection>
                                                    <dx:LayoutItemNestedControlContainer>
-                                                       <dx:ASPxTextBox runat="server" ID="txtUsername">
+                                                       <dx:ASPxTextBox runat="server" ID="txtUsername" AutoPostBack="false">
                                                        </dx:ASPxTextBox>
                                                    </dx:LayoutItemNestedControlContainer>
                                                </LayoutItemNestedControlCollection>
@@ -17,15 +17,15 @@
                                            <dx:LayoutItem Caption="Password">
                                                <LayoutItemNestedControlCollection>
                                                    <dx:LayoutItemNestedControlContainer>
-                                                       <dx:ASPxTextBox runat="server" ID="txtPassword">
+                                                       <dx:ASPxTextBox runat="server" ID="txtPassword" AutoPostBack="false">
                                                        </dx:ASPxTextBox>
                                                    </dx:LayoutItemNestedControlContainer>
                                                </LayoutItemNestedControlCollection>
                                            </dx:LayoutItem>
-                                           <dx:LayoutItem Caption="Sign In">
+                                           <dx:LayoutItem Caption="">
                                                <LayoutItemNestedControlCollection>
                                                    <dx:LayoutItemNestedControlContainer runat="server">
-                                                       <dx:ASPxButton runat="server" ID="submitBtn" Text="Sign In" OnClick="btnSubmitLoginCredentials_Click"></dx:ASPxButton>
+                                                       <dx:ASPxButton runat="server" AutoPostBack="false" ID="submitBtn" Text="Sign In" OnClick="btnSubmitLoginCredentials_Click"></dx:ASPxButton>
                                                    </dx:LayoutItemNestedControlContainer>
                                                </LayoutItemNestedControlCollection>
                                            </dx:LayoutItem>

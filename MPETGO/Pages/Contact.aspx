@@ -64,7 +64,7 @@
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
 
-            <dx:LayoutItem >
+            <dx:LayoutItem Caption="">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
 
@@ -72,17 +72,18 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem >
+            <dx:LayoutItem Caption="">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
                         <dx:ASPxButton ID="btnSend" runat="server" Text="Send"
-                            OnClick="btnSend_Click"></dx:ASPxButton>
+                            OnClick="btnSend_Click">
+                        </dx:ASPxButton>
 
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
 
-            <dx:LayoutItem >
+            <dx:LayoutItem Caption="">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
                         <dx:ASPxLabel ID="lblMessage" runat="server" Text="" ForeColor = "Green"></dx:ASPxLabel>

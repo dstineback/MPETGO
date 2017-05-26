@@ -13,13 +13,13 @@ namespace MPETGO.Pages {
     public partial class WorkRequestList {
         
         /// <summary>
-        /// ASPxGridView1 control.
+        /// WorkRequestGrid control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxGridView ASPxGridView1;
+        protected global::DevExpress.Web.ASPxGridView WorkRequestGrid;
         
         /// <summary>
         /// WorkRequestListDS control.

@@ -32,7 +32,7 @@
         <dx:MenuItem Text="Home" NavigateUrl="index.aspx"></dx:MenuItem>
         <dx:MenuItem Text="Work Requst" NavigateUrl="Pages/WorkRequestForm.aspx"></dx:MenuItem>
         <dx:MenuItem Text="Work Request List" NavigateUrl="Pages/WorkRequestList.aspx"></dx:MenuItem>
-        <dx:MenuItem Text="Contact US"></dx:MenuItem>
+        <dx:MenuItem Text="Contact US" NavigateUrl="Pages/Contact.aspx"></dx:MenuItem>
 
     </Items>
 </dx:ASPxMenu>
