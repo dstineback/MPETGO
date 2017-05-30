@@ -17,7 +17,66 @@ namespace MPETGO.Pages
         private LogonObject _oLogon;
         private DateTime date = DateTime.Now;
         private MaintAttachmentObject _oObjeAttachments;
-        
+        private MaintenanceObject _oMaintObj;
+        private bool _UseWeb;
+        private string connection = ConfigurationManager.ConnectionStrings["ClientConnectionString"].ConnectionString;
+
+        private int taskId = -1;
+        private int parentObjectID = -1;
+        private int areaID;
+        private int costCodeID;
+        private int locationID;
+        private int manufacturerID;
+        private int objClassID;
+        private int objTypeID;
+        private int prodLineID;
+        private int storeroomID;
+        private string txtMaintObjectNotes;
+        private string txtAssetNumber;
+
+
+        private decimal txtChargeRate = 0;
+        private string cboFundamentalType;
+        private decimal txtGpsZ;
+        private int txtLogicalOrder;
+        private int idealCycle = 0;
+        private DateTime tmpRebuildDate;
+        private string cboManufacturer;
+        private string txtModel;
+        private string txtMiscRef;
+        private int txtProductionNbr;
+        private DateTime tmpPuchaseDate;
+        private decimal txtPurchasePrice;
+        private string txtRemarks;
+        private string txtSerial;
+        private DateTime tmpAsOfDate;
+        private DateTime tmpWarrantyDate;
+        private int overheadRateID;
+        private int responsibleID;
+        private int conditionID;
+        private DateTime tmpLifeCycleDate;
+        private int vendorID;
+        private decimal txtMilePost;
+        private int milePostDir;
+        private int stateRouteID;
+        private decimal txtEasting;
+        private decimal txtNorthing;
+        private int txtWarrantyInterval;
+        private int txtLifeCycleInterval;
+        private int uom;
+        private decimal milepostTo;
+        private decimal quantity;
+        private decimal txtHoursAvailable;
+        private decimal txtPMHours;
+        private decimal txtTotalAvailHrs;
+        private int fundSource;
+        private int workOrder;
+        private int workOp;
+        private int orgCode;
+        private int fundingGroup;
+        private int equipNumber;
+        private int controlSection;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if(Session["LogonInfo"] != null)
@@ -545,6 +604,140 @@ namespace MPETGO.Pages
         }
         #endregion
         #region Add Part
+        private void AddParts()
+        {
+            _oMaintObj = new MaintenanceObject(connection, _UseWeb);
+
+            _oMaintObj.Add(objectID.Text.Trim(),
+                objectDesc.Text.Trim(),
+                taskId,
+                parentObjectID,
+                areaID,
+                costCodeID,
+                locationID,
+                manufacturerID,
+                objClassID,
+                objTypeID,
+                prodLineID,
+                storeroomID,
+                txtMaintObjectNotes,
+                txtAssetNumber,
+                activeCheckBox.Checked,
+                chkChargeable.Checked,
+                chkOEEFocus.Checked,
+                chkRoute.Checked,
+                txtChargeRate,
+                cboFundamentalType,
+                Convert.ToDecimal(txtLat.Value),
+                Convert.ToDecimal(txtLong.Value),
+                txtGpsZ,
+                txtLogicalOrder,
+                idealCycle,
+                tmpRebuildDate,
+                cboManufacturer,
+                txtModel,
+                txtMiscRef,
+                txtProductionNbr,
+                tmpPuchaseDate,
+                txtPurchasePrice,
+                txtRemarks,
+                txtSerial,
+                startDate,
+                tmpWarrantyDate,
+                overheadRateID,
+                responsibleID,
+                conditionID,
+                tmpLifeCycleDate,
+                vendorID,
+                Convert.ToDecimal(txtMilePost.Value),
+                milePostDir,
+                stateRouteID,
+                Convert.ToDecimal(txtEasting.Value),
+                Convert.ToDecimal(txtNorthing.Value),
+                Convert.ToInt32(txtWarrantyInterval.Value),
+                Convert.ToInt32(txtLifeCycleInterval.Value),
+                uom,
+                milepostTo,
+                quantity,
+                Convert.ToDecimal(txtHoursAvailable.Value),
+                Convert.ToDecimal(txtPMHours.Value),
+                Convert.ToDecimal(txtTotalAvailHrs.Value),
+                fundSource,
+                workOrder,
+                workOp,
+                orgCode,
+                fundingGroup,
+                equipNumber,
+                controlSection,
+                _oLogon.UserID
+
+                );  
+            
+        }
+        //                        string objectId,
+        //                        string desc,
+        //                        int taskId,
+        //                        int parentObjectId,
+        //                        int areaId,
+        //                        int costcodeId,
+        //                        int locationId,
+        //                        int mfgId,
+        //                        int objectClassId,
+        //                        int objectTypeId,
+        //                        int productLineId,
+        //                        int storeroomId,
+        //                        string notes,
+        //                        string assetNumber,
+        //                        bool active,
+        //                        bool chargeable,
+        //                        bool oeeFocus,
+        //                        bool routeable,
+        //                        decimal chargeRate,
+        //                        string fundMtlType,
+        //                        decimal gpsX,
+        //                        decimal gpsY,
+        //                        decimal gpsZ,
+        //                        int logicalOrder,
+        //                        int idealCycle,
+        //                        DateTime inServiceDate,
+        //                        string mfgIdString,
+        //                        string mfgModel,
+        //                        string miscRef,
+        //                        int objectCount,
+        //                        DateTime purchaseDate,
+        //                        decimal purchasePrice,
+        //                        string remarks,
+        //                        string serialNumber,
+        //                        DateTime statusDate,
+        //                        DateTime warrantyDate,
+        //                        int overheadRateId,
+        //                        int responsiblePersonId,
+        //                        int conditionCode,
+        //                        DateTime equipLifeTerminationDate,
+        //                        int purchaseVendorId,
+        //                        decimal milePost,
+        //                        int milePostDirection,
+        //                        int stateRouteId,
+        //                        decimal easting,
+        //                        decimal northing,
+        //                        int warrantyInterval,
+        //                        int lifeCycleInterval,
+        //                        int uom,
+        //                        decimal milepostTo,
+        //                        decimal quantity,
+        //                        decimal availHrs,
+        //                        decimal pmHours,
+        //                        decimal totalAvailHrs,
+        //                        int fundSourceId,
+        //                        int workOrderId,
+        //                        int workOpId,
+        //                        int orgCodeId,
+        //                        int fundGroupId,
+        //                        int equipmentNumberId,
+        //                        int controlSectionId,
+        //                        int createdBy
+       
+
         #endregion
     }
 }
