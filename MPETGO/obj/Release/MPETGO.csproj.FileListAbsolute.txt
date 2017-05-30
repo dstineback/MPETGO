@@ -56,3 +56,4 @@ C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\ru\DevExpress.Pdf.v17.1.Core.reso
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\obj\Release\MPETGO.dll.licenses
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\obj\Release\MPETGO.dll
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\obj\Release\MPETGO.pdb
+C:\Users\stinebackd\Projects\MPETGO\MPETGO\obj\Release\MPETGO.csprojResolveAssemblyReference.cache
