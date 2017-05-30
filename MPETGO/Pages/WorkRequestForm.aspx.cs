@@ -2133,6 +2133,31 @@ namespace MPETGO.Pages
             }
             #endregion
 
+            #region Lat/Long
+            if (txtLat.Text.Length > 0)
+            {
+                //Check for session value
+                if(Session["txtLat"] != null)
+                {
+                    //Remove session Value before adding new value
+                    Session.Remove("txtLat");
+                }
+                //Add Value from texBox
+                Session.Add("txtLat", txtLat.Text.Trim());
+            }
+
+            if(txtLong.Text.Length > 0)
+            {   //Check for Session Value
+                if(Session["txtLong"] != null)
+                {
+                    //Remove Session Value before adding new value
+                    Session.Remove("txtLong");
+                }
+                //Add new value to session from textBox
+                Session.Add("txtLong", txtLong.Text.Trim());
+            }
+            #endregion
+
         }
 
         protected void submitBtn_Click(object sender, EventArgs e)
@@ -2153,6 +2178,11 @@ namespace MPETGO.Pages
             var savedID = Session["AssignedJobID"];
 
             Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');</script>");
+        }
+
+        protected void LatLongBtn_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

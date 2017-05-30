@@ -22,7 +22,9 @@
                 <dx:PanelContent runat="server" SupportsDisabledAttribute="True">
                         <div class="headerTop">
                             <div class="templateTitle">
-                                <a id="TitleLink" href="~/" runat="server">M-PET Go</a>
+                                <a id="TitleLink" href="~/" runat="server">M-PET Go</a> <br />
+                                <dx:ASPxLabel runat="server" ID="logonLable" Text="Signed in as: "></dx:ASPxLabel>
+                                <dx:ASPxLabel runat="server" ID="userNameLable" Text=""></dx:ASPxLabel>
                             </div>
                         </div>
                         <div class="headerMenu">
@@ -33,20 +35,17 @@
         <dx:MenuItem Text="Work Requst" NavigateUrl="Pages/WorkRequestForm.aspx"></dx:MenuItem>
         <dx:MenuItem Text="Work Request List" NavigateUrl="Pages/WorkRequestList.aspx"></dx:MenuItem>
         <dx:MenuItem Text="Contact US" NavigateUrl="Pages/Contact.aspx"></dx:MenuItem>
+        <dx:MenuItem Text="Sign Out" NavigateUrl="Pages/LogOut.aspx"></dx:MenuItem>
 
     </Items>
 </dx:ASPxMenu>
                         </div>
-                    <div>
-                        <dx:ASPxLabel runat="server" ID="logonLable" Text="Signed in as: "></dx:ASPxLabel>
-                        <dx:ASPxLabel runat="server" ID="userNameLable" Text=""></dx:ASPxLabel>
-                    </div>
                 </dx:PanelContent>
             </PanelCollection>
            <%-- this is the Collasped header--%>
             <ExpandBarTemplate>
                 <div class="templateTitle">
-                    <a id="TitleLink" href="~/" runat="server">M-PET Go</a>
+                    <a id="TitleLink" href="~/" runat="server">M-PET Go</a> <br />
                     <dx:ASPxLabel runat="server" ID="logonLable" Text="Signed in as: "></dx:ASPxLabel>
                     <dx:ASPxLabel runat="server" ID="userNameLable" Text=""></dx:ASPxLabel>
                 </div>

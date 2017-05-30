@@ -3,13 +3,37 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
+<script type='text/javascript'>
+    var lat;
+    var long;
+    var x = document.getElementById("noGEO");
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+    }
+    function showPosition(position) {
+    lat = position.coords.latitude; 
+    long = position.coords.longitude;
+    txtLat.SetValue(lat);
+    txtLat.SetText(lat);
+    txtLong.SetValue(long);
+    txtLong.SetText(long);
+    }
+</script>
+
+
         <dx:ASPxFormLayout ID="ASPxFormLayout1"
             runat="server" Theme="iOS" EnableTheming="True" Width="100%" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit">
             <Items>
-                <dx:LayoutItem Caption="Work Request Issue" Width="100%">
+                <dx:LayoutItem Caption="Work Request Issue">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
-                            <dx:ASPxMemo runat="server" ID="txtWorkDescription" MaxLength="250" AutoPostBack="false" Width="100">
+                            <dx:ASPxMemo runat="server" ID="txtWorkDescription" MaxLength="250" AutoPostBack="false" Width="100%">
                                 <ValidationSettings ErrorText="Description required">
                                     <RequiredField IsRequired="true" />
                                 </ValidationSettings>
@@ -148,6 +172,36 @@
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
 
+                <dx:LayoutItem>
+                    <LayoutItemNestedControlCollection>
+                        <dx:LayoutItemNestedControlContainer>
+                            <dx:ASPxTextBox runat="server" ID="txtLong" ClientInstanceName="txtLong" Width="100%" AutoPostBack="false">
+
+                            </dx:ASPxTextBox>
+                        </dx:LayoutItemNestedControlContainer>
+                    </LayoutItemNestedControlCollection>
+                </dx:LayoutItem>
+
+                <dx:LayoutItem>
+                    <LayoutItemNestedControlCollection>
+                        <dx:LayoutItemNestedControlContainer>
+                            <dx:ASPxTextBox runat="server" ID="txtLat" ClientInstanceName="txtLat" AutoPostBack="false" Width="100%">
+
+                            </dx:ASPxTextBox>
+                        </dx:LayoutItemNestedControlContainer>
+                    </LayoutItemNestedControlCollection>
+                </dx:LayoutItem>
+
+                <dx:LayoutItem>
+                    <LayoutItemNestedControlCollection>
+                        <dx:LayoutItemNestedControlContainer>
+                            <dx:ASPxButton runat="server" Text="Add Coordinates" ID="LatLongBtn">
+                                <ClientSideEvents Click="getLocation" />
+                            </dx:ASPxButton>
+                        </dx:LayoutItemNestedControlContainer>
+                    </LayoutItemNestedControlCollection>
+                </dx:LayoutItem>
+
                 <dx:LayoutItem Caption="">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
@@ -170,6 +224,9 @@
                 </dx:LayoutItem>
             </Items>
         </dx:ASPxFormLayout>
+    <input type="file" accept="image/*" capture="camera">
+    <input type="file" accept="image/*;capture=camera">
+
         <asp:SqlDataSource ID="AttachmentDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:connection %>" 
         SelectCommand="SELECT [ID], [nJobID], [nJobstepID], [DocType], [Description], [LocationOrURL], [ShortName] 
         FROM [Attachments] 
