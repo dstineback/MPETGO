@@ -22,6 +22,15 @@ namespace MPETGO.Pages {
         protected global::DevExpress.Web.ASPxFormLayout PartsForm;
         
         /// <summary>
+        /// activeCheckBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxCheckBox activeCheckBox;
+        
+        /// <summary>
         /// objectID control.
         /// </summary>
         /// <remarks>
@@ -47,33 +56,6 @@ namespace MPETGO.Pages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::DevExpress.Web.ASPxMemo objectDesc;
-        
-        /// <summary>
-        /// txtLat control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DevExpress.Web.ASPxTextBox txtLat;
-        
-        /// <summary>
-        /// txtLong control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DevExpress.Web.ASPxTextBox txtLong;
-        
-        /// <summary>
-        /// LatLongBtn control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DevExpress.Web.ASPxButton LatLongBtn;
         
         /// <summary>
         /// ComboStreet control.
@@ -103,12 +85,57 @@ namespace MPETGO.Pages {
         protected global::DevExpress.Web.ASPxDateEdit startDate;
         
         /// <summary>
-        /// activeCheckBox control.
+        /// txtLat control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxCheckBox activeCheckBox;
+        protected global::DevExpress.Web.ASPxTextBox txtLat;
+        
+        /// <summary>
+        /// txtLong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxTextBox txtLong;
+        
+        /// <summary>
+        /// LatLongBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxButton LatLongBtn;
+        
+        /// <summary>
+        /// ObjectTypeDataSource control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource ObjectTypeDataSource;
+        
+        /// <summary>
+        /// AreaSqlDatasource control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource AreaSqlDatasource;
+        
+        /// <summary>
+        /// StateRouteDataSource control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource StateRouteDataSource;
     }
 }

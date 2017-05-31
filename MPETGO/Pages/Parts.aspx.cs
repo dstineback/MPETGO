@@ -16,10 +16,10 @@ namespace MPETGO.Pages
     {
         private LogonObject _oLogon;
         private DateTime date = DateTime.Now;
-        private MaintAttachmentObject _oObjeAttachments;
+        private MaintAttachmentObject _oObjAttachments;
         private MaintenanceObject _oMaintObj;
-        private bool _UseWeb;
-        private string connection = ConfigurationManager.ConnectionStrings["ClientConnectionString"].ConnectionString;
+        private bool _useWeb;
+        private string _connectionString = ConfigurationManager.ConnectionStrings["ClientConnectionString"].ConnectionString;
 
         private int taskId = -1;
         private int parentObjectID = -1;
@@ -97,8 +97,159 @@ namespace MPETGO.Pages
             }          
         }
 
-        #region Combo functions
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            // Set Connection Info
+            _connectionString = ConfigurationManager.ConnectionStrings["connection"].ToString();
+            _useWeb = (ConfigurationManager.AppSettings["UsingWebService"] == "Y");
 
+            //Initialize Classes
+           
+            _oObjAttachments = new MaintAttachmentObject(_connectionString, _useWeb);
+
+            //Set DataSource
+            ObjectTypeDataSource.ConnectionString = _connectionString;
+            AreaSqlDatasource.ConnectionString = _connectionString;
+            StateRouteDataSource.ConnectionString = _connectionString;
+
+        }
+
+        #region Combo functions
+        protected void ComboObjectType_OnItemsRequestedByFilterCondition_SQL(object source, ListEditItemsRequestedByFilterConditionEventArgs e)
+        {
+            var comboBox = (ASPxComboBox)source;
+            ObjectTypeDataSource.SelectCommand =
+                @"SELECT [n_objtypeid]
+                         ,[objtypeid]
+                         ,[descr]
+                FROM (SELECT    dbo.objecttypes.n_objtypeid AS n_objtypeid,
+                                dbo.objecttypes.objtypeid AS objtypeid,
+                                dbo.objecttypes.descr AS descr,
+                                ROW_NUMBER() OVER (ORDER BY n_objtypeid) AS [rn]
+                    FROM        dbo.objecttypes
+                    WHERE       ((objtypeid + ' ' + descr) LIKE @filter)
+                                AND dbo.objecttypes.b_IsActive = 'Y'
+                                AND n_objtypeid > 0 )
+                                AS st
+                    WHERE st.[rn] BETWEEN @startIndex AND @endIndex";
+            ObjectTypeDataSource.SelectParameters.Clear();
+            ObjectTypeDataSource.SelectParameters.Add("filter", TypeCode.String, string.Format("%{0}%", e.Filter));
+            ObjectTypeDataSource.SelectParameters.Add("startIndex", TypeCode.Int64, (e.BeginIndex + 1).ToString(CultureInfo.InvariantCulture));
+            ObjectTypeDataSource.SelectParameters.Add("endIndex", TypeCode.Int64, (e.EndIndex + 1).ToString(CultureInfo.InvariantCulture));
+            comboBox.DataSource = ObjectTypeDataSource;
+            comboBox.DataBind();
+        }
+
+        protected void ComboObjectType_OnItemRequestedByValue_SQL(object source, ListEditItemRequestedByValueEventArgs e)
+        {
+            var comboBox = (ASPxComboBox)source;
+            ObjectTypeDataSource.SelectCommand =
+                @" SELECT   dbo.objecttypes.n_objtypeid,
+                            dbo.objecttypes.objtypeid,
+                            dbo.objecttypes.descr
+                            
+                    FROM    dbo.objecttypes
+                    WHERE   dbo.objecttypes.n_objtypeid = @ID
+                            AND dbo.objecttypes.b_IsActive = 'Y'
+                            AND dbo.objecttypes.n_objtypeid > 0      
+                    ORDER BY dbo.objecttypes.objtypeid ASC";
+            ObjectTypeDataSource.SelectParameters.Clear();
+            ObjectTypeDataSource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
+            comboBox.DataSource = ObjectTypeDataSource;
+            comboBox.DataBind();
+        }
+
+        protected void ComboStreet_OnItemRequestedByFilterCondition_SQL(object source, ListEditItemsRequestedByFilterConditionEventArgs e)
+        {
+            var comboBox = (ASPxComboBox)source;
+            StateRouteDataSource.SelectCommand =
+                @"SELECT [n_StateRouteID]
+		                ,[StateRouteID]
+		                ,[Description]
+                    FROM (SELECT  dbo.StateRoutes.[n_StateRouteID] AS n_StateRouteID,
+                            dbo.StateRoutes.[StateRouteID] AS StateRouteID,
+                            dbo.StateRoutes.[Description] AS Description,
+			                ROW_NUMBER() OVER (ORDER BY StateRouteID) AS [rn]
+                    FROM    dbo.StateRoutes
+                    WHERE   (( StateRouteID + ' ' + Description) LIKE @filter)
+			                AND dbo.StateRoutes.b_IsActive = 'Y'
+                            AND n_StateRouteID > 0 ) AS st 
+	                Where st.[rn] BETWEEN @startIndex AND @endIndex";
+
+            StateRouteDataSource.SelectParameters.Clear();
+            StateRouteDataSource.SelectParameters.Add("filter", TypeCode.String, string.Format("%{0}%", e.Filter));
+            StateRouteDataSource.SelectParameters.Add("startIndex", TypeCode.Int64, (e.BeginIndex + 1).ToString(CultureInfo.InvariantCulture));
+            StateRouteDataSource.SelectParameters.Add("endIndex", TypeCode.Int64, (e.EndIndex + 1).ToString(CultureInfo.InvariantCulture));
+            comboBox.DataSource = StateRouteDataSource;
+            comboBox.DataBind();
+        }
+
+        protected void ComboStreet_OnItemRequestedByValue_SQL(object source, ListEditItemRequestedByValueEventArgs e)
+        {
+            var comboBox = (ASPxComboBox)source;
+            StateRouteDataSource.SelectCommand =
+                @"SELECT 
+                            dbo.StateRoutes.[n_StateRouteID] AS n_StateRouteID,
+                            dbo.StateRoutes.[StateRouteID] AS StateRouteID,
+                            dbo.StateRoutes.[Description] AS Description
+			               
+                    FROM    dbo.StateRoutes
+                    WHERE   dbo.StateRoutes.b_IsActive = 'Y'
+                            AND n_StateRouteID > 0 
+                            AND n_StateRouteID = @ID
+	                  
+                    ORDER BY StateRouteID ASC";
+            StateRouteDataSource.SelectParameters.Clear();
+            StateRouteDataSource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
+            comboBox.DataSource = StateRouteDataSource;
+            comboBox.DataBind();
+
+        }
+
+        protected void ComboArea_OnItemRequestedByFilterCondition_SQL(object source, ListEditItemsRequestedByFilterConditionEventArgs e)
+        {
+            var comboBox = (ASPxComboBox)source;
+            AreaSqlDatasource.SelectCommand =
+                @" SELECT [n_areaid]
+		                ,[areaid]
+		                ,[descr]
+                    From (SELECT  dbo.Areas.[n_areaid] AS n_areaid,
+                            dbo.Areas.[areaid] AS areaid,
+                            dbo.Areas.[descr] AS descr,
+			                ROW_NUMBER() OVER (ORDER BY areaid) AS [rn]
+                    FROM    dbo.Areas
+                    WHERE   ((areaid + ' ' + descr) Like @filter)
+			                AND dbo.Areas.b_IsActive = 'Y'
+                            AND n_areaid > 0 ) AS st 
+	                WHERE st.[rn] BETWEEN @startIndex AND @endIndex	"; 
+
+            AreaSqlDatasource.SelectParameters.Clear();
+            AreaSqlDatasource.SelectParameters.Add("filter", TypeCode.String, string.Format("%{0}%", e.Filter));
+            AreaSqlDatasource.SelectParameters.Add("startIndex", TypeCode.Int64, (e.BeginIndex + 1).ToString(CultureInfo.InvariantCulture));
+            AreaSqlDatasource.SelectParameters.Add("endIndex", TypeCode.Int64, (e.EndIndex + 1).ToString(CultureInfo.InvariantCulture));
+            comboBox.DataSource = AreaSqlDatasource;
+            comboBox.DataBind();
+        }
+
+        protected void ComboArea_OnItemRequestedByValue_SQL(object source, ListEditItemRequestedByValueEventArgs e)
+        {
+            var comboBox = (ASPxComboBox)source;
+            AreaSqlDatasource.SelectCommand =
+                @"SELECT 
+                            dbo.Areas.[n_areaid] AS n_areaid,
+                            dbo.Areas.[areaid] AS areaid,
+                            dbo.Areas.[descr] AS descr
+			               
+                    FROM    dbo.Areas
+                    WHERE   dbo.Areas.b_IsActive = 'Y'
+                            AND n_areaid > 0
+                            AND n_areaid = @ID 
+	                ORDER BY areaid ASC	";
+            AreaSqlDatasource.SelectParameters.Clear();
+            AreaSqlDatasource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
+            comboBox.DataSource = AreaSqlDatasource;
+            comboBox.DataBind();
+        }
         #endregion
         #region Save Session
         private void SaveSession()
@@ -606,7 +757,11 @@ namespace MPETGO.Pages
         #region Add Part
         private void AddParts()
         {
-            _oMaintObj = new MaintenanceObject(connection, _UseWeb);
+            objTypeID = Convert.ToInt32(ComboObjectType.Value);
+            areaID = Convert.ToInt32(ComboArea.Value);
+            
+
+            _oMaintObj = new MaintenanceObject(_connectionString, _useWeb);
 
             _oMaintObj.Add(objectID.Text.Trim(),
                 objectDesc.Text.Trim(),
@@ -623,9 +778,9 @@ namespace MPETGO.Pages
                 txtMaintObjectNotes,
                 txtAssetNumber,
                 activeCheckBox.Checked,
-                chkChargeable.Checked,
-                chkOEEFocus.Checked,
-                chkRoute.Checked,
+                true,
+                true,
+                true,
                 txtChargeRate,
                 cboFundamentalType,
                 Convert.ToDecimal(txtLat.Value),
@@ -642,26 +797,26 @@ namespace MPETGO.Pages
                 txtPurchasePrice,
                 txtRemarks,
                 txtSerial,
-                startDate,
+                date,
                 tmpWarrantyDate,
                 overheadRateID,
                 responsibleID,
                 conditionID,
                 tmpLifeCycleDate,
                 vendorID,
-                Convert.ToDecimal(txtMilePost.Value),
+                txtMilePost,
                 milePostDir,
                 stateRouteID,
-                Convert.ToDecimal(txtEasting.Value),
-                Convert.ToDecimal(txtNorthing.Value),
-                Convert.ToInt32(txtWarrantyInterval.Value),
-                Convert.ToInt32(txtLifeCycleInterval.Value),
+                txtEasting,
+                txtNorthing,
+                txtWarrantyInterval,
+                txtLifeCycleInterval,
                 uom,
                 milepostTo,
                 quantity,
-                Convert.ToDecimal(txtHoursAvailable.Value),
-                Convert.ToDecimal(txtPMHours.Value),
-                Convert.ToDecimal(txtTotalAvailHrs.Value),
+                txtHoursAvailable,
+                txtPMHours,
+                txtTotalAvailHrs,
                 fundSource,
                 workOrder,
                 workOp,
@@ -670,72 +825,10 @@ namespace MPETGO.Pages
                 equipNumber,
                 controlSection,
                 _oLogon.UserID
-
                 );  
             
         }
-        //                        string objectId,
-        //                        string desc,
-        //                        int taskId,
-        //                        int parentObjectId,
-        //                        int areaId,
-        //                        int costcodeId,
-        //                        int locationId,
-        //                        int mfgId,
-        //                        int objectClassId,
-        //                        int objectTypeId,
-        //                        int productLineId,
-        //                        int storeroomId,
-        //                        string notes,
-        //                        string assetNumber,
-        //                        bool active,
-        //                        bool chargeable,
-        //                        bool oeeFocus,
-        //                        bool routeable,
-        //                        decimal chargeRate,
-        //                        string fundMtlType,
-        //                        decimal gpsX,
-        //                        decimal gpsY,
-        //                        decimal gpsZ,
-        //                        int logicalOrder,
-        //                        int idealCycle,
-        //                        DateTime inServiceDate,
-        //                        string mfgIdString,
-        //                        string mfgModel,
-        //                        string miscRef,
-        //                        int objectCount,
-        //                        DateTime purchaseDate,
-        //                        decimal purchasePrice,
-        //                        string remarks,
-        //                        string serialNumber,
-        //                        DateTime statusDate,
-        //                        DateTime warrantyDate,
-        //                        int overheadRateId,
-        //                        int responsiblePersonId,
-        //                        int conditionCode,
-        //                        DateTime equipLifeTerminationDate,
-        //                        int purchaseVendorId,
-        //                        decimal milePost,
-        //                        int milePostDirection,
-        //                        int stateRouteId,
-        //                        decimal easting,
-        //                        decimal northing,
-        //                        int warrantyInterval,
-        //                        int lifeCycleInterval,
-        //                        int uom,
-        //                        decimal milepostTo,
-        //                        decimal quantity,
-        //                        decimal availHrs,
-        //                        decimal pmHours,
-        //                        decimal totalAvailHrs,
-        //                        int fundSourceId,
-        //                        int workOrderId,
-        //                        int workOpId,
-        //                        int orgCodeId,
-        //                        int fundGroupId,
-        //                        int equipmentNumberId,
-        //                        int controlSectionId,
-        //                        int createdBy
+       
        
 
         #endregion
