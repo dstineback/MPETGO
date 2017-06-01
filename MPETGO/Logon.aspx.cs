@@ -26,7 +26,7 @@ namespace MPETGO
                 {
                     if(Session["LogonInfo"] != null)
                     {
-                        Response.Redirect("/index.aspx");
+                        Response.Redirect("~/index.aspx");
                     }
                 }
 

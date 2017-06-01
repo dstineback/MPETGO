@@ -110,6 +110,8 @@
     <Content Include="index.aspx" />
     <Content Include="Logon.aspx" />
     <Content Include="Pages\Contact.aspx" />
+    <Content Include="LogOut.aspx" />
+    <Content Include="Pages\Parts.aspx" />
     <Content Include="Pages\WorkRequestForm.aspx" />
     <Content Include="Pages\WorkRequestList.aspx" />
   </ItemGroup>
@@ -183,6 +185,20 @@
     </Compile>
     <Compile Include="Pages\Contact.aspx.designer.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="LogOut.aspx.cs">
+      <DependentUpon>LogOut.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LogOut.aspx.designer.cs">
+      <DependentUpon>LogOut.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Parts.aspx.cs">
+      <DependentUpon>Parts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Parts.aspx.designer.cs">
+      <DependentUpon>Parts.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\WorkRequestForm.aspx.cs">
       <DependentUpon>WorkRequestForm.aspx</DependentUpon>
