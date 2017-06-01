@@ -14,6 +14,7 @@ namespace MPETGO.Pages
 {
     public partial class Parts : System.Web.UI.Page
     {
+        private readonly DateTime _nullDate = Convert.ToDateTime("1/1/1960 23:59:59");
         private LogonObject _oLogon;
         private DateTime date = DateTime.Now;
         private MaintAttachmentObject _oObjAttachments;
@@ -23,59 +24,59 @@ namespace MPETGO.Pages
 
         private int taskId = -1;
         private int parentObjectID = -1;
-        private int areaID;
-        private int costCodeID;
-        private int locationID;
-        private int manufacturerID;
-        private int objClassID;
-        private int objTypeID;
-        private int prodLineID;
-        private int storeroomID;
-        private string txtMaintObjectNotes;
-        private string txtAssetNumber;
+        private int areaID = -1;
+        private int costCodeID = -1;
+        private int locationID = -1;
+        private int manufacturerID = -1;
+        private int objClassID = -1;
+        private int objTypeID = -1 ;
+        private int prodLineID = -1;
+        private int storeroomID = -1;
+        private string txtMaintObjectNotes = "";
+        private string txtAssetNumber = "";
 
 
         private decimal txtChargeRate = 0;
-        private string cboFundamentalType;
-        private decimal txtGpsZ;
-        private int txtLogicalOrder;
+        private string cboFundamentalType = "";
+        private decimal txtGpsZ = 0;
+        private int txtLogicalOrder = 0;
         private int idealCycle = 0;
         private DateTime tmpRebuildDate;
-        private string cboManufacturer;
-        private string txtModel;
-        private string txtMiscRef;
-        private int txtProductionNbr;
-        private DateTime tmpPuchaseDate;
-        private decimal txtPurchasePrice;
-        private string txtRemarks;
-        private string txtSerial;
+        private string cboManufacturer = "";
+        private string txtModel = "";
+        private string txtMiscRef = "";
+        private int txtProductionNbr = 0;
+        private DateTime tmpPuchaseDate ;
+        private decimal txtPurchasePrice = 0;
+        private string txtRemarks = "";
+        private string txtSerial = "";
         private DateTime tmpAsOfDate;
         private DateTime tmpWarrantyDate;
-        private int overheadRateID;
-        private int responsibleID;
-        private int conditionID;
+        private int overheadRateID = -1;
+        private int responsibleID = -1;
+        private int conditionID = -1;
         private DateTime tmpLifeCycleDate;
-        private int vendorID;
-        private decimal txtMilePost;
-        private int milePostDir;
-        private int stateRouteID;
-        private decimal txtEasting;
-        private decimal txtNorthing;
-        private int txtWarrantyInterval;
-        private int txtLifeCycleInterval;
-        private int uom;
-        private decimal milepostTo;
-        private decimal quantity;
-        private decimal txtHoursAvailable;
-        private decimal txtPMHours;
-        private decimal txtTotalAvailHrs;
-        private int fundSource;
-        private int workOrder;
-        private int workOp;
-        private int orgCode;
-        private int fundingGroup;
-        private int equipNumber;
-        private int controlSection;
+        private int vendorID =-1;
+        private decimal txtMilePost = 0;
+        private int milePostDir = -1;
+        private int stateRouteID = -1;
+        private decimal txtEasting = 0;
+        private decimal txtNorthing = 0;
+        private int txtWarrantyInterval = 0;
+        private int txtLifeCycleInterval = 0;
+        private int uom = -1;
+        private decimal milepostTo = 0;
+        private decimal quantity = 0;
+        private decimal txtHoursAvailable = 0;
+        private decimal txtPMHours = 0;
+        private decimal txtTotalAvailHrs = 0;
+        private int fundSource = -1;
+        private int workOrder = -1;
+        private int workOp = -1;
+        private int orgCode = -1;
+        private int fundingGroup = -1;
+        private int equipNumber = -1;
+        private int controlSection = -1;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -757,13 +758,19 @@ namespace MPETGO.Pages
         #region Add Part
         private void AddParts()
         {
+            tmpPuchaseDate = _nullDate;
+            tmpRebuildDate = _nullDate;
+            tmpWarrantyDate = _nullDate;
+            tmpLifeCycleDate = _nullDate;
+
+            
             objTypeID = Convert.ToInt32(ComboObjectType.Value);
             areaID = Convert.ToInt32(ComboArea.Value);
             
 
             _oMaintObj = new MaintenanceObject(_connectionString, _useWeb);
 
-            _oMaintObj.Add(objectID.Text.Trim(),
+            if(_oMaintObj.Add(objectID.Text.Trim(),
                 objectDesc.Text.Trim(),
                 taskId,
                 parentObjectID,
@@ -825,12 +832,24 @@ namespace MPETGO.Pages
                 equipNumber,
                 controlSection,
                 _oLogon.UserID
-                );  
-            
+                ))
+            {
+
+            Response.Redirect("/pages/parts.aspx");
+            } else
+            {
+                throw new SystemException(@"Error adding - " + _oMaintObj.LastError);
+            }
         }
-       
-       
+
+
 
         #endregion
+
+        protected void AddPartBtn_Click(object sender, EventArgs e)
+        {
+            SaveSession();
+            AddParts();
+        }
     }
 }

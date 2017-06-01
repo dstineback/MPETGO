@@ -133,7 +133,23 @@
                             </dx:ASPxButton>
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
-                </dx:LayoutItem>
+             </dx:LayoutItem>
+            <dx:LayoutItem>
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer>
+                        <dx:ASPxButton runat="server" ID="SaveBtn" Text="Save" ClientInstanceName="SaveBtn" AutoPostBack="false">
+                        </dx:ASPxButton>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>
+            <dx:LayoutItem>
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer>
+                        <dx:ASPxButton runat="server" ID="AddPartBtn" Text="Add Part" OnClick="AddPartBtn_Click" ClientInstanceName="AddPartBtn" AutoPostBack="false">
+                        </dx:ASPxButton>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>
         </Items>
     </dx:ASPxFormLayout>
          <input type="file" accept="image/*;capture=camera">
