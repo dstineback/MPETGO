@@ -44,7 +44,7 @@
                             OnItemsRequestedByFilterCondition="ComboObjectType_OnItemsRequestedByFilterCondition_SQL" 
                             DropDownButton-Enabled="true" DropDownStyle="DropDown" 
                             AutoPostBack="false" CallbackPageSize="10" EnableCallbackMode="true" 
-                            TextField="objecttypeid" ValueField="n_objtypeid" ValueType="System.String" 
+                            TextField="objecttypeid" ValueField="n_objtypeid" ValueType="System.Int32"
                             TextFormatString="{0} - {1}" ClientInstanceName="ComboObjectType"
                             >
                             <Columns>
@@ -152,7 +152,7 @@
             </dx:LayoutItem>
         </Items>
     </dx:ASPxFormLayout>
-         <input type="file" accept="image/*;capture=camera">
+         <input runat="server" id="uploadFile" type="file" accept="image/*;capture=camera" onselect="addImg">
 
 <asp:SqlDataSource ID="ObjectTypeDataSource" runat="server"></asp:SqlDataSource>
 <asp:SqlDataSource ID="AreaSqlDatasource" runat="server" />

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Web;
 using DevExpress.Web;
 using System.Configuration;
+using System.Web.Configuration;
 using System.Globalization;
+using System.Web.UI.HtmlControls;
 using System.Web.UI;
 using System.Data;
 using System.Web.UI.WebControls;
@@ -78,12 +80,45 @@ namespace MPETGO.Pages
         private int equipNumber = -1;
         private int controlSection = -1;
 
+        //Variables to pass for attachment add
+        private string docType = "JPG";
+        private int maintObjectId;
+        private int creator;
+        private string fullPath;
+        private string desc;
+        private string shortName;
+
+        
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if(Session["LogonInfo"] != null)
             {
                 _oLogon = ((LogonObject)Session["LogonInfo"]);
-             
+
+                #region Attempt To Load Azure Details
+
+                //Check For Null Azure Account
+                if (!string.IsNullOrEmpty(AzureAccount))
+                {
+                    UploadControl.AzureSettings.StorageAccountName = AzureAccount;
+                }
+
+                //Check For Null Access Key
+                if (!string.IsNullOrEmpty(AzureAccessKey))
+                {
+                    UploadControl.AzureSettings.AccessKey = AzureAccessKey;
+                }
+
+                //Check For Null Container
+                if (!string.IsNullOrEmpty(AzureContainer))
+                {
+                    UploadControl.AzureSettings.ContainerName = AzureContainer;
+                }
+
+                #endregion
+
+
             }
             else
             {
@@ -114,6 +149,31 @@ namespace MPETGO.Pages
             StateRouteDataSource.ConnectionString = _connectionString;
 
         }
+        #region Azure Setup
+        string AzureAccount
+        {
+            get
+            {
+               return WebConfigurationManager.AppSettings["StorageAccount"];
+            }
+        }
+
+        string AzureAccessKey
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["StorageKey"];
+            }
+        }
+
+        string AzureContainer
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["StorageContainer"];
+            }
+        }
+        #endregion
 
         #region Combo functions
         protected void ComboObjectType_OnItemsRequestedByFilterCondition_SQL(object source, ListEditItemsRequestedByFilterConditionEventArgs e)
@@ -765,7 +825,10 @@ namespace MPETGO.Pages
 
             
             objTypeID = Convert.ToInt32(ComboObjectType.Value);
+            var c = Convert.ToInt32(ComboObjectType.SelectedItem.GetFieldValue("n_objtypeid"));
+            int n_objectid = c;
             areaID = Convert.ToInt32(ComboArea.Value);
+            
             
 
             _oMaintObj = new MaintenanceObject(_connectionString, _useWeb);
@@ -834,8 +897,30 @@ namespace MPETGO.Pages
                 _oLogon.UserID
                 ))
             {
+               
+                var file = uploadFile.Value.ToString();
+                          
+                if (file != null)
+                {
+                 maintObjectId = objTypeID;
+                 creator = _oLogon.UserID;
+                 fullPath = uploadFile.PostedFile.FileName;
+                   
+                 desc = "M-PET GO upload";
+                 shortName = file.Trim();
+                if(_oObjAttachments.Add(_oMaintObj.RecordID, 
+                    creator, 
+                    fullPath, 
+                    docType, 
+                    desc, 
+                    shortName))
+                    {
+                    } else {
+                        throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
+                    }
+                }
 
-            Response.Redirect("/pages/parts.aspx");
+                Response.Redirect("/pages/parts.aspx");
             } else
             {
                 throw new SystemException(@"Error adding - " + _oMaintObj.LastError);
@@ -851,5 +936,36 @@ namespace MPETGO.Pages
             SaveSession();
             AddParts();
         }
+
+        protected void addImg(object sender, FileUploadCompleteEventArgs e)
+        {
+            string name = e.UploadedFile.FileName;
+            //string url = GetImageUrl(e.UploadedFile.FileNameInStorage);
+            string url = e.UploadedFile.FileNameInStorage;
+            long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
+            string sizeText = sizeInKilobytes + " KB";
+            e.CallbackData = name + "|" + url + "|" + sizeText;
+        }
+
+string GetImageUrl(string fileName)
+        {
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+            {
+                provider.StorageAccountName = uploadFile.PostedFile.StorageAccountName;
+                provider.AccessKey = uploadFile.PostedFile.AccessKey;
+                provider.ContainerName = uploadFile.PostedFile.ContainerName;
+            }
+            else
+            {
+
+            }
+            FileManagerFile file = new FileManagerFile(provider, fileName);
+            FileManagerFile[] files = new FileManagerFile[] { file };
+            return provider.GetDownloadUrl(files);
+
+        }
+
     }
 }
