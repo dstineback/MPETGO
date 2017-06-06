@@ -28,7 +28,7 @@ function getLocation() {
 
 
         <dx:ASPxFormLayout ID="ASPxFormLayout1"
-            runat="server" Theme="iOS" EnableTheming="True" Width="100%" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit">
+            runat="server" Theme="iOS" EnableTheming="True" Width="100%" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit">            
             <Items>
                 <dx:LayoutItem Caption="Work Request Issue">
                     <LayoutItemNestedControlCollection>

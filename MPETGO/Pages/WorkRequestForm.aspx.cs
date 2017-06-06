@@ -64,349 +64,261 @@ namespace MPETGO.Pages
                    
                     txtWorkDescription.Focus();
                 }
-            } else
+            }
+            #endregion
+
+            #region Check for query string and Set form vars
+
+            //Check for query string
+            if (!String.IsNullOrEmpty(Request.QueryString["Jobid"]))
             {
-                if (!String.IsNullOrEmpty(Request.QueryString["jobid"]))
+                //Check of editing job id
+                if (Session["editingJobID"] == null)
                 {
-                    
+                    //Create jobGuid var
+                    var jobGuid = "";
+                    var tempJobID = Request.QueryString["Jobid"];
 
-                    if (Session["editingJobID"] == null)
+                    _oLogon = ((LogonObject)Session["LogonInfo"]);
+
+                    #region Load Job info and populate Session vars
+                    //Load job info and populate session vars
+                    if (_oJob.GetJobGuidFromJobID(-1, tempJobID, ref jobGuid))
                     {
-                        var jobGuid = "";
+                        var userId = -1;
 
-                        #region Load Job Info from Guid
-                        //Load Job Info & Populate Session Variables
-                        if (_oJob.GetJobGuidFromJobID(-1, Request.QueryString["jobid"], ref jobGuid))
+                        if (_oLogon != null)
                         {
-                            var userId = -1;
-
-                            //if (_oLogon != null)
-                            //{
-                            //    userId = _oLogon.UserID;
-                            //}
-
-                            //Load Job Info From GUID
-                            if (_oJob.LoadDataByGuid(jobGuid, userId))
-                            {
-                                //Exepcted Schema
-                                //tbl_Jobs.n_Jobid AS 'n_Jobid',
-                                //tbl_Jobs.Jobid AS 'Jobid',
-                                //tbl_Jobs.Title AS 'Title',
-                                //tbl_Jobs.TypeOfJob AS 'TypeOfJob',
-                                //tbl_Jobs.AssignedGUID AS 'AssignedGUID',
-                                //tbl_Jobs.JobAgainstID AS 'JobAgainstID',
-                                //tbl_Jobs.n_MaintObjectID AS 'n_MaintObjectID',
-                                //tbl_Jobs.n_AreaObjectID AS 'n_AreaObjectID',
-                                //tbl_Jobs.n_LocationObjectID AS 'n_LocationObjectID',
-                                //tbl_Jobs.n_GPSObjectID AS 'n_GPSObjectID',
-                                //tbl_Jobs.n_ActionPriority AS 'n_ActionPriority',
-                                //tbl_Jobs.n_jobreasonid AS 'nJobReasonID' ,
-                                //tbl_Jobs.Notes AS 'Notes',
-                                //tbl_Jobs.EstimatedJobHours AS 'EstimatedJobHours',
-                                //tbl_Jobs.ActualJobHours AS 'ActualJobHours',
-                                //tbl_Jobs.IsRequestOnly AS 'IsRequestOnly',
-                                //tbl_Jobs.n_RouteTo AS 'n_RouteTo',
-                                //tbl_Jobs.RequestDate AS 'RequestDate',
-                                //tbl_Jobs.n_requestPriority AS 'n_priorityid' ,
-                                //tbl_Jobs.n_requestor AS 'UserID' ,
-                                //tbl_Jobs.pmcalc_startdate AS 'pmcalc_startdate',
-                                //tbl_Jobs.n_MobileOwner AS 'n_MobileOwner',
-                                //tbl_Jobs.MobileDate AS 'MobileDate',
-                                //tbl_Jobs.IssuedDate AS 'IssuedDate',
-                                //tbl_Jobs.GPS_X AS 'GPS_X',
-                                //tbl_Jobs.GPS_Y AS 'GPS_Y',
-                                //tbl_Jobs.GPS_Z AS 'GPS_Z',
-                                //tbl_Jobs.n_group AS 'n_group',
-                                //tbl_Jobs.SentToPDA AS 'SentToPDA',
-                                //tbl_Jobs.JobOpen AS 'JobOpen',
-                                //tbl_Jobs.IsHistory AS 'IsHistory',
-                                //tbl_Jobs.ServicingEquipment AS 'ServicingEquipment',
-                                //tbl_Jobs.completed_units1 AS 'completed_units1',
-                                //tbl_Jobs.completed_units2 AS 'completed_units2',
-                                //tbl_Jobs.completed_units3 AS 'completed_units3',
-                                //tbl_Jobs.n_OutcomeID AS 'n_OutcomeID',
-                                //tbl_Jobs.n_OwnerID AS 'n_OwnerID',
-                                //tbl_Jobs.n_TaskID AS 'n_TaskID',
-                                //tbl_Jobs.n_workeventid AS 'n_workeventid',
-                                //tbl_Jobs.n_worktypeid AS 'n_WorkOpID' ,
-                                //tbl_Jobs.PostedDate AS 'PostedDate',
-                                //tbl_Jobs.SubAssemblyID AS 'SubAssemblyID',
-                                //tbl_Jobs.n_StateRouteID AS 'n_StateRouteID' ,
-                                //tbl_Jobs.Milepost AS 'Milepost' ,
-                                //tbl_Jobs.IncreasingMP AS 'n_MilePostDirectionID' ,
-                                //tbl_Jobs.b_AdditionalDamage AS 'b_AdditionalDamage',
-                                //tbl_Jobs.PercentOverage AS 'PercentOverage',
-                                //ISNULL(tbl_IsFlaggedRecord.RecordID, -1) AS 'FlaggedRecordID' ,
-                                //tbl_Requestor.Username AS 'Username' ,
-                                //tbl_Priorities.priorityid AS 'priorityid' ,
-                                //tbl_JobReasons.JobReasonID AS 'JobReasonID' ,
-                                //tbl_Owner.Username AS 'OwnerID' ,
-                                //tbl_StateRoutes.StateRouteID AS 'StateRouteID' ,
-                                //tbl_MPDirections.MilePostDirectionID AS 'MilePostDirectionID' ,
-                                //tbl_WorkOP.WorkOpID AS 'WorkOpID' ,
-                                //tbl_Jobs.n_CostCodeID AS 'n_CostCodeID' ,
-                                //tbl_CostCodes.costcodeid AS 'costcodeid' ,
-                                //tbl_CostCodes.SupplementalCode as 'SupplementalCode' ,
-                                //tbl_Jobs.n_FundSrcCodeID AS 'n_FundSrcCodeID' ,
-                                //tbl_FSC.FundSrcCodeID AS 'FundSrcCodeID' ,
-                                //tbl_Jobs.n_WorkOrderCodeID AS 'n_WorkOrderCodeID' ,
-                                //tbl_WOCodes.WorkOrderCodeID AS 'WorkOrderCodeID' ,
-                                //tbl_Jobs.n_OrganizationCodeID AS 'n_OrganizationCodeID' ,
-                                //tbl_OrgCodes.OrganizationCodeID AS 'OrganizationCodeID' ,
-                                //tbl_Jobs.n_FundingGroupCodeID AS 'n_FundingGroupCodeID' ,
-                                //tbl_FundGroup.FundingGroupCodeID AS 'FundingGroupID' ,
-                                //tbl_Jobs.n_ControlSectionID AS 'n_ControlSectionID' ,
-                                //tbl_CtlSections.ControlSectionID AS 'ControlSectionID' ,
-                                //tbl_Jobs.n_EquipmentNumberID AS 'n_EquipmentNumberID' ,
-                                //tbl_EquipNum.EquipmentNumberID AS 'EquipmentNumberID'
-                                //tbl_MO.objectid AS 'ObjectID',
-                                //tbl_MO.description AS 'ObjectDesc',
-                                //tbl_MO.assetnumber AS 'ObjectAsset',
-                                //tbl_MO.locationid AS 'ObjectLoc',
-                                //tbl_MO.areaid AS 'ObjectArea'
-
-                                #region Setup Job Data
-
-                                //Add Job ID Class
-                                HttpContext.Current.Session.Add("oJob", _oJob);
-
-                                //Add Editing Job ID
-                                HttpContext.Current.Session.Add("editingJobID",
-                                    ((int)_oJob.Ds.Tables[0].Rows[0]["n_Jobid"]));
-
-                                //Add Job String ID
-                                HttpContext.Current.Session.Add("AssignedJobID", _oJob.Ds.Tables[0].Rows[0]["Jobid"]);
-
-                                //Add Description
-                                HttpContext.Current.Session.Add("txtWorkDescription", _oJob.Ds.Tables[0].Rows[0]["Title"]);
-
-                                //Add Request Date
-                                HttpContext.Current.Session.Add("TxtWorkRequestDate",
-                                    _oJob.Ds.Tables[0].Rows[0]["RequestDate"]);
-
-                                #endregion
-
-                                #region Setup Object Info
-
-                                HttpContext.Current.Session.Add("ObjectIDCombo",
-                                    _oJob.Ds.Tables[0].Rows[0]["n_MaintObjectID"]);
-                                HttpContext.Current.Session.Add("ObjectIDComboText", _oJob.Ds.Tables[0].Rows[0]["ObjectID"]);
-                                HttpContext.Current.Session.Add("txtObjectDescription",
-                                    _oJob.Ds.Tables[0].Rows[0]["ObjectDesc"]);
-                                HttpContext.Current.Session.Add("txtObjectArea", _oJob.Ds.Tables[0].Rows[0]["ObjectArea"]);
-                                HttpContext.Current.Session.Add("txtObjectLocation", _oJob.Ds.Tables[0].Rows[0]["ObjectLoc"]);
-                                HttpContext.Current.Session.Add("txtObjectAssetNumber",
-                                    _oJob.Ds.Tables[0].Rows[0]["ObjectAsset"]);
-
-
-                                #endregion
-
-                                #region Seetup Requestor
-
-                                HttpContext.Current.Session.Add("ComboRequestor", _oJob.Ds.Tables[0].Rows[0]["UserID"]);
-                                HttpContext.Current.Session.Add("ComboRequestorText", _oJob.Ds.Tables[0].Rows[0]["Username"]);
-                                requestorValue = Convert.ToInt32(HttpContext.Current.Session["ComboRequestor"]);
-                                requestorText = HttpContext.Current.Session["ComboRequestorText"].ToString();
-
-
-
-                                #endregion
-
-                                #region Setup Priority
-
-                                HttpContext.Current.Session.Add("ComboPriority", _oJob.Ds.Tables[0].Rows[0]["n_priorityid"]);
-                                HttpContext.Current.Session.Add("ComboPriorityText",
-                                    _oJob.Ds.Tables[0].Rows[0]["priorityid"]);
-
-                                #endregion
-
-                                #region Setup Reason
-
-                                HttpContext.Current.Session.Add("comboReason", _oJob.Ds.Tables[0].Rows[0]["nJobReasonID"]);
-                                HttpContext.Current.Session.Add("comboReasonText", _oJob.Ds.Tables[0].Rows[0]["JobReasonID"]);
-
-                                #endregion
-
-                                #region Setup Route To
-
-                                HttpContext.Current.Session.Add("comboRouteTo", _oJob.Ds.Tables[0].Rows[0]["n_RouteTo"]);
-                                HttpContext.Current.Session.Add("comboRouteToText", _oJob.Ds.Tables[0].Rows[0]["OwnerID"]);
-
-                                #endregion
-
-                                #region Setup Hwy Route
-
-                                HttpContext.Current.Session.Add("comboHwyRoute",
-                                    _oJob.Ds.Tables[0].Rows[0]["n_StateRouteID"]);
-                                HttpContext.Current.Session.Add("comboHwyRouteText",
-                                    _oJob.Ds.Tables[0].Rows[0]["StateRouteID"]);
-
-                                #endregion
-
-                                #region Setup Milepost
-
-                                HttpContext.Current.Session.Add("txtMilepost", _oJob.Ds.Tables[0].Rows[0]["Milepost"]);
-                                HttpContext.Current.Session.Add("txtMilepostTo", _oJob.Ds.Tables[0].Rows[0]["MilepostTo"]);
-                                HttpContext.Current.Session.Add("comboMilePostDir",
-                                    _oJob.Ds.Tables[0].Rows[0]["n_MilePostDirectionID"]);
-                                HttpContext.Current.Session.Add("comboMilePostDirText",
-                                    _oJob.Ds.Tables[0].Rows[0]["MilePostDirectionID"]);
-
-                                #endregion
-
-                                #region Setup Cost Code
-
-                                HttpContext.Current.Session.Add("ComboCostCode", _oJob.Ds.Tables[0].Rows[0]["n_CostCodeID"]);
-                                HttpContext.Current.Session.Add("ComboCostCodeText",
-                                    _oJob.Ds.Tables[0].Rows[0]["costcodeid"]);
-
-                                #endregion
-
-                                #region Setup Fund Source
-
-                                HttpContext.Current.Session.Add("ComboFundSource",
-                                    _oJob.Ds.Tables[0].Rows[0]["n_FundSrcCodeID"]);
-                                HttpContext.Current.Session.Add("ComboFundSourceText",
-                                    _oJob.Ds.Tables[0].Rows[0]["FundSrcCodeID"]);
-
-                                #endregion
-
-                                #region Setup Work Order
-
-                                HttpContext.Current.Session.Add("ComboWorkOrder",
-                                    _oJob.Ds.Tables[0].Rows[0]["n_WorkOrderCodeID"]);
-                                HttpContext.Current.Session.Add("ComboWorkOrderText",
-                                    _oJob.Ds.Tables[0].Rows[0]["WorkOrderCodeID"]);
-
-                                #endregion
-
-                                #region Setup Work Op
-
-                                HttpContext.Current.Session.Add("ComboWorkOp", _oJob.Ds.Tables[0].Rows[0]["n_WorkOpID"]);
-                                HttpContext.Current.Session.Add("ComboWorkOpText", _oJob.Ds.Tables[0].Rows[0]["WorkOpID"]);
-
-                                #endregion
-
-                                #region Setup Org Code
-
-                                HttpContext.Current.Session.Add("ComboOrgCode",
-                                    _oJob.Ds.Tables[0].Rows[0]["n_OrganizationCodeID"]);
-                                HttpContext.Current.Session.Add("ComboOrgCodeText",
-                                    _oJob.Ds.Tables[0].Rows[0]["OrganizationCodeID"]);
-
-                                #endregion
-
-                                #region Setup Fund Group
-
-                                HttpContext.Current.Session.Add("ComboFundGroup",
-                                    _oJob.Ds.Tables[0].Rows[0]["n_FundingGroupCodeID"]);
-                                HttpContext.Current.Session.Add("ComboFundGroupText",
-                                    _oJob.Ds.Tables[0].Rows[0]["FundingGroupCodeID"]);
-
-                                #endregion
-
-                                #region Setup Control Section
-
-                                HttpContext.Current.Session.Add("ComboCtlSection",
-                                    _oJob.Ds.Tables[0].Rows[0]["n_ControlSectionID"]);
-                                HttpContext.Current.Session.Add("ComboCtlSectionText",
-                                    _oJob.Ds.Tables[0].Rows[0]["ControlSectionID"]);
-
-                                #endregion
-
-                                #region Setup Equip Num
-
-                                HttpContext.Current.Session.Add("ComboEquipNum",
-                                    _oJob.Ds.Tables[0].Rows[0]["n_EquipmentNumberID"]);
-                                HttpContext.Current.Session.Add("ComboEquipNumText",
-                                    _oJob.Ds.Tables[0].Rows[0]["EquipmentNumberID"]);
-
-                                #endregion
-                            }
-
-
+                            userId = _oLogon.UserID;
                         }
 
-                        #endregion
-                        #region Get Attachment photo
-                        //Load Object Attachments To Get First Photo
-                        if (_oObjAttachments.GetAttachments(((int)_oJob.Ds.Tables[0].Rows[0]["n_MaintObjectID"])))
+                        //Load job info from GUID
+                        if (_oJob.LoadDataByGuid(jobGuid, userId))
                         {
-                            //Check For Table
-                            if (_oObjAttachments.Ds.Tables.Count > 0)
+
+                            #region Setup Job Data
+
+                            //Add Job ID Class
+                            HttpContext.Current.Session.Add("oJob", _oJob);
+
+                            //Add Editing Job ID
+                            HttpContext.Current.Session.Add("editingJobID",
+                                ((int)_oJob.Ds.Tables[0].Rows[0]["n_Jobid"]));
+
+                            //Add Job String ID
+                            HttpContext.Current.Session.Add("AssignedJobID", _oJob.Ds.Tables[0].Rows[0]["Jobid"]);
+
+                            //Add Description
+                            HttpContext.Current.Session.Add("txtWorkDescription", _oJob.Ds.Tables[0].Rows[0]["Title"]);
+
+                            //Add Request Date
+                            HttpContext.Current.Session.Add("TxtWorkRequestDate",
+                                _oJob.Ds.Tables[0].Rows[0]["RequestDate"]);
+
+                            #endregion
+
+                            #region Setup Object Info
+
+                            HttpContext.Current.Session.Add("ObjectIDCombo",
+                                _oJob.Ds.Tables[0].Rows[0]["n_MaintObjectID"]);
+                            HttpContext.Current.Session.Add("ObjectIDComboText", _oJob.Ds.Tables[0].Rows[0]["ObjectID"]);
+                            HttpContext.Current.Session.Add("txtObjectDescription",
+                                _oJob.Ds.Tables[0].Rows[0]["ObjectDesc"]);
+                            HttpContext.Current.Session.Add("txtObjectArea", _oJob.Ds.Tables[0].Rows[0]["ObjectArea"]);
+                            HttpContext.Current.Session.Add("txtObjectLocation", _oJob.Ds.Tables[0].Rows[0]["ObjectLoc"]);
+                            HttpContext.Current.Session.Add("txtObjectAssetNumber",
+                                _oJob.Ds.Tables[0].Rows[0]["ObjectAsset"]);
+
+
+                            #endregion
+
+                            #region Seetup Requestor
+
+                            HttpContext.Current.Session.Add("ComboRequestor", _oJob.Ds.Tables[0].Rows[0]["UserID"]);
+                            HttpContext.Current.Session.Add("ComboRequestorText", _oJob.Ds.Tables[0].Rows[0]["Username"]);
+                            requestorValue = Convert.ToInt32(HttpContext.Current.Session["ComboRequestor"]);
+                            requestorText = HttpContext.Current.Session["ComboRequestorText"].ToString();
+
+
+
+                            #endregion
+
+                            #region Setup Priority
+
+                            HttpContext.Current.Session.Add("ComboPriority", _oJob.Ds.Tables[0].Rows[0]["n_priorityid"]);
+                            HttpContext.Current.Session.Add("ComboPriorityText",
+                                _oJob.Ds.Tables[0].Rows[0]["priorityid"]);
+
+                            #endregion
+
+                            #region Setup Reason
+
+                            HttpContext.Current.Session.Add("comboReason", _oJob.Ds.Tables[0].Rows[0]["nJobReasonID"]);
+                            HttpContext.Current.Session.Add("comboReasonText", _oJob.Ds.Tables[0].Rows[0]["JobReasonID"]);
+
+                            #endregion
+
+                            #region Setup Route To
+
+                            HttpContext.Current.Session.Add("comboRouteTo", _oJob.Ds.Tables[0].Rows[0]["n_RouteTo"]);
+                            HttpContext.Current.Session.Add("comboRouteToText", _oJob.Ds.Tables[0].Rows[0]["OwnerID"]);
+
+                            #endregion
+
+                            #region Setup Hwy Route
+
+                            HttpContext.Current.Session.Add("comboHwyRoute",
+                                _oJob.Ds.Tables[0].Rows[0]["n_StateRouteID"]);
+                            HttpContext.Current.Session.Add("comboHwyRouteText",
+                                _oJob.Ds.Tables[0].Rows[0]["StateRouteID"]);
+
+                            #endregion
+
+                            #region Setup Milepost
+
+                            HttpContext.Current.Session.Add("txtMilepost", _oJob.Ds.Tables[0].Rows[0]["Milepost"]);
+                            HttpContext.Current.Session.Add("txtMilepostTo", _oJob.Ds.Tables[0].Rows[0]["MilepostTo"]);
+                            HttpContext.Current.Session.Add("comboMilePostDir",
+                                _oJob.Ds.Tables[0].Rows[0]["n_MilePostDirectionID"]);
+                            HttpContext.Current.Session.Add("comboMilePostDirText",
+                                _oJob.Ds.Tables[0].Rows[0]["MilePostDirectionID"]);
+
+                            #endregion
+
+                            #region Setup Cost Code
+
+                            HttpContext.Current.Session.Add("ComboCostCode", _oJob.Ds.Tables[0].Rows[0]["n_CostCodeID"]);
+                            HttpContext.Current.Session.Add("ComboCostCodeText",
+                                _oJob.Ds.Tables[0].Rows[0]["costcodeid"]);
+
+                            #endregion
+
+                            #region Setup Fund Source
+
+                            HttpContext.Current.Session.Add("ComboFundSource",
+                                _oJob.Ds.Tables[0].Rows[0]["n_FundSrcCodeID"]);
+                            HttpContext.Current.Session.Add("ComboFundSourceText",
+                                _oJob.Ds.Tables[0].Rows[0]["FundSrcCodeID"]);
+
+                            #endregion
+
+                            #region Setup Work Order
+
+                            HttpContext.Current.Session.Add("ComboWorkOrder",
+                                _oJob.Ds.Tables[0].Rows[0]["n_WorkOrderCodeID"]);
+                            HttpContext.Current.Session.Add("ComboWorkOrderText",
+                                _oJob.Ds.Tables[0].Rows[0]["WorkOrderCodeID"]);
+
+                            #endregion
+
+                            #region Setup Work Op
+
+                            HttpContext.Current.Session.Add("ComboWorkOp", _oJob.Ds.Tables[0].Rows[0]["n_WorkOpID"]);
+                            HttpContext.Current.Session.Add("ComboWorkOpText", _oJob.Ds.Tables[0].Rows[0]["WorkOpID"]);
+
+                            #endregion
+
+                            #region Setup Org Code
+
+                            HttpContext.Current.Session.Add("ComboOrgCode",
+                                _oJob.Ds.Tables[0].Rows[0]["n_OrganizationCodeID"]);
+                            HttpContext.Current.Session.Add("ComboOrgCodeText",
+                                _oJob.Ds.Tables[0].Rows[0]["OrganizationCodeID"]);
+
+                            #endregion
+
+                            #region Setup Fund Group
+
+                            HttpContext.Current.Session.Add("ComboFundGroup",
+                                _oJob.Ds.Tables[0].Rows[0]["n_FundingGroupCodeID"]);
+                            HttpContext.Current.Session.Add("ComboFundGroupText",
+                                _oJob.Ds.Tables[0].Rows[0]["FundingGroupCodeID"]);
+
+                            #endregion
+
+                            #region Setup Control Section
+
+                            HttpContext.Current.Session.Add("ComboCtlSection",
+                                _oJob.Ds.Tables[0].Rows[0]["n_ControlSectionID"]);
+                            HttpContext.Current.Session.Add("ComboCtlSectionText",
+                                _oJob.Ds.Tables[0].Rows[0]["ControlSectionID"]);
+
+                            #endregion
+
+                            #region Setup Equip Num
+
+                            HttpContext.Current.Session.Add("ComboEquipNum",
+                                _oJob.Ds.Tables[0].Rows[0]["n_EquipmentNumberID"]);
+                            HttpContext.Current.Session.Add("ComboEquipNumText",
+                                _oJob.Ds.Tables[0].Rows[0]["EquipmentNumberID"]);
+
+                            #endregion
+
+                            #region Load attachments
+                            //Load Object Attachments To Get First Photo
+                            if (_oObjAttachments.GetAttachments(((int)_oJob.Ds.Tables[0].Rows[0]["n_MaintObjectID"])))
                             {
-                                //Create Control Flag
-                                var firstPicFound = false;
-
-                                //Loop Attachments
-                                for (var rowIndex = 0;
-                                    // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
-                                    rowIndex < _oObjAttachments.Ds.Tables[0].Rows.Count;
-                                    rowIndex++)
+                                //Check For Table
+                                if (_oObjAttachments.Ds.Tables.Count > 0)
                                 {
-                                    //Determine Attachment Type
-                                    switch (_oObjAttachments.Ds.Tables[0].Rows[rowIndex][1].ToString().ToUpper())
+                                    //Create Control Flag
+                                    var firstPicFound = false;
+
+                                    //Loop Attachments
+                                    for (var rowIndex = 0;
+                                        // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
+                                        rowIndex < _oObjAttachments.Ds.Tables[0].Rows.Count;
+                                        rowIndex++)
                                     {
-                                        case "GIF":
-                                        case "BMP":
-                                        case "JPG":
-                                            {
-                                                //Check For Prior Value
-                                                if (HttpContext.Current.Session["ObjectPhoto"] != null)
+                                        //Determine Attachment Type
+                                        switch (_oObjAttachments.Ds.Tables[0].Rows[rowIndex][1].ToString().ToUpper())
+                                        {
+                                            case "GIF":
+                                            case "BMP":
+                                            case "JPG":
                                                 {
-                                                    //Remove Old One
-                                                    HttpContext.Current.Session.Remove("ObjectPhoto");
+                                                    //Check For Prior Value
+                                                    if (HttpContext.Current.Session["ObjectPhoto"] != null)
+                                                    {
+                                                        //Remove Old One
+                                                        HttpContext.Current.Session.Remove("ObjectPhoto");
+                                                    }
+
+                                                    //Add New Value
+                                                    HttpContext.Current.Session.Add("ObjectPhoto",
+                                                        _oObjAttachments.Ds.Tables[0].Rows[rowIndex]["LocationOrURL"]
+                                                            .ToString());
+
+                                                    firstPicFound = true;
+
+                                                    //Break
+                                                    break;
                                                 }
+                                            default:
+                                                {
+                                                    //Do Nothing
+                                                    break;
+                                                }
+                                        }
 
-                                                //Add New Value
-                                                HttpContext.Current.Session.Add("ObjectPhoto",
-                                                    _oObjAttachments.Ds.Tables[0].Rows[rowIndex]["LocationOrURL"]
-                                                        .ToString());
-
-                                                firstPicFound = true;
-
-                                                //Break
-                                                break;
-                                            }
-                                        default:
-                                            {
-                                                //Do Nothing
-                                                break;
-                                            }
-                                    }
-
-                                    //Check Control
-                                    if (firstPicFound)
-                                    {
-                                        //Break Loop
-                                        break;
+                                        //Check Control
+                                        if (firstPicFound)
+                                        {
+                                            //Break Loop
+                                            break;
+                                        }
                                     }
                                 }
                             }
-                        }
-
-                        //Refresh Attachments
-                        //AttachmentGrid.DataBind();
-
-                        //Enable Tab
-
-                    }
-                    else
-                    {
-                        if (HttpContext.Current.Session["ObjectPhoto"] != null)
-                        {
-                            //Set Image
-                            //objectImg.ImageUrl = HttpContext.Current.Session["ObjectPhoto"].ToString();
+                            #endregion
                         }
                     }
+
+                    #endregion
                 }
-            
-        #endregion
+            }
 
-    }
-            #endregion
-
-            #region If it is a Post Back But not Inital Page Load
+            #region set form var values from session data
             if (!IsPostBack)
             {
                 //Check For Previous Session Variables
@@ -420,7 +332,7 @@ namespace MPETGO.Pages
                 if (HttpContext.Current.Session["AssignedJobID"] != null)
                 {
                     //Get Additional Info From Session
-                 ////   lblHeader.Text = (HttpContext.Current.Session["AssignedJobID"].ToString());
+                    lblHeader.Text = (HttpContext.Current.Session["AssignedJobID"].ToString());
                 }
                 //Check For Previous Session Variables
                 if (HttpContext.Current.Session["ObjectIDCombo"] != null)
@@ -497,15 +409,14 @@ namespace MPETGO.Pages
                 if (HttpContext.Current.Session["ObjectPhoto"] != null)
                 {
                     //Set Image
-                    ////objectImg.ImageUrl = HttpContext.Current.Session["ObjectPhoto"].ToString();
+                    objectImg.ImageUrl = HttpContext.Current.Session["ObjectPhoto"].ToString();
                 }
-                ////AttachmentGrid.DataBind();
             }
+            #endregion
+            #endregion
 
-        
-        #endregion
         }
-
+            
         protected void Page_Init(object sender, EventArgs e)
         {
             //Set Connection Info
@@ -528,14 +439,11 @@ namespace MPETGO.Pages
             //Setup Fields
             if (Session["editingJobID"] != null)
             {
-                submitBtn.Visible = false;
-                
+                submitBtn.Visible = true;
 
-                
             } else
             {
-                saveBtn.Visible = false;
-               
+                saveBtn.Visible = false;           
             }
 
         }

@@ -16,6 +16,7 @@ namespace MPETGO.Pages
 {
     public partial class Parts : System.Web.UI.Page
     {
+        private WorkOrder _oJob;
         private readonly DateTime _nullDate = Convert.ToDateTime("1/1/1960 23:59:59");
         private LogonObject _oLogon;
         private DateTime date = DateTime.Now;
@@ -98,23 +99,23 @@ namespace MPETGO.Pages
 
                 #region Attempt To Load Azure Details
 
-                //Check For Null Azure Account
-                if (!string.IsNullOrEmpty(AzureAccount))
-                {
-                    UploadControl.AzureSettings.StorageAccountName = AzureAccount;
-                }
+                ////Check For Null Azure Account
+                //if (!string.IsNullOrEmpty(AzureAccount))
+                //{
+                //    UploadControl.AzureSettings.StorageAccountName = AzureAccount;
+                //}
 
-                //Check For Null Access Key
-                if (!string.IsNullOrEmpty(AzureAccessKey))
-                {
-                    UploadControl.AzureSettings.AccessKey = AzureAccessKey;
-                }
+                ////Check For Null Access Key
+                //if (!string.IsNullOrEmpty(AzureAccessKey))
+                //{
+                //    UploadControl.AzureSettings.AccessKey = AzureAccessKey;
+                //}
 
-                //Check For Null Container
-                if (!string.IsNullOrEmpty(AzureContainer))
-                {
-                    UploadControl.AzureSettings.ContainerName = AzureContainer;
-                }
+                ////Check For Null Container
+                //if (!string.IsNullOrEmpty(AzureContainer))
+                //{
+                //    UploadControl.AzureSettings.ContainerName = AzureContainer;
+                //}
 
                 #endregion
 
@@ -129,8 +130,8 @@ namespace MPETGO.Pages
             {
                 ResetSession();
                 startDate.Value = DateTime.Now;
-                activeCheckBox.Checked = true;               
-            }          
+                activeCheckBox.Checked = true;     
+            }
         }
 
         protected void Page_Init(object sender, EventArgs e)
@@ -947,25 +948,25 @@ namespace MPETGO.Pages
             e.CallbackData = name + "|" + url + "|" + sizeText;
         }
 
-string GetImageUrl(string fileName)
-        {
-            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+//string GetImageUrl(string fileName)
+//        {
+//            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
 
-            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
-            {
-                provider.StorageAccountName = uploadFile.PostedFile.StorageAccountName;
-                provider.AccessKey = uploadFile.PostedFile.AccessKey;
-                provider.ContainerName = uploadFile.PostedFile.ContainerName;
-            }
-            else
-            {
+//            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+//            {
+//                provider.StorageAccountName = uploadFile.PostedFile.StorageAccountName;
+//                provider.AccessKey = uploadFile.PostedFile.AccessKey;
+//                provider.ContainerName = uploadFile.PostedFile.ContainerName;
+//            }
+//            else
+//            {
 
-            }
-            FileManagerFile file = new FileManagerFile(provider, fileName);
-            FileManagerFile[] files = new FileManagerFile[] { file };
-            return provider.GetDownloadUrl(files);
+//            }
+//            FileManagerFile file = new FileManagerFile(provider, fileName);
+//            FileManagerFile[] files = new FileManagerFile[] { file };
+//            return provider.GetDownloadUrl(files);
 
-        }
+//        }
 
     }
 }

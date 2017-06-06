@@ -6,14 +6,11 @@
     
         <dx:ASPxGridView ID="WorkRequestGrid" runat="server" Theme="iOS"
             AutoGenerateColumns="False" 
-            KeyFieldName="n_Jobid">
-            
+            KeyFieldName="n_Jobid">            
             <SettingsAdaptivity AdaptivityMode="HideDataCells" 
-                AllowOnlyOneAdaptiveDetailExpanded="true" 
-                
+                AllowOnlyOneAdaptiveDetailExpanded="true"                
                 AdaptiveDetailColumnCount="1"></SettingsAdaptivity>
-            <Settings  />
-            
+            <Settings  />        
             <Columns>
                 <dx:GridViewDataTextColumn FieldName="n_Jobid" ReadOnly="True" Visible="false"
                     VisibleIndex="0">
@@ -25,36 +22,38 @@
                 <dx:GridViewDataTextColumn FieldName="A" VisibleIndex="2" Visible="false"
                     ReadOnly="True">
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="Jobid" VisibleIndex="3" FixedStyle="Left">
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="Object ID"
+               
+                <dx:GridViewDataHyperLinkColumn FieldName ="Jobid" Caption="Job ID" VisibleIndex="3" FixedStyle="Left">
+                    <PropertiesHyperLinkEdit NavigateUrlFormatString="~/Pages/WorkRequestForm.aspx?jobid={0}"></PropertiesHyperLinkEdit>
+                </dx:GridViewDataHyperLinkColumn>
+                <dx:GridViewDataTextColumn FieldName="Object ID" Caption="Object ID"
                     VisibleIndex="4">
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="Title"
+                <dx:GridViewDataTextColumn FieldName="Title" Caption="Description"
                     VisibleIndex="5">
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataDateColumn FieldName="Request Date"
+                <dx:GridViewDataDateColumn FieldName="Request Date" Caption="Request Date"
                     ReadOnly="True" VisibleIndex="1" FixedStyle="Left">
                 </dx:GridViewDataDateColumn>
                 <dx:GridViewDataTextColumn FieldName="AssignedGUID" Visible="false"
                     VisibleIndex="7"></dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="RouteToID" VisibleIndex="8">
+                <dx:GridViewDataTextColumn FieldName="RouteToID" VisibleIndex="8" Visible="false">
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="WorkOpID" VisibleIndex="9">
+                <dx:GridViewDataTextColumn FieldName="WorkOpID" VisibleIndex="9" Visible="false">
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="PriorityID" VisibleIndex="10">
+                <dx:GridViewDataTextColumn FieldName="PriorityID" Caption="Priority" VisibleIndex="10">
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="ReasonID" VisibleIndex="11">
+                <dx:GridViewDataTextColumn FieldName="ReasonID" Caption="Reason" VisibleIndex="11">
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="SubAssemblyName" Visible="false"
                     VisibleIndex="12"></dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="HwyRouteID" ReadOnly="True"
+                <dx:GridViewDataTextColumn FieldName="HwyRouteID" ReadOnly="True" Caption="Route/Street"
                     VisibleIndex="13"></dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="Milepost" ReadOnly="True"
+                <dx:GridViewDataTextColumn FieldName="Milepost" ReadOnly="True" Caption="Milepost"
                     VisibleIndex="14"></dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="MilePostDirID"
+                <dx:GridViewDataTextColumn FieldName="MilePostDirID" Caption="MilePost Direction"
                     ReadOnly="True" VisibleIndex="15"></dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="Requestor" VisibleIndex="16">
+                <dx:GridViewDataTextColumn FieldName="Requestor" VisibleIndex="16" Caption="Requestor">
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="FlaggedRecordID" Visible="false"
                     VisibleIndex="17" ReadOnly="True">
@@ -77,19 +76,18 @@
                     ReadOnly="True" VisibleIndex="24"></dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="MilePostTo" VisibleIndex="25">
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="Area ID" VisibleIndex="26">
+                <dx:GridViewDataTextColumn FieldName="Area ID" VisibleIndex="26" Caption="Area">
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="Created By" ReadOnly="True"
+                <dx:GridViewDataTextColumn FieldName="Created By" ReadOnly="True" Caption="Created By"
                     VisibleIndex="27"></dx:GridViewDataTextColumn>
-                <dx:GridViewDataDateColumn FieldName="Created On"
+                <dx:GridViewDataDateColumn FieldName="Created On" Caption="Created On"
                     VisibleIndex="28" ReadOnly="True">
                 </dx:GridViewDataDateColumn>
-                <dx:GridViewDataTextColumn FieldName="Modified By"
+                <dx:GridViewDataTextColumn FieldName="Modified By" Caption="Modified By"
                     VisibleIndex="29" ReadOnly="True">
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataDateColumn FieldName="Modified On"
+                <dx:GridViewDataDateColumn FieldName="Modified On" Caption="Modified On"
                     ReadOnly="True" VisibleIndex="30"></dx:GridViewDataDateColumn>
-
             </Columns>
         </dx:ASPxGridView>
     <asp:SqlDataSource runat="server" ID="WorkRequestListDS"

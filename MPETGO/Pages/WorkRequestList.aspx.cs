@@ -128,5 +128,11 @@ namespace MPETGO.Pages
         {
 
         }
+
+        public string GetUrl(GridViewDataItemTemplateContainer container)
+        {
+            var values = (int)container.Grid.GetRowValues(container.VisibleIndex, new[] { "n_jobstepid" });
+            return "~/Pages/PlannedJobs/PlannedJobs.aspx?n_jobstepid=" + values;
+        }
     }
 }
