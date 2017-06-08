@@ -12,7 +12,7 @@
 <body runat="server" id="Body">
     <form id="form1" runat="server">
         <dx:ASPxPanel ID="HeaderPane" runat="server" FixedPosition="WindowTop" ClientInstanceName="headerPane" CssClass="headerPane" Collapsible="true">
-            <SettingsAdaptivity CollapseAtWindowInnerWidth="500" />
+            <SettingsAdaptivity CollapseAtWindowInnerWidth="735" />
             <Styles>
                 <Panel CssClass="panel"></Panel>
                 <ExpandedPanel CssClass="expandedPanel"></ExpandedPanel>

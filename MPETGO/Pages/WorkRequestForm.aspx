@@ -25,7 +25,7 @@ function getLocation() {
     txtLong.SetText(long);
     }
 </script>
-
+    <dx:ASPxLabel runat="server" ID="lblHeader"></dx:ASPxLabel>
 
         <dx:ASPxFormLayout ID="ASPxFormLayout1"
             runat="server" Theme="iOS" EnableTheming="True" Width="100%" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit">            

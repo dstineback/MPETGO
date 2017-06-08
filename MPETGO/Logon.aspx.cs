@@ -13,27 +13,55 @@ namespace MPETGO
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
-
-
-            if (!IsPostBack)
+            if (IsPostBack)
             {
-                if (Session["LogonInfo"] == null)
+                if(Session["LogonInfo"] != null)
                 {
-                    txtUsername.Focus();
 
                 } else
                 {
-                    if(Session["LogonInfo"] != null)
+                    var name = txtUsername.Value;
+                    var P = txtPassword.Value;
+                    var mis = txtUsername.Text.ToString();
+                    
+                    if(( txtUsername.Text != "") && (txtPassword.Text != ""))
                     {
-                        Response.Redirect("~/index.aspx");
-                    }
-                }
+                        if (Session["userName"] != null)
+                        {
+                            Session.Remove("userName");
+                        }
+                        Session.Add("userName", txtUsername.Text);
 
+                        if (Session["password"] != null)
+                        {
+                            Session.Remove("password");
+                        }
+                        Session.Add("password", txtPassword.Text);
+
+                        SetLogon();
+                    }
+                    
+                }
             }
+                if (!IsPostBack)
+                {
+                    if (Session["LogonInfo"] == null)
+                    {
+                        txtUsername.Focus();                
+
+                    } else
+                    {
+                        if(Session["LogonInfo"] != null)
+                        {
+                            Response.Redirect("~/index.aspx");
+                        }
+                    }
+
+                }            
+
         }
 
-        protected void btnSubmitLoginCredentials_Click(object sender, EventArgs e)
+        protected void SetLogon()
         {
             //Instanciate Class & Values
             _oLogon = new LogonObject { Username = txtUsername.Text, Password = txtPassword.Text };
@@ -61,7 +89,38 @@ namespace MPETGO
                 //Set Focus
                 txtPassword.Focus();
             }
+        }
+
+        protected void btnSubmitLoginCredentials_Click(object sender, EventArgs e)
+        {
+            //Instanciate Class & Values
+            _oLogon = new LogonObject { Username = txtUsername.Text, Password = txtPassword.Text };
+            
+            //Run Login Routine
+            if (_oLogon.PerformLogin())
+            {
+                //Check For Previous Session Variable
+                if (HttpContext.Current.Session["LogonInfo"] != null)
+                {
+                    //Remove Old One
+                    HttpContext.Current.Session.Remove("LogonInfo");
+                }
+
+                //Add New Session State For Logon
+                HttpContext.Current.Session.Add("LogonInfo", _oLogon);
+
+                Response.Redirect("/index.aspx");
+
+            }
+            else
+            {
+                Response.Write("<script language='javascript'>alert('Could not Log in. Please check Username and Password.');</script>");
+
+                //Set Focus
+                txtPassword.Focus();
+            }
 
         }
+
     }
 }

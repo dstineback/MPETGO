@@ -409,7 +409,7 @@ namespace MPETGO.Pages
                 if (HttpContext.Current.Session["ObjectPhoto"] != null)
                 {
                     //Set Image
-                    objectImg.ImageUrl = HttpContext.Current.Session["ObjectPhoto"].ToString();
+//objectImg.ImageUrl = HttpContext.Current.Session["ObjectPhoto"].ToString();
                 }
             }
             #endregion

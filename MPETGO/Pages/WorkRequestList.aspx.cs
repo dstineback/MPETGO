@@ -62,7 +62,7 @@ namespace MPETGO.Pages
                 Response.Redirect("/Logon.aspx");
             }
 
-            Configuration rootWebConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~/");
+            Configuration rootWebConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");
             ConnectionStringSettings strConnString = rootWebConfig.ConnectionStrings.ConnectionStrings["ClientConnectionString"];
 
             SqlConnection con = new SqlConnection(strConnString.ConnectionString);

@@ -8,16 +8,22 @@
                                        <Items>
                                            <dx:LayoutItem Caption="Username">
                                                <LayoutItemNestedControlCollection>
-                                                   <dx:LayoutItemNestedControlContainer>
-                                                       <dx:ASPxTextBox runat="server" ID="txtUsername" AutoPostBack="false">
+                                                   <dx:LayoutItemNestedControlContainer runat="server">
+                                                       <dx:ASPxTextBox runat="server" ID="txtUsername">
+                                                           <ValidationSettings>
+                                                               <RequiredField  IsRequired="true"/>
+                                                           </ValidationSettings>
                                                        </dx:ASPxTextBox>
                                                    </dx:LayoutItemNestedControlContainer>
                                                </LayoutItemNestedControlCollection>
                                            </dx:LayoutItem>
                                            <dx:LayoutItem Caption="Password">
                                                <LayoutItemNestedControlCollection>
-                                                   <dx:LayoutItemNestedControlContainer>
-                                                       <dx:ASPxTextBox runat="server" ID="txtPassword" AutoPostBack="false">
+                                                   <dx:LayoutItemNestedControlContainer runat="server">
+                                                       <dx:ASPxTextBox runat="server" ID="txtPassword" Password="true">
+                                                        <ValidationSettings>
+                                                               <RequiredField  IsRequired="true"/>
+                                                           </ValidationSettings>
                                                        </dx:ASPxTextBox>
                                                    </dx:LayoutItemNestedControlContainer>
                                                </LayoutItemNestedControlCollection>
@@ -25,7 +31,7 @@
                                            <dx:LayoutItem Caption="">
                                                <LayoutItemNestedControlCollection>
                                                    <dx:LayoutItemNestedControlContainer runat="server">
-                                                       <dx:ASPxButton runat="server" AutoPostBack="false" ID="submitBtn" Text="Sign In" OnClick="btnSubmitLoginCredentials_Click"></dx:ASPxButton>
+                                                       <dx:ASPxButton runat="server" AutoPostBack="true" ID="submitBtn" Text="Sign In" OnClick="btnSubmitLoginCredentials_Click" ></dx:ASPxButton>
                                                    </dx:LayoutItemNestedControlContainer>
                                                </LayoutItemNestedControlCollection>
                                            </dx:LayoutItem>
