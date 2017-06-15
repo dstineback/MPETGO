@@ -12,7 +12,7 @@ namespace MPETGO {
             {
                 if (Session["LogonInfo"] == null)
                 {
-                    Response.Redirect("/Logon.aspx");
+                    Response.Redirect("~/Logon.aspx");
                 }
 
             }

@@ -112,13 +112,13 @@ namespace MPETGO.Pages {
         protected global::DevExpress.Web.ASPxButton LatLongBtn;
         
         /// <summary>
-        /// SaveBtn control.
+        /// UploadControl control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxButton SaveBtn;
+        protected global::DevExpress.Web.ASPxUploadControl UploadControl;
         
         /// <summary>
         /// AddPartBtn control.
@@ -128,15 +128,6 @@ namespace MPETGO.Pages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::DevExpress.Web.ASPxButton AddPartBtn;
-        
-        /// <summary>
-        /// uploadFile control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputFile uploadFile;
         
         /// <summary>
         /// ObjectTypeDataSource control.

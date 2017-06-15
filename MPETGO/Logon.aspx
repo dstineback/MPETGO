@@ -2,6 +2,56 @@
 
 <asp:Content ID="Content" ContentPlaceHolderID="MainContent" runat="server">
 
+
+    <script>
+        var lat;
+        var long;
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+                window.alert = "Location found";
+            } else {
+                window.alert = "Geolocation is not supported by this browser.";
+            }
+        }
+        function showPosition(position) {
+            lat = position.coords.latitude;
+            long = position.coords.longitude;
+           
+            
+        }
+
+        function ShowPopUp() {
+            LogonPopUp.Show();
+        }
+
+
+        function SetName() {
+            var name = document.getElementById("txtUsername");
+            var nt = name.Value;
+            txtUsername.SetText(nt);
+        }
+
+        function SetPW() {
+            var name = document.getElementById("txtPassword");
+            var nt = name.Value;
+            txtPassword.SetText(nt);
+        }
+
+        function SetText() {
+            var ut = txtUsername.Text;
+            var pt = txtPassword.Text;
+            txtPassword.SetText(pt);
+            txtUsername.SetText(ut);
+
+        }
+    </script>
+    <dx:ASPxHiddenField runat="server" ID="GetLocation"><ClientSideEvents Init="getLocation" /></dx:ASPxHiddenField>
+    <dx:ASPxPopupControl runat="server" ID="LogonPopUp" ClientInstanceName="LogonPopUp" HeaderText="Logon" Modal="true" PopupAnimationType="Fade" AllowDragging="true" AllowResize="true" CloseAction="CloseButton" PopupHorizontalAlign="WindowCenter" PopupVerticalAlign="WindowCenter" CloseOnEscape="true" OnLoad="LogonPopUp_Load" >
+        <ClientSideEvents Init="ShowPopUp" />             
+        
+        <ContentCollection >
+            <dx:PopupControlContentControl> 
                             <dx:ASPxFormLayout runat="server" Theme="iOS">
                                <Items>
                                    <dx:LayoutGroup>
@@ -9,7 +59,11 @@
                                            <dx:LayoutItem Caption="Username">
                                                <LayoutItemNestedControlCollection>
                                                    <dx:LayoutItemNestedControlContainer runat="server">
-                                                       <dx:ASPxTextBox runat="server" ID="txtUsername">
+                                                       <dx:ASPxTextBox runat="server" 
+                                                           ID="txtUsername" 
+                                                           ClientEnabled="true" 
+                                                           ClientInstanceName="txtUsername">
+                                                           
                                                            <ValidationSettings>
                                                                <RequiredField  IsRequired="true"/>
                                                            </ValidationSettings>
@@ -20,7 +74,12 @@
                                            <dx:LayoutItem Caption="Password">
                                                <LayoutItemNestedControlCollection>
                                                    <dx:LayoutItemNestedControlContainer runat="server">
-                                                       <dx:ASPxTextBox runat="server" ID="txtPassword" Password="true">
+                                                       <dx:ASPxTextBox runat="server" 
+                                                           ID="txtPassword" 
+                                                           Password="true" 
+                                                           ClientEnabled="true" 
+                                                           ClientInstanceName="txtPassword">
+                                                           
                                                         <ValidationSettings>
                                                                <RequiredField  IsRequired="true"/>
                                                            </ValidationSettings>
@@ -31,7 +90,9 @@
                                            <dx:LayoutItem Caption="">
                                                <LayoutItemNestedControlCollection>
                                                    <dx:LayoutItemNestedControlContainer runat="server">
-                                                       <dx:ASPxButton runat="server" AutoPostBack="true" ID="submitBtn" Text="Sign In" OnClick="btnSubmitLoginCredentials_Click" ></dx:ASPxButton>
+                                                       <dx:ASPxButton runat="server" AutoPostBack="true" ID="submitBtn" ClientEnabled="true" Text="Sign In" OnClick="btnSubmitLoginCredentials_Click" >
+                                                          
+                                                       </dx:ASPxButton>
                                                    </dx:LayoutItemNestedControlContainer>
                                                </LayoutItemNestedControlCollection>
                                            </dx:LayoutItem>
@@ -39,5 +100,9 @@
                                    </dx:LayoutGroup>
                                </Items>
                             </dx:ASPxFormLayout>
+
+                </dx:PopupControlContentControl>
+            </ContentCollection>
+    </dx:ASPxPopupControl>
                         
 </asp:Content>

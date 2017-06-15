@@ -1,16 +1,19 @@
-using System;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Web;
     using System.Web.Security;
     using System.Web.SessionState;
     using DevExpress.Web;
+    using System.Web.Configuration;
 
     namespace MPETGO {
         public class Global_asax : System.Web.HttpApplication {
             void Application_Start(object sender, EventArgs e) {
+               
                 DevExpress.Web.ASPxWebControl.CallbackError += new EventHandler(Application_Error);
             }
+            
 
             void Application_End(object sender, EventArgs e) {
                 // Code that runs on application shutdown

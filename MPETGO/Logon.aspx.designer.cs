@@ -13,30 +13,21 @@ namespace MPETGO {
     public partial class Logon {
         
         /// <summary>
-        /// txtUsername control.
+        /// GetLocation control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxTextBox txtUsername;
+        protected global::DevExpress.Web.ASPxHiddenField GetLocation;
         
         /// <summary>
-        /// txtPassword control.
+        /// LogonPopUp control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxTextBox txtPassword;
-        
-        /// <summary>
-        /// submitBtn control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DevExpress.Web.ASPxButton submitBtn;
+        protected global::DevExpress.Web.ASPxPopupControl LogonPopUp;
     }
 }

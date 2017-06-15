@@ -21,7 +21,7 @@ namespace MPETGO
             }
             else
             {
-                Response.Redirect("/Logon.aspx");
+                Response.Redirect("~/Logon.aspx", true);
             }
             #endregion
         }

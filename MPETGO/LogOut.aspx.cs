@@ -13,7 +13,7 @@ namespace MPETGO.Pages
         {
             ResetSession();
             Session.Remove("LogonInfo");
-            Response.Redirect("/Main.Master");
+            Response.Redirect("~/Logon.aspx");
 
 
         }

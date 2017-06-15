@@ -89,6 +89,10 @@ namespace MPETGO.Pages
         private string desc;
         private string shortName;
 
+        private string AzureAccountName = "";
+        private string AzureAccountKey = "";
+        private string AzureAccountContainerName = "";
+
         
 
         protected void Page_Load(object sender, EventArgs e)
@@ -99,26 +103,30 @@ namespace MPETGO.Pages
 
                 #region Attempt To Load Azure Details
 
-                ////Check For Null Azure Account
-                //if (!string.IsNullOrEmpty(AzureAccount))
-                //{
-                //    UploadControl.AzureSettings.StorageAccountName = AzureAccount;
-                //}
+                //Check For Null Azure Account
+                if (!string.IsNullOrEmpty(AzureAccount))
+                {
 
-                ////Check For Null Access Key
-                //if (!string.IsNullOrEmpty(AzureAccessKey))
-                //{
-                //    UploadControl.AzureSettings.AccessKey = AzureAccessKey;
-                //}
+                    UploadControl.AzureSettings.StorageAccountName = AzureAccount;
+                    AzureAccountName = AzureAccount;
 
-                ////Check For Null Container
-                //if (!string.IsNullOrEmpty(AzureContainer))
-                //{
-                //    UploadControl.AzureSettings.ContainerName = AzureContainer;
-                //}
+                }
+
+                //Check For Null Access Key
+                if (!string.IsNullOrEmpty(AzureAccessKey))
+                {
+                    UploadControl.AzureSettings.AccessKey = AzureAccessKey;
+                    AzureAccountKey = AzureAccessKey;
+                }
+
+                //Check For Null Container
+                if (!string.IsNullOrEmpty(AzureContainer))
+                {
+                    UploadControl.AzureSettings.ContainerName = AzureContainer;
+                    AzureAccountContainerName = AzureContainer;
+                }
 
                 #endregion
-
 
             }
             else
@@ -128,6 +136,7 @@ namespace MPETGO.Pages
 
            if (!IsPostBack)
             {
+               
                 ResetSession();
                 startDate.Value = DateTime.Now;
                 activeCheckBox.Checked = true;     
@@ -337,38 +346,38 @@ namespace MPETGO.Pages
            if(ComboObjectType.Value != null)
             {
                 Session.Remove("ComboObjectType");
-            }
             Session.Add("ComboObjectType", ComboObjectType.Value.ToString());
+            }
 
             if (objectDesc.Text.Length > 0)
             {
                 Session.Remove("objectDesc");
-            }
             Session.Add("objectDesc", objectDesc.Text.Trim());
+            }
 
             if(ComboArea.Value != null)
             {
                 Session.Remove("ComboArea"); 
-            }
             Session.Add("ComboArea", ComboArea.Value.ToString());
+            }
 
             if(txtLat.Text.Length > 0)
             {
                 Session.Remove("txtLat");
-            }
             Session.Add("txtLat", txtLat.Text.Trim());
+            }
 
             if (txtLong.Text.Length > 0)
             {
                 Session.Remove("txtLong");
-            }
             Session.Add("txtLong", txtLong.Text.Trim());
+            }
 
             if (ComboStreet.Value != null)
             {
                 Session.Remove("ComboStreet");
-            }
             Session.Add("ComboStreet", ComboStreet.Value.ToString());
+            }
            
         }
         #endregion
@@ -898,14 +907,16 @@ namespace MPETGO.Pages
                 _oLogon.UserID
                 ))
             {
-               
-                var file = uploadFile.Value.ToString();
+
+
+                var file = Session["url"].ToString();
+                var x = file.Contains("fileName").ToString();
                           
                 if (file != null)
                 {
                  maintObjectId = objTypeID;
                  creator = _oLogon.UserID;
-                 fullPath = uploadFile.PostedFile.FileName;
+                 fullPath = file;
                    
                  desc = "M-PET GO upload";
                  shortName = file.Trim();
@@ -941,32 +952,40 @@ namespace MPETGO.Pages
         protected void addImg(object sender, FileUploadCompleteEventArgs e)
         {
             string name = e.UploadedFile.FileName;
-            //string url = GetImageUrl(e.UploadedFile.FileNameInStorage);
-            string url = e.UploadedFile.FileNameInStorage;
+            string url = GetImageUrl(e.UploadedFile.FileNameInStorage);
+           
             long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
             string sizeText = sizeInKilobytes + " KB";
             e.CallbackData = name + "|" + url + "|" + sizeText;
+
+            if(Session["url"] != null)
+            {
+                Session.Remove("url");
+            }
+            Session.Add("url", url);
         }
 
-//string GetImageUrl(string fileName)
-//        {
-//            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+        string GetImageUrl(string fileName)
+        {
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
 
-//            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
-//            {
-//                provider.StorageAccountName = uploadFile.PostedFile.StorageAccountName;
-//                provider.AccessKey = uploadFile.PostedFile.AccessKey;
-//                provider.ContainerName = uploadFile.PostedFile.ContainerName;
-//            }
-//            else
-//            {
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+            {
+                provider.StorageAccountName = AzureAccountName;
+                provider.AccessKey = AzureAccountKey;
+                provider.ContainerName = AzureAccountContainerName;
+                //provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                //provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                //provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+            }
+            else
+            {
 
-//            }
-//            FileManagerFile file = new FileManagerFile(provider, fileName);
-//            FileManagerFile[] files = new FileManagerFile[] { file };
-//            return provider.GetDownloadUrl(files);
-
-//        }
+            }
+            FileManagerFile file = new FileManagerFile(provider, fileName);
+            FileManagerFile[] files = new FileManagerFile[] { file };
+            return provider.GetDownloadUrl(files);
+        }
 
     }
 }

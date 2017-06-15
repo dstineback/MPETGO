@@ -4,60 +4,37 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.Script.Serialization;
+using System.Data;
 
 namespace MPETGO
 {
-    public partial class Logon : System.Web.UI.Page
+    public partial class Logon : Page
     {
         private LogonObject _oLogon;
+        protected global::DevExpress.Web.ASPxTextBox txtUsername;
+        protected global::DevExpress.Web.ASPxTextBox txtPassword;
+        protected global::DevExpress.Web.ASPxButton submitBtn;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (IsPostBack)
+            if (Session["LogonInfo"] != null)
             {
-                if(Session["LogonInfo"] != null)
-                {
+                Response.Redirect("~/index.aspx");
 
-                } else
-                {
-                    var name = txtUsername.Value;
-                    var P = txtPassword.Value;
-                    var mis = txtUsername.Text.ToString();
-                    
-                    if(( txtUsername.Text != "") && (txtPassword.Text != ""))
-                    {
-                        if (Session["userName"] != null)
-                        {
-                            Session.Remove("userName");
-                        }
-                        Session.Add("userName", txtUsername.Text);
-
-                        if (Session["password"] != null)
-                        {
-                            Session.Remove("password");
-                        }
-                        Session.Add("password", txtPassword.Text);
-
-                        SetLogon();
-                    }
-                    
-                }
             }
-                if (!IsPostBack)
-                {
-                    if (Session["LogonInfo"] == null)
-                    {
-                        txtUsername.Focus();                
+            else
+            {
+                LogonPopUp.Enabled = true;
+            }
 
-                    } else
-                    {
-                        if(Session["LogonInfo"] != null)
-                        {
-                            Response.Redirect("~/index.aspx");
-                        }
-                    }
 
-                }            
+            
+
+        }
+
+        protected void Page_Init()
+        {
 
         }
 
@@ -93,6 +70,53 @@ namespace MPETGO
 
         protected void btnSubmitLoginCredentials_Click(object sender, EventArgs e)
         {
+            if (IsPostBack)
+            {
+                if (Session["LogonInfo"] != null)
+                {
+                    Response.Redirect("~/index.aspx");
+
+                }
+                else
+                {
+                   
+
+                    if ((txtUsername.Text != "") && (txtPassword.Text != ""))
+                    {
+                        if (Session["userName"] != null)
+                        {
+                            Session.Remove("userName");
+                        }
+                        Session.Add("userName", txtUsername.Text);
+
+                        if (Session["password"] != null)
+                        {
+                            Session.Remove("password");
+                        }
+                        Session.Add("password", txtPassword.Text);
+
+                        //SetLogon();
+                    }
+
+                }
+            }
+            if (!IsPostBack)
+            {
+                if (Session["LogonInfo"] == null)
+                {
+                    txtUsername.Focus();
+
+                }
+                else
+                {
+                    if (Session["LogonInfo"] != null)
+                    {
+                        Response.Redirect("~/index.aspx");
+                    }
+                }
+
+            }
+
             //Instanciate Class & Values
             _oLogon = new LogonObject { Username = txtUsername.Text, Password = txtPassword.Text };
             
@@ -122,5 +146,9 @@ namespace MPETGO
 
         }
 
+        protected void LogonPopUp_Load(object sender, EventArgs e)
+        {
+            LogonPopUp.Enabled = true;
+        }
     }
 }

@@ -48,7 +48,7 @@ namespace MPETGO.Pages
                 userLastName = _oLogon.LastName;
             } else
             {
-                Response.Redirect("/Logon.aspx");
+                Response.Redirect("~/Logon.aspx");
             }
 
             #endregion
