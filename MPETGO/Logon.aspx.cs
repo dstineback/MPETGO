@@ -20,7 +20,7 @@ namespace MPETGO
         {
             if (Session["LogonInfo"] != null)
             {
-                Response.Redirect("~/index.aspx");
+                Response.Redirect("~/", true);
 
             }
             else
@@ -56,7 +56,7 @@ namespace MPETGO
                 //Add New Session State For Logon
                 HttpContext.Current.Session.Add("LogonInfo", _oLogon);
 
-                Response.Redirect("/index.aspx");
+                Response.Redirect("/index.aspx", true);
 
             }
             else
@@ -74,7 +74,7 @@ namespace MPETGO
             {
                 if (Session["LogonInfo"] != null)
                 {
-                    Response.Redirect("~/index.aspx");
+                    Response.Redirect("~/index.aspx", true);
 
                 }
                 else
@@ -111,7 +111,7 @@ namespace MPETGO
                 {
                     if (Session["LogonInfo"] != null)
                     {
-                        Response.Redirect("~/index.aspx");
+                        Response.Redirect("~/index.aspx", true);
                     }
                 }
 
@@ -133,7 +133,7 @@ namespace MPETGO
                 //Add New Session State For Logon
                 HttpContext.Current.Session.Add("LogonInfo", _oLogon);
 
-                Response.Redirect("/index.aspx");
+                Response.Redirect("~/index.aspx", true);
 
             }
             else

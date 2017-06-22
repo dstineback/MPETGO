@@ -16,7 +16,10 @@ namespace MPETGO {
             {
                 _oLogon = ((LogonObject)Session["LogonInfo"]);
                 var userName = _oLogon.FullName.ToString();
-                userNameLable.Text = userName;     
+                userNameLable.Text = userName;
+                
+                
+               
             } 
         ASPxLabel2.Text = DateTime.Now.Year + Server.HtmlDecode(" &copy; Copyright by Four Winds Group Inc.");
         }

@@ -18,6 +18,15 @@
         txtLong.SetValue(long);
         txtLong.SetText(long);
     }
+    function onFileUploadComplete(s, e) {
+        if (e.callbackData) {
+            var fileData = e.callbackData.split('|');
+            var fileName = fileData[0],
+                fileUrl = fileData[1],
+                fileSize = fileData[2];
+            DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
+        }
+    }
 </script>
     <dx:ASPxFormLayout ID="PartsForm" runat="server" Theme="iOS">
         <Items>
@@ -92,7 +101,6 @@
                             AutoPostBack="false" EnableCallbackMode="true" 
                             CallbackPageSize="10" TextFormatString="{0} - {1}" ClientInstanceName="ComboArea" 
                             TextField="areaid" ValueField="n_areaid" ValueType="System.String">
-
                             <Columns>
                                 <dx:ListBoxColumn FieldName="n_areaid" Visible="false"></dx:ListBoxColumn>
                                 <dx:ListBoxColumn FieldName="areaid" Caption="Area" Width="75px" ToolTip="M-PET Go Area ID"></dx:ListBoxColumn>
@@ -134,15 +142,29 @@
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
              </dx:LayoutItem>
-            <dx:LayoutItem>
+            <%--<dx:LayoutItem Caption="">
                 <LayoutItemNestedControlCollection>
-                    <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxButton runat="server" ID="SaveBtn" Text="Save" ClientInstanceName="SaveBtn" AutoPostBack="false">
-                        </dx:ASPxButton>
+                    <dx:LayoutItemNestedControlContainer>                      
+                        <dx:ASPxLabel Text="Add Photo" runat="server"></dx:ASPxLabel>
+                        <input runat="server" id="uploadFile" type="file" accept="image/*;capture=camera" onselect="addImg" />  
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>--%>
+            <dx:LayoutItem Caption="">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer>
+                        <dx:ASPxUploadControl runat="server" ID="UploadControl" ClientInstanceName="UploadControl" ShowTextBox="true" NullText="Upload image" UploadStorage="Azure" FileUploadMode="OnPageLoad" ShowUploadButton="true" ShowProgressPanel="true" OnFileUploadComplete="addImg">
+                           <%-- <AzureSettings AccountName="UploadAzureAccount" ContainerName="attachments" />--%>
+                            <AdvancedModeSettings EnableMultiSelect="true" EnableDragAndDrop="true" EnableFileList="true"></AdvancedModeSettings>
+                            <ValidationSettings MaxFileSize="4194304" AllowedFileExtensions=".jpg, .jpeg, .gif, .png"></ValidationSettings>
+                            <ClientSideEvents FileUploadComplete="onFileUploadComplete" />
+                        </dx:ASPxUploadControl>
+                        
+                    </dx:LayoutItemNestedControlContainer>
+                    
+                </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem>
+            <dx:LayoutItem Caption="">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
                         <dx:ASPxButton runat="server" ID="AddPartBtn" Text="Add Part" OnClick="AddPartBtn_Click" ClientInstanceName="AddPartBtn" AutoPostBack="false">
@@ -150,10 +172,9 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
+           
         </Items>
     </dx:ASPxFormLayout>
-         <input runat="server" id="uploadFile" type="file" accept="image/*;capture=camera" onselect="addImg">
-
 <asp:SqlDataSource ID="ObjectTypeDataSource" runat="server"></asp:SqlDataSource>
 <asp:SqlDataSource ID="AreaSqlDatasource" runat="server" />
 <asp:SqlDataSource ID="StateRouteDataSource" runat="server"></asp:SqlDataSource>

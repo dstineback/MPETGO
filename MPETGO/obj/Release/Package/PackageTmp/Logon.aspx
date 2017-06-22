@@ -4,6 +4,28 @@
 
 
     <script>
+        var lat;
+        var long;
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+                window.alert = "Location found";
+            } else {
+                window.alert = "Geolocation is not supported by this browser.";
+            }
+        }
+        function showPosition(position) {
+            lat = position.coords.latitude;
+            long = position.coords.longitude;
+           
+            
+        }
+
+        function ShowPopUp() {
+            LogonPopUp.Show();
+        }
+
+
         function SetName() {
             var name = document.getElementById("txtUsername");
             var nt = name.Value;
@@ -24,6 +46,12 @@
 
         }
     </script>
+    <dx:ASPxHiddenField runat="server" ID="GetLocation"><ClientSideEvents Init="getLocation" /></dx:ASPxHiddenField>
+    <dx:ASPxPopupControl runat="server" ID="LogonPopUp" ClientInstanceName="LogonPopUp" HeaderText="Logon" Modal="true" PopupAnimationType="Fade" AllowDragging="true" AllowResize="true" CloseAction="CloseButton" PopupHorizontalAlign="WindowCenter" PopupVerticalAlign="WindowCenter" CloseOnEscape="true" OnLoad="LogonPopUp_Load" >
+        <ClientSideEvents Init="ShowPopUp" />             
+        
+        <ContentCollection >
+            <dx:PopupControlContentControl> 
                             <dx:ASPxFormLayout runat="server" Theme="iOS">
                                <Items>
                                    <dx:LayoutGroup>
@@ -72,5 +100,9 @@
                                    </dx:LayoutGroup>
                                </Items>
                             </dx:ASPxFormLayout>
+
+                </dx:PopupControlContentControl>
+            </ContentCollection>
+    </dx:ASPxPopupControl>
                         
 </asp:Content>

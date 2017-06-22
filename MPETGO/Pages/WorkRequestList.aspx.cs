@@ -59,7 +59,7 @@ namespace MPETGO.Pages
             }
             else
             {
-                Response.Redirect("~/Logon.aspx");
+                Response.Redirect("~/Logon.aspx", true);
             }
 
             Configuration rootWebConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");

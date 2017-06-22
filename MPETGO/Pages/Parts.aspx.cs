@@ -131,7 +131,7 @@ namespace MPETGO.Pages
             }
             else
             {
-                Response.Redirect("~/index.aspx");
+                Response.Redirect("~/index.aspx", true);
             }
 
            if (!IsPostBack)
@@ -932,7 +932,7 @@ namespace MPETGO.Pages
                     }
                 }
 
-                Response.Redirect("/pages/parts.aspx");
+                Response.Redirect("/pages/parts.aspx", true);
             } else
             {
                 throw new SystemException(@"Error adding - " + _oMaintObj.LastError);

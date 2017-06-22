@@ -1,5 +1,8 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Main.master" CodeBehind="Parts.aspx.cs" Inherits="MPETGO.Pages.Parts" %>
 <asp:Content ID="Content" ContentPlaceHolderID="MainContent" runat="server">
+
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARk0BJK-cnQ27jHObwdI4xtqsNY9n7z9E"></script>
+
 <script>
     var lat;
     var long;
@@ -15,7 +18,7 @@
         long = position.coords.longitude;
         txtLat.SetValue(lat);
         txtLat.SetText(lat);
-        txtLong.SetValue(long);
+        txtLong.SetValue(long); 
         txtLong.SetText(long);
     }
     function onFileUploadComplete(s, e) {
@@ -28,6 +31,7 @@
         }
     }
 </script>
+
     <dx:ASPxFormLayout ID="PartsForm" runat="server" Theme="iOS">
         <Items>
             <dx:LayoutItem Caption="Active">
