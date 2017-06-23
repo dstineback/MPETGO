@@ -32,7 +32,7 @@
     }
 </script>
 
-    <dx:ASPxFormLayout ID="PartsForm" runat="server" Theme="iOS">
+    <dx:ASPxFormLayout ID="PartsForm" runat="server" Width="100%" Theme="iOS" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800">
         <Items>
             <dx:LayoutItem Caption="Active">
                 <LayoutItemNestedControlCollection>
@@ -42,17 +42,18 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem Caption="Object ID">
+            <dx:LayoutItem Caption="Object ID" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxTextBox runat="server" ID="objectID"></dx:ASPxTextBox>
+                        <dx:ASPxTextBox runat="server" ID="objectID" Width="100%"></dx:ASPxTextBox>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem Caption="Object/Asset Name">
+            <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>
+            <dx:LayoutItem Caption="Object/Asset Name" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxComboBox runat="server" ID="ComboObjectType" 
+                        <dx:ASPxComboBox runat="server" ID="ComboObjectType" Width="100%" 
                             OnItemRequestedByValue="ComboObjectType_OnItemRequestedByValue_SQL" 
                             OnItemsRequestedByFilterCondition="ComboObjectType_OnItemsRequestedByFilterCondition_SQL" 
                             DropDownButton-Enabled="true" DropDownStyle="DropDown" 
@@ -69,17 +70,17 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem Caption="Description">
+            <dx:LayoutItem Caption="Description" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxMemo runat="server" ID="objectDesc"></dx:ASPxMemo>
+                        <dx:ASPxMemo runat="server" ID="objectDesc" Width="100%"></dx:ASPxMemo>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem Caption="Street/Road">
+            <dx:LayoutItem Caption="Street/Road" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxComboBox runat="server" ID="ComboStreet" 
+                        <dx:ASPxComboBox runat="server" ID="ComboStreet" Width="100%" 
                             OnItemRequestedByValue="ComboStreet_OnItemRequestedByValue_SQL" 
                             OnItemsRequestedByFilterCondition="ComboStreet_OnItemRequestedByFilterCondition_SQL" 
                             DropDownButton-Enabled="true" DropDownStyle="DropDown" 
@@ -95,10 +96,10 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem Caption="Area">
+            <dx:LayoutItem Caption="Area" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxComboBox runat="server" ID="ComboArea" 
+                        <dx:ASPxComboBox runat="server" ID="ComboArea" Width="100%"
                             OnItemRequestedByValue="ComboArea_OnItemRequestedByValue_SQL" 
                             OnItemsRequestedByFilterCondition="ComboArea_OnItemRequestedByFilterCondition_SQL" 
                             DropDownButton-Enabled="true" DropDownStyle="DropDown" 
@@ -114,50 +115,18 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem Caption="As Of">
+            <dx:LayoutItem Caption="As Of" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxDateEdit runat="server" ID="startDate">
+                        <dx:ASPxDateEdit runat="server" ID="startDate" Width="100%">
                         </dx:ASPxDateEdit>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem Caption="Latitude">
-                <LayoutItemNestedControlCollection>
-                    <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxTextBox runat="server" ID="txtLat" ClientInstanceName="txtLat" AutoPostBack="false">
-                        </dx:ASPxTextBox>
-                    </dx:LayoutItemNestedControlContainer>
-                </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>
-            <dx:LayoutItem Caption="Longitude">
-                <LayoutItemNestedControlCollection>
-                    <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxTextBox runat="server" ID="txtLong" ClientInstanceName="txtLong" AutoPostBack="false"></dx:ASPxTextBox>
-                    </dx:LayoutItemNestedControlContainer>
-                </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>
-            <dx:LayoutItem Caption="">
-                    <LayoutItemNestedControlCollection>
-                        <dx:LayoutItemNestedControlContainer>
-                            <dx:ASPxButton runat="server" Text="Add Coordinates" ID="LatLongBtn" ClientInstanceName="LatLongBtn" AutoPostBack="false">
-                                <ClientSideEvents Click="getLocation" />
-                            </dx:ASPxButton>
-                        </dx:LayoutItemNestedControlContainer>
-                    </LayoutItemNestedControlCollection>
-             </dx:LayoutItem>
-            <%--<dx:LayoutItem Caption="">
-                <LayoutItemNestedControlCollection>
-                    <dx:LayoutItemNestedControlContainer>                      
-                        <dx:ASPxLabel Text="Add Photo" runat="server"></dx:ASPxLabel>
-                        <input runat="server" id="uploadFile" type="file" accept="image/*;capture=camera" onselect="addImg" />  
-                    </dx:LayoutItemNestedControlContainer>
-                </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>--%>
-            <dx:LayoutItem Caption="">
+            <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxUploadControl runat="server" ID="UploadControl" ClientInstanceName="UploadControl" ShowTextBox="true" NullText="Upload image" UploadStorage="Azure" FileUploadMode="OnPageLoad" ShowUploadButton="true" ShowProgressPanel="true" OnFileUploadComplete="addImg">
+                        <dx:ASPxUploadControl runat="server" Width="100%" ID="UploadControl" ClientInstanceName="UploadControl" ShowTextBox="true" NullText="Upload image" UploadStorage="Azure" FileUploadMode="OnPageLoad" ShowUploadButton="true" ShowProgressPanel="true" OnFileUploadComplete="addImg">
                            <%-- <AzureSettings AccountName="UploadAzureAccount" ContainerName="attachments" />--%>
                             <AdvancedModeSettings EnableMultiSelect="true" EnableDragAndDrop="true" EnableFileList="true"></AdvancedModeSettings>
                             <ValidationSettings MaxFileSize="4194304" AllowedFileExtensions=".jpg, .jpeg, .gif, .png"></ValidationSettings>
@@ -168,10 +137,48 @@
                     
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem Caption="">
+            <dx:LayoutItem Caption="Latitude" CaptionSettings-Location="Top" Width="50%">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer runat="server">
+                        <dx:ASPxTextBox runat="server" Width="100%" ID="txtLat" ClientInstanceName="txtLat" AutoPostBack="false">
+                        </dx:ASPxTextBox>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>
+            <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>
+            <dx:LayoutItem Caption="Longitude" CaptionSettings-Location="Top" Width="50%">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer runat="server">
+                        <dx:ASPxTextBox runat="server" Width="100%" ID="txtLong" ClientInstanceName="txtLong" AutoPostBack="false"></dx:ASPxTextBox>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>
+            <dx:EmptyLayoutItem Width="50%">
+
+            </dx:EmptyLayoutItem>
+            <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
+                    <LayoutItemNestedControlCollection>
+                        <dx:LayoutItemNestedControlContainer>
+                            <dx:ASPxButton runat="server" Width="50%" Text="Add Coordinates" ID="LatLongBtn" ClientInstanceName="LatLongBtn" AutoPostBack="false">
+                                <ClientSideEvents Click="getLocation" />
+                            </dx:ASPxButton>
+                        </dx:LayoutItemNestedControlContainer>
+                    </LayoutItemNestedControlCollection>
+             </dx:LayoutItem>
+            <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>
+            <%--<dx:LayoutItem Caption="">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer>                      
+                        <dx:ASPxLabel Text="Add Photo" runat="server"></dx:ASPxLabel>
+                        <input runat="server" id="uploadFile" type="file" accept="image/*;capture=camera" onselect="addImg" />  
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>--%>
+            
+            <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxButton runat="server" ID="AddPartBtn" Text="Add Part" OnClick="AddPartBtn_Click" ClientInstanceName="AddPartBtn" AutoPostBack="false">
+                        <dx:ASPxButton runat="server" Width="50%" ID="AddPartBtn" Text="Add Part" OnClick="AddPartBtn_Click" ClientInstanceName="AddPartBtn" AutoPostBack="false">
                         </dx:ASPxButton>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
