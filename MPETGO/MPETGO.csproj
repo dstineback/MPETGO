@@ -112,6 +112,7 @@
     <Content Include="Logon.aspx" />
     <Content Include="Pages\Contact.aspx" />
     <Content Include="LogOut.aspx" />
+    <Content Include="Pages\ObjectList.aspx" />
     <Content Include="Pages\Parts.aspx" />
     <Content Include="Pages\WorkRequestForm.aspx" />
     <Content Include="Pages\WorkRequestList.aspx" />
@@ -196,6 +197,13 @@
     <Compile Include="LogOut.aspx.designer.cs">
       <DependentUpon>LogOut.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ObjectList.aspx.cs">
+      <DependentUpon>ObjectList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\ObjectList.aspx.designer.cs">
+      <DependentUpon>ObjectList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Parts.aspx.cs">
       <DependentUpon>Parts.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -228,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\v3-utility-library-master\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />

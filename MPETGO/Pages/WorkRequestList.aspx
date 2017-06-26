@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Main.master" CodeBehind="WorkRequestList.aspx.cs" Inherits="MPETGO.Pages.WorkRequestList" %>
 <asp:Content ID="Content" ContentPlaceHolderID="MainContent" runat="server">
-<!DOCTYPE html>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
    
         <dx:ASPxGridView ID="WorkRequestGrid" runat="server" Theme="iOS" SettingsPager-PageSize="50"
