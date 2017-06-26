@@ -19,7 +19,7 @@
     <Columns>
         <dx:GridViewDataColumn FieldName="n_objectid" ReadOnly="true" Visible="false"></dx:GridViewDataColumn>
         <dx:GridViewDataHyperLinkColumn FieldName="objectid" Caption="Object ID" VisibleIndex="0">
-            <PropertiesHyperLinkEdit NavigateUrlFormatString="~/pages/parts.aspx"></PropertiesHyperLinkEdit>
+            <PropertiesHyperLinkEdit NavigateUrlFormatString="~/pages/UpdateObject.aspx?n_objectid={0}"></PropertiesHyperLinkEdit>
         </dx:GridViewDataHyperLinkColumn>
         <dx:GridViewDataTextColumn FieldName="description" ReadOnly="true" VisibleIndex="1" Width="200px"></dx:GridViewDataTextColumn>
         <dx:GridViewDataColumn FieldName="Current Condition" ReadOnly="true" VisibleIndex="2" ></dx:GridViewDataColumn>

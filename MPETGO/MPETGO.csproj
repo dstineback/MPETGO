@@ -114,6 +114,7 @@
     <Content Include="LogOut.aspx" />
     <Content Include="Pages\ObjectList.aspx" />
     <Content Include="Pages\Parts.aspx" />
+    <Content Include="Pages\UpdateObject.aspx" />
     <Content Include="Pages\WorkRequestForm.aspx" />
     <Content Include="Pages\WorkRequestList.aspx" />
   </ItemGroup>
@@ -210,6 +211,13 @@
     </Compile>
     <Compile Include="Pages\Parts.aspx.designer.cs">
       <DependentUpon>Parts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UpdateObject.aspx.cs">
+      <DependentUpon>UpdateObject.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\UpdateObject.aspx.designer.cs">
+      <DependentUpon>UpdateObject.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\WorkRequestForm.aspx.cs">
       <DependentUpon>WorkRequestForm.aspx</DependentUpon>
