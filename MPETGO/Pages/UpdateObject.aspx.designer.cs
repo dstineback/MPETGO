@@ -13,13 +13,40 @@ namespace MPETGO.Pages {
     public partial class UpdateObject {
         
         /// <summary>
+        /// objectGridView control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxGridView objectGridView;
+        
+        /// <summary>
+        /// ObjectComboSearch control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxComboBox ObjectComboSearch;
+        
+        /// <summary>
+        /// objectIDValue control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxHiddenField objectIDValue;
+        
+        /// <summary>
         /// latValue control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox latValue;
+        protected global::DevExpress.Web.ASPxTextBox latValue;
         
         /// <summary>
         /// lngValue control.
@@ -28,7 +55,16 @@ namespace MPETGO.Pages {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox lngValue;
+        protected global::DevExpress.Web.ASPxTextBox lngValue;
+        
+        /// <summary>
+        /// getCords control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxButton getCords;
         
         /// <summary>
         /// saveLatLng control.
@@ -37,6 +73,6 @@ namespace MPETGO.Pages {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button saveLatLng;
+        protected global::DevExpress.Web.ASPxButton saveLatLng;
     }
 }
