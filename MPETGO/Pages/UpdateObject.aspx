@@ -25,11 +25,6 @@
     }
 </script>
 
-<%--<asp:TextBox runat="server" ID="latValue"></asp:TextBox> 
-<asp:TextBox runat="server" ID="lngValue"></asp:TextBox>--%>
-
-    
-<%-- <asp:Button runat="server" ID="saveLatLng" OnClick="updateLatLng"/> --%>
 <dx:ASPxGridView runat="server" ID="objectGridView" OnLoad="objectGridView_Load" AutoGenerateColumns="false">
     <Columns>
         <dx:GridViewDataTextColumn FieldName="n_objectid">
@@ -42,8 +37,6 @@
     </Columns>
 </dx:ASPxGridView>
  <dx:ASPxFormLayout runat="server">
-
-
      <Items>
          <dx:LayoutGroup>
              <Items>
@@ -53,14 +46,20 @@
                              <dx:ASPxComboBox runat="server" ID="ObjectComboSearch" 
                                  ClientInstanceName="ObjectComboSearch" 
                                  OnItemsRequestedByFilterCondition="ObjectComboSearch_ItemsRequestedByFilterCondition" 
-                                 OnItemRequestedByValue="ObjectcomboSearch_ItemsRequestedByValue">
-                                 
+                                 OnItemRequestedByValue="ObjectcomboSearch_ItemsRequestedByValue">                                
                                  <Columns>
                                      <dx:ListBoxColumn FieldName="n_objectid" Caption="n_objectid"></dx:ListBoxColumn>
                                      <dx:ListBoxColumn FieldName="objectid" Caption="Object ID"></dx:ListBoxColumn>
                                      <dx:ListBoxColumn FieldName="description" Caption="Description"></dx:ListBoxColumn>
                                  </Columns>
                              </dx:ASPxComboBox>
+                         </dx:LayoutItemNestedControlContainer>
+                     </LayoutItemNestedControlCollection>
+                 </dx:LayoutItem>
+                 <dx:LayoutItem>
+                     <LayoutItemNestedControlCollection>
+                         <dx:LayoutItemNestedControlContainer>
+                             <dx:ASPxHiddenField runat="server" ID="objectIDValue" ></dx:ASPxHiddenField>
                          </dx:LayoutItemNestedControlContainer>
                      </LayoutItemNestedControlCollection>
                  </dx:LayoutItem>

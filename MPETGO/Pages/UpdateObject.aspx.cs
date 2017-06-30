@@ -140,12 +140,12 @@ namespace MPETGO.Pages
 
         protected void ObjectcomboSearch_ItemsRequestedByFilterCondition(object sender, ListEditItemsRequestedByFilterConditionEventArgs e)
         {
-
+            //Add combo filter SQL query
         }
 
         protected void ObjectcomboSearch_ItemsRequestedByValue(object sender, ListEditItemRequestedByValueEventArgs e)
         {
-
+            //Add Sql query
         }
 
     }

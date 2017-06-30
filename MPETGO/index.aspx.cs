@@ -28,25 +28,23 @@ namespace MPETGO
 
         protected void setSessionLat(object sender, EventArgs e)
         {
-            var x = latValue.Text.ToString();
-            var y = latValue;
+            
             if (Session["latValue"] != null)
             {
                 Session.Remove("latValue");
             }
-            Session.Add("latValue", latValue.Text);
+            //Session.Add("latValue", latValue.Text);
 
         }
 
         protected void setSessionLng(object sender, EventArgs e)
         {
-            var a = lngValue.Text.ToString();
-            var b = lngValue;
+            
             if (Session["lngValue"] != null)
             {
                 Session.Remove("lngValue");
             }
-            Session.Add("lngValue", lngValue.Text);
+            //Session.Add("lngValue", lngValue.Text);
         }
     }
 }

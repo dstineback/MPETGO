@@ -33,12 +33,12 @@
        <div>
            
 
-           <asp:TextBox runat="server" ID="latValue" ClientIDMode="Static" OnInit="setSessionLat">
+          <%-- <asp:TextBox runat="server" ID="latValue" ClientIDMode="Static" OnInit="setSessionLat">
                
            </asp:TextBox>
            <asp:TextBox runat="server" ID="lngValue" ClientIDMode="Static" OnLoad="setSessionLng">
                
-           </asp:TextBox>
+           </asp:TextBox>--%>
            
        </div>
 
