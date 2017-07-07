@@ -58,7 +58,7 @@
             <dx:PopupControlContentControl> 
                             <dx:ASPxFormLayout runat="server" Theme="iOS">
                                <Items>
-                                   <dx:LayoutGroup>
+                                   <dx:LayoutGroup Caption="">
                                        <Items>
                                            <dx:LayoutItem Caption="Username">
                                                <LayoutItemNestedControlCollection>

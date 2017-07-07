@@ -51,6 +51,44 @@ namespace MPETGO.Pages
                 Response.Redirect("~/Logon.aspx", true);
             }
 
+            #region Attempt To Load Azure Details
+
+            ////Check For Null Azure Account
+            if (!string.IsNullOrEmpty(AzureAccount))
+            {
+                UploadControl.AzureSettings.StorageAccountName = AzureAccount;
+            }
+
+            ////Check For Null Access Key
+            if (!string.IsNullOrEmpty(AzureAccessKey))
+            {
+                UploadControl.AzureSettings.AccessKey = AzureAccessKey;
+            }
+
+            ////Check For Null Container
+            if (!string.IsNullOrEmpty(AzureContainer))
+            {
+                UploadControl.AzureSettings.ContainerName = AzureContainer;
+            }
+
+            #endregion
+
+
+            if (HttpContext.Current.Request.IsSecureConnection == false)
+            {
+                LatLongBtn.Visible = false;
+            }
+
+            if (HttpContext.Current.Session["TxtWorkRequestDate"] != null)
+            {
+                //Get Info From Session
+                startDate.Value = Convert.ToDateTime(HttpContext.Current.Session["TxtWorkRequestDate"].ToString());
+            } else
+            {
+                startDate.Value = DateTime.Now;
+                Session.Add("txtWorkRequestDate", startDate);
+            }
+
             #endregion
             #region Inital Page Load
             if (!IsPostBack)
@@ -439,14 +477,232 @@ namespace MPETGO.Pages
             //Setup Fields
             if (Session["editingJobID"] != null)
             {
-                submitBtn.Visible = true;
+                saveBtn.Visible = true;
+                submitBtn.Visible = false;
+                AttachmentGrid.Visible = true;
+                
 
             } else
             {
-                saveBtn.Visible = false;           
+                saveBtn.Visible = false;
+                submitBtn.Visible = true;
+                AttachmentGrid.Visible = false;
+                           
             }
 
         }
+
+        #region Azure Setup
+        string AzureAccount
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["StorageAccount"];
+            }
+        }
+
+        string AzureAccessKey
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["StorageKey"];
+            }
+        }
+
+        string AzureContainer
+        {
+            get
+            {
+                return WebConfigurationManager.AppSettings["StorageContainer"];
+            }
+        }
+        #endregion
+
+        protected void UploadControl_FileUploadComplete(object sender, FileUploadCompleteEventArgs e)
+        {
+            // RemoveFileWithDelay(e.UploadedFile.FileNameInStorage, 5);
+
+            string name = e.UploadedFile.FileName;
+            string url = GetImageUrl(e.UploadedFile.FileNameInStorage);
+            long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
+            string sizeText = sizeInKilobytes + " KB";
+            e.CallbackData = name + "|" + url + "|" + sizeText;
+
+            Session.Add("url", url);
+            Session.Add("name", name);
+
+            //INSERT JOB ATTACHMENT ROUTINE HERE!!!!
+
+            //Check For Job ID
+            if (HttpContext.Current.Session["editingJobID"] != null)
+            {
+                //Check For Previous Session Variable
+                if (HttpContext.Current.Session["LogonInfo"] != null)
+                {
+                    //Get Logon Info From Session
+                    _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
+
+                    var jobStepID = -1;
+                    if(Session["editingJobStepID"] != null)
+                    {
+                        jobStepID = Convert.ToInt32(Session["editingJobStepID"].ToString());
+                    }
+
+                    if (_oAttachments.Add(Convert.ToInt32(HttpContext.Current.Session["editingJobID"].ToString()),
+                        jobStepID,
+                        _oLogon.UserID,
+                        url,
+                        "JPG",
+                        "Mobile Web Attachment",
+                        name.Trim()))
+                    {
+                        //Check For Prior Value
+                        if (HttpContext.Current.Session["HasAttachments"] != null)
+                        {
+                            //Remove Old One
+                            HttpContext.Current.Session.Remove("HasAttachments");
+                        }
+
+                        //Add New Value
+                        HttpContext.Current.Session.Add("HasAttachments", true);
+
+                        //Refresh Attachments
+                        AttachmentGrid.DataBind();
+                        ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
+
+                    }
+                }
+            } else
+            {
+                Response.Write("<script language='javascript'>window.alert('File uploaded, Attachment Grid will be displayed after a Work Request is submitted.')</script>");
+            }
+        }
+
+        string GetImageUrl(string fileName)
+        {
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+            {
+                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+            }
+            else
+            {
+
+            }
+            FileManagerFile file = new FileManagerFile(provider, fileName);
+            FileManagerFile[] files = new FileManagerFile[] { file };
+            return provider.GetDownloadUrl(files);
+        }
+
+        protected bool AddAttachment()
+        {
+            try
+            {
+                var url = "";
+                var name = "";
+                if(Session["url"] != null && Session["name"] != null)
+                {
+                     url = Session["url"].ToString();
+                    name = Session["name"].ToString();
+                }
+
+
+                if (url != "" & name != "")
+                {
+                    //Check For Job ID
+                    if (HttpContext.Current.Session["editingJobID"] != null)
+                    {
+                        //Check For Previous Session Variable
+                        if (HttpContext.Current.Session["LogonInfo"] != null)
+                        {
+                            //Get Logon Info From Session
+                            _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
+
+                            var jobStepID = -1;
+                            if (Session["editingJobStepID"] != null)
+                            {
+                                jobStepID = Convert.ToInt32(Session["editingJobStepID"].ToString());
+                            }
+                            
+
+                            if (_oAttachments.Add(Convert.ToInt32(HttpContext.Current.Session["editingJobID"].ToString()),
+                                jobStepID,
+                                _oLogon.UserID,
+                                url,
+                                "JPG",
+                                "Mobile Web Attachment",
+                                name.Trim()))
+                            {
+                                //Check For Prior Value
+                                if (HttpContext.Current.Session["HasAttachments"] != null)
+                                {
+                                    //Remove Old One
+                                    HttpContext.Current.Session.Remove("HasAttachments");
+                                }
+
+                                //Add New Value
+                                HttpContext.Current.Session.Add("HasAttachments", true);
+
+                                //Refresh Attachments
+                                AttachmentGrid.DataBind();
+                                ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
+
+                            }
+                        }
+                    }
+                }
+                return true;
+            } catch
+            {
+                Response.Write("<script language='javascript'>window.alert('Error, Could not attach photo')</script>");
+                return false;
+            }
+
+        }
+
+        protected void DeleteAttachmentButton_Click(object sender, EventArgs e)
+        {
+            DeleteGridViewAttachment();
+        }
+
+        public void DeleteGridViewAttachment()
+        {
+            for (int i = 0; i < AttachmentGrid.VisibleRowCount; i++)
+            {
+                if (AttachmentGrid.GetRowLevel(i) == AttachmentGrid.GroupCount)
+                {
+                    object keyValue = AttachmentGrid.GetRowValues(i, new string[] { "ID" });
+                    var id = Convert.ToInt32(keyValue.ToString());
+                    if (keyValue != null)
+
+                        _oAttachments.Delete(id);
+                }
+            }
+        }
+
+        protected void UpdatePanel_Unload(object sender, EventArgs e)
+        {
+            //MethodInfo methodInfo = typeof(ScriptManager).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            //    .Where(i => i.Name.Equals("System.Web.UI.IScriptManagerInternal.RegisterUpdatePanel")).First();
+            //methodInfo.Invoke(ScriptManager.GetCurrent(Page),
+            //    new object[] { sender as UpdatePanel });
+
+            RegisterUpdatePanel((UpdatePanel)sender);
+        }
+
+        protected void RegisterUpdatePanel(UpdatePanel panel)
+        {
+            var sType = typeof(ScriptManager);
+            var mInfo = sType.GetMethod("System.Web.UI.IScriptManagerInternal.RegisterUpdatePanel", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (mInfo != null)
+                mInfo.Invoke(ScriptManager.GetCurrent(Page), new object[] { panel });
+        }
+
+
+
 
         #region Combo Loading Events
 
@@ -2073,6 +2329,7 @@ namespace MPETGO.Pages
             SaveSessionData();
             //Update Job
             AddRequest();
+            AddAttachment();
 
             var savedID = Session["AssignedJobID"];
 

@@ -107,7 +107,7 @@ namespace MPETGO.Pages
                 if (!string.IsNullOrEmpty(AzureAccount))
                 {
 
-                    UploadControl.AzureSettings.StorageAccountName = AzureAccount;
+                    //UploadControl.AzureSettings.StorageAccountName = AzureAccount;
                     AzureAccountName = AzureAccount;
 
                 }
@@ -115,14 +115,14 @@ namespace MPETGO.Pages
                 //Check For Null Access Key
                 if (!string.IsNullOrEmpty(AzureAccessKey))
                 {
-                    UploadControl.AzureSettings.AccessKey = AzureAccessKey;
+                    //UploadControl.AzureSettings.AccessKey = AzureAccessKey;
                     AzureAccountKey = AzureAccessKey;
                 }
 
                 //Check For Null Container
                 if (!string.IsNullOrEmpty(AzureContainer))
                 {
-                    UploadControl.AzureSettings.ContainerName = AzureContainer;
+                   // UploadControl.AzureSettings.ContainerName = AzureContainer;
                     AzureAccountContainerName = AzureContainer;
                 }
 
@@ -150,13 +150,18 @@ namespace MPETGO.Pages
             _useWeb = (ConfigurationManager.AppSettings["UsingWebService"] == "Y");
 
             //Initialize Classes
-           
+
             _oObjAttachments = new MaintAttachmentObject(_connectionString, _useWeb);
 
             //Set DataSource
             ObjectTypeDataSource.ConnectionString = _connectionString;
             AreaSqlDatasource.ConnectionString = _connectionString;
             StateRouteDataSource.ConnectionString = _connectionString;
+
+            if (HttpContext.Current.Request.IsSecureConnection == false)
+            {
+                LatLongBtn.Visible = false;
+            }
 
         }
         #region Azure Setup
@@ -963,6 +968,12 @@ namespace MPETGO.Pages
                 Session.Remove("url");
             }
             Session.Add("url", url);
+
+            if(Session["name"] != null)
+            {
+                Session.Remove("name");
+            }
+            Session.Add("name", name);
         }
 
         string GetImageUrl(string fileName)

@@ -49,7 +49,6 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>
             <dx:LayoutItem Caption="Object/Asset Name" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
@@ -77,6 +76,7 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
+            <%--<dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
             <dx:LayoutItem Caption="Street/Road" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
@@ -123,11 +123,11 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
+           <%-- <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
                         <dx:ASPxUploadControl runat="server" Width="100%" ID="UploadControl" ClientInstanceName="UploadControl" ShowTextBox="true" NullText="Upload image" UploadStorage="Azure" FileUploadMode="OnPageLoad" ShowUploadButton="true" ShowProgressPanel="true" OnFileUploadComplete="addImg">
-                           <%-- <AzureSettings AccountName="UploadAzureAccount" ContainerName="attachments" />--%>
+                           <%-- <AzureSettings AccountName="UploadAzureAccount" ContainerName="attachments" />-
                             <AdvancedModeSettings EnableMultiSelect="true" EnableDragAndDrop="true" EnableFileList="true"></AdvancedModeSettings>
                             <ValidationSettings MaxFileSize="4194304" AllowedFileExtensions=".jpg, .jpeg, .gif, .png"></ValidationSettings>
                             <ClientSideEvents FileUploadComplete="onFileUploadComplete" />
@@ -136,7 +136,8 @@
                     </dx:LayoutItemNestedControlContainer>
                     
                 </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>
+            </dx:LayoutItem>--%>
+           <%-- <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
             <dx:LayoutItem Caption="Latitude" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
@@ -145,7 +146,6 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>
             <dx:LayoutItem Caption="Longitude" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
@@ -165,7 +165,7 @@
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
              </dx:LayoutItem>
-            <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>
+<%-- <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
             <%--<dx:LayoutItem Caption="">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>                      
@@ -178,7 +178,7 @@
             <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxButton runat="server" Width="50%" ID="AddPartBtn" Text="Add Part" OnClick="AddPartBtn_Click" ClientInstanceName="AddPartBtn" AutoPostBack="false">
+                        <dx:ASPxButton runat="server" Width="50%" ID="AddPartBtn" Text="Submit" OnClick="AddPartBtn_Click" ClientInstanceName="AddPartBtn" AutoPostBack="false">
                         </dx:ASPxButton>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>

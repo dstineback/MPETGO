@@ -9,6 +9,7 @@
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition);
+                console.log("lat", lat, "long", long);
                 window.alert = "Location found";
             } else {
                 window.alert = "Geolocation is not supported by this browser.";
@@ -17,6 +18,9 @@
         function showPosition(position) {
             lat = position.coords.latitude;
             long = position.coords.longitude;
+            console.log("latTWO", lat, "longTWO", long);
+            localStorage.setItem("Lat", lat);
+            localStorage.setItem("Lng", long);
            
             
         }

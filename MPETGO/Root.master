@@ -32,12 +32,16 @@
 <dx:ASPxMenu ID="HeaderMenu" runat="server" CssClass="headerMenu" ClientInstanceName="headerMenu" ItemAutoWidth="False" Width="100%">
     <Items>
         <dx:MenuItem Text="Home" NavigateUrl="index.aspx"></dx:MenuItem>
-        <dx:MenuItem Text="Work Requst" NavigateUrl="Pages/WorkRequestForm.aspx"></dx:MenuItem>
-        <dx:MenuItem Text="Work Request List" NavigateUrl="Pages/WorkRequestList.aspx"></dx:MenuItem>
-        <dx:MenuItem Text="Assests/Objects" NavigateUrl="Pages/Parts.aspx">
+        <dx:MenuItem Text="Work Request">
+            <Items>
+            <dx:MenuItem Text="Work Request List" NavigateUrl="Pages/WorkRequestList.aspx"></dx:MenuItem>
+            <dx:MenuItem Text="Add Work Request" NavigateUrl="Pages/WorkRequestForm.aspx"></dx:MenuItem>
+                
+            </Items>
+        </dx:MenuItem>
+        <dx:MenuItem Text="Objects/Machines">
            <Items>
-               <dx:MenuItem Text="Add Asset" NavigateUrl="Pages/Parts.aspx"></dx:MenuItem>
-               <dx:MenuItem Text="Test Assest" NavigateUrl="index.aspx"></dx:MenuItem>
+               <dx:MenuItem Text="Add Object" NavigateUrl="Pages/Parts.aspx"></dx:MenuItem>       
            </Items>
         </dx:MenuItem>
         <dx:MenuItem Text="Contact US" NavigateUrl="Pages/Contact.aspx"></dx:MenuItem>
@@ -55,7 +59,6 @@
                 </div>
             </ExpandBarTemplate>
         </dx:ASPxPanel>
-
         <script type="text/javascript">
             function updateHeaderMenuOrientation(){
                 if(!window.headerMenu) return;
@@ -64,11 +67,9 @@
                     headerMenu.SetOrientation(orientation);
             }
         </script>
-
         <dx:ASPxGlobalEvents runat="server">
             <ClientSideEvents ControlsInitialized="updateHeaderMenuOrientation" BrowserWindowResized="updateHeaderMenuOrientation" />
         </dx:ASPxGlobalEvents>
-
 
         <dx:ASPxPanel ID="MainPane" runat="server" CssClass="mainContentPane">
             <PanelCollection>

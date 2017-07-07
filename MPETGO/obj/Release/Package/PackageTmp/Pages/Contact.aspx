@@ -9,14 +9,14 @@
 
 <body>
     
-    <dx:ASPxFormLayout Theme="iOS" runat="server" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit"
-        SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="500"
+    <dx:ASPxFormLayout Theme="iOS" runat="server" Width="100%" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit"
+        SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800"
         RequiredMarkDisplayMode="None">
         <Items>
-            <dx:LayoutItem ShowCaption="False">
+            <dx:LayoutItem Caption="Name:" CaptionSettings-Location="Top" Width="100%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxTextBox ID="txtName" Caption="Name" runat="server">
+                        <dx:ASPxTextBox ID="txtName" runat="server" Width="100%">
                             <ValidationSettings>
                                 <RequiredField IsRequired="true" ErrorText="Name Required" />
                             </ValidationSettings>
@@ -24,10 +24,11 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem RequiredMarkDisplayMode="Required" ShowCaption="False">
+            <dx:EmptyLayoutItem Width="100%"></dx:EmptyLayoutItem>
+            <dx:LayoutItem RequiredMarkDisplayMode="Required" Caption="Subject" CaptionSettings-Location="Top" Width="100%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxTextBox Caption="Subject" runat="server" ID="txtSubject">
+                        <dx:ASPxTextBox runat="server" ID="txtSubject" Width="100%">
                             <ValidationSettings>
                                 <RequiredField IsRequired="true" ErrorText="Subject required" />
                             </ValidationSettings>
@@ -35,11 +36,11 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-
-            <dx:LayoutItem RequiredMarkDisplayMode="Required" ShowCaption="False">
+            <dx:EmptyLayoutItem Width="100%"></dx:EmptyLayoutItem>
+            <dx:LayoutItem RequiredMarkDisplayMode="Required" Caption="Email" CaptionSettings-Location="Top" Width="100%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxTextBox ID="txtEmail" runat="server" Caption="Email">
+                        <dx:ASPxTextBox ID="txtEmail" runat="server" Width="100%">
                             <ValidationSettings>
                                 <RequiredField IsRequired="true" ErrorText="Email address required" />
                                 <RegularExpression ErrorText="Invalid Email Address"
@@ -51,10 +52,10 @@
             </dx:LayoutItem>
 
 
-            <dx:LayoutItem RequiredMarkDisplayMode="Required" ShowCaption="False">
+            <dx:LayoutItem RequiredMarkDisplayMode="Required" Caption="Body" CaptionSettings-Location="Top" Width="100%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxTextBox ID="txtBody" Caption="Body" runat="server"
+                        <dx:ASPxTextBox ID="txtBody" runat="server" Width="100%"
                             TextMode="MultiLine">
                             <ValidationSettings ErrorText="Body text required" ErrorTextPosition="Bottom">
                                 <RequiredField IsRequired="true" ErrorText=""  />
@@ -64,18 +65,18 @@
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
 
-            <dx:LayoutItem Caption="">
+            <dx:LayoutItem Caption="" Width="100%" CaptionSettings-Location="Top">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
 
-                        <asp:FileUpload ID="FileUpload1" runat="server" />
+                        <asp:FileUpload ID="FileUpload1" runat="server" Width="100%" />
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem Caption="">
+            <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="100%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxButton ID="btnSend" runat="server" Text="Send"
+                        <dx:ASPxButton ID="btnSend" runat="server" Text="Send" Width="100%"
                             OnClick="btnSend_Click">
                         </dx:ASPxButton>
 

@@ -25,12 +25,86 @@ function getLocation() {
     txtLong.SetText(long);
     }
 </script>
+<script type="text/javascript">
+    DXUploadedFilesContainer = {
+        nameCellStyle: "",
+        sizeCellStyle: "",
+        useExtendedPopup: false,
+
+        AddFile: function (fileName, fileUrl, fileSize) {
+            var self = DXUploadedFilesContainer;
+            var builder = ["<tr>"];
+
+            builder.push("<td class='nameCell'");
+            if (self.nameCellStyle)
+                builder.push(" style='" + self.nameCellStyle + "'");
+            builder.push(">");
+            self.BuildLink(builder, fileName, fileUrl);
+            builder.push("</td>");
+
+            builder.push("<td class='sizeCell'");
+            if (self.sizeCellStyle)
+                builder.push(" style='" + self.sizeCellStyle + "'");
+            builder.push(">");
+            builder.push(fileSize);
+            builder.push("</td>");
+
+            builder.push("</tr>");
+
+            var html = builder.join("");
+            DXUploadedFilesContainer.AddHtml(html);
+        },
+        Clear: function () {
+            DXUploadedFilesContainer.ReplaceHtml("");
+        },
+        BuildLink: function (builder, text, url) {
+            builder.push("<a target='blank' onclick='return DXDemo.ShowScreenshotWindow(event, this, " + this.useExtendedPopup + ");'");
+            builder.push(" href='" + url + "'>");
+            builder.push(text);
+            builder.push("</a>");
+        },
+        AddHtml: function (html) {
+            var fileContainer = document.getElementById("uploadedFilesContainer"),
+                fullHtml = html;
+            if (fileContainer) {
+                var containerBody = fileContainer.tBodies[0];
+                fullHtml = containerBody.innerHTML + html;
+            }
+            DXUploadedFilesContainer.ReplaceHtml(fullHtml);
+        },
+        ReplaceHtml: function (html) {
+            var builder = ["<table id='uploadedFilesContainer' class='uploadedFilesContainer'><tbody>"];
+            builder.push(html);
+            builder.push("</tbody></table>");
+            var contentHtml = builder.join("");
+            window.FilesRoundPanel.SetContentHtml(contentHtml);
+        },
+        ApplySettings: function (nameCellStyle, sizeCellStyle, useExtendedPopup) {
+            var self = DXUploadedFilesContainer;
+            self.nameCellStyle = nameCellStyle;
+            self.sizeCellStyle = sizeCellStyle;
+            self.useExtendedPopup = useExtendedPopup;
+        }
+    };
+
+    function onFileUploadComplete(s, e) {
+        if (e.callbackData) {
+            var fileData = e.callbackData.split('|');
+            var fileName = fileData[0],
+                fileUrl = fileData[1],
+                fileSize = fileData[2];
+            //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
+            //window.AttachmentGrid.Refresh();
+        }
+    }
+</script>
+     <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
     <dx:ASPxLabel runat="server" ID="lblHeader"></dx:ASPxLabel>
 
         <dx:ASPxFormLayout ID="ASPxFormLayout1"
             runat="server" Theme="iOS" EnableTheming="True"  Width="100%" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit">            
             <Items>
-                <dx:LayoutItem Caption="Work Request Issue"  CaptionSettings-Location="Top" Width="100%">
+                <dx:LayoutItem Caption="Problem Description"  CaptionSettings-Location="Top" Width="100%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
                             <dx:ASPxTextBox runat="server" ID="txtWorkDescription" MaxLength="250" AutoPostBack="false" Width="100%">
@@ -119,7 +193,7 @@ function getLocation() {
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
-                <dx:LayoutItem Caption="Created Date" CaptionSettings-Location="Top" Width="25%">
+                <dx:LayoutItem Caption="Request Date" CaptionSettings-Location="Top" Width="25%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
                             <dx:ASPxDateEdit runat="server" Width="100%" ID="startDate" AutoPostBack="false"></dx:ASPxDateEdit>
@@ -174,7 +248,6 @@ function getLocation() {
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
                 
-
                 <dx:LayoutItem Caption="Longitude" CaptionSettings-Location="Top" Width="50%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer>
@@ -185,8 +258,7 @@ function getLocation() {
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
                 <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>
-               
-
+              
                 <dx:LayoutItem Caption="Latitude" CaptionSettings-Location="Top" Width="50%"> 
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer>
@@ -196,7 +268,136 @@ function getLocation() {
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
                 <dx:EmptyLayoutItem Width="50%" ></dx:EmptyLayoutItem>
-                
+
+                <dx:LayoutItem Caption="" ShowCaption="False" CaptionSettings-Location="Top">
+                                                                        <LayoutItemNestedControlCollection >
+                                                                            <dx:LayoutItemNestedControlContainer>
+                                                                                <div id="PhotoContainer" runat="server">
+                                                                                    <div class="uploadContainer">
+                                                                                        <dx:ASPxUploadControl 
+                                                                                            
+                                                                                            ID="UploadControl" 
+                                                                                            runat="server" 
+                                                                                            ClientInstanceName="UploadControl" 
+                                                                                            Width="98%" 
+                                                                                            UploadMode="Auto" 
+                                                                                            UploadStorage="Azure" 
+                                                                                            FileUploadMode="OnPageLoad" 
+                                                                                            ShowUploadButton="True" 
+                                                                                            ShowProgressPanel="True" 
+                                                                                            OnFileUploadComplete="UploadControl_FileUploadComplete" 
+                                                                                            ShowAddRemoveButtons="True">
+                                                                                            
+                                                                                            <AzureSettings 
+                                                                                                StorageAccountName="aspdemo" 
+                                                                                                ContainerName="uploadcontroldemo"/>
+                                                                                            
+                                                                                            <BrowseButton Text="Browse">
+                                                                                            </BrowseButton>
+                                                                                            <AdvancedModeSettings 
+                                                                                                EnableDragAndDrop="True" 
+                                                                                                EnableFileList="false" 
+                                                                                                EnableMultiSelect="true">
+                                                                                                <FileListItemStyle CssClass="pending dxucFileListItem"></FileListItemStyle>
+                                                                                            </AdvancedModeSettings>
+                                                                                            <ValidationSettings 
+                                                                                                MaxFileSize="4194304" 
+                                                                                                AllowedFileExtensions=".jpg,.jpeg,.gif,.png">
+                                                                                            </ValidationSettings>
+                                                                                            <ClientSideEvents 
+                                                                                                FileUploadComplete="onFileUploadComplete"/>
+                                                                                        </dx:ASPxUploadControl>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </dx:LayoutItemNestedControlContainer>
+                                                                        </LayoutItemNestedControlCollection>
+
+                                                                        <CaptionSettings Location="Top"></CaptionSettings>
+                                                                    </dx:LayoutItem> <%--upload control--%>   
+                                                                                
+                <dx:LayoutItem Caption="" ShowCaption="False"  CaptionSettings-Location="Top">
+                                                                        <LayoutItemNestedControlCollection >
+                                                                            <dx:LayoutItemNestedControlContainer>
+                                                                                <asp:UpdatePanel ID="UpdatePanel" runat="server" OnUnload="UpdatePanel_Unload">
+                                                                                    <ContentTemplate>
+                                                                                        <dx:ASPxGridView 
+                                                                                            ID="AttachmentGrid" 
+                                                                                            runat="server" 
+                                                                                            
+                                                                                            KeyFieldName="LocationOrURL" 
+                                                                                            Width="98%" 
+                                                                                            KeyboardSupport="True" 
+                                                                                            ClientInstanceName="AttachmentGrid" 
+                                                                                            AutoPostBack="true" 
+                                                                                            
+                                                                                            Settings-HorizontalScrollBarMode="Auto" 
+                                                                                            SettingsPager-Mode="ShowPager" 
+                                                                                            SettingsBehavior-ProcessFocusedRowChangedOnServer="True" 
+                                                                                            SettingsBehavior-AllowFocusedRow="True"
+                                                                                            EnableCallBacks="true" AutoGenerateColumns="False" DataSourceID="AttachmentDataSource">
+                                                                                            <Styles Header-CssClass="gridViewHeader" Row-CssClass="gridViewRow" FocusedRow-CssClass="gridViewRowFocused" 
+                                                                                                    RowHotTrack-CssClass="gridViewRow" FilterRow-CssClass="gridViewFilterRow" >
+                                                                                                <Header CssClass="gridViewHeader"></Header>
+
+                                                                                                <Row CssClass="gridViewRow"></Row>
+
+                                                                                                <RowHotTrack CssClass="gridViewRow"></RowHotTrack>
+
+                                                                                                <FocusedRow CssClass="gridViewRowFocused"></FocusedRow>
+
+                                                                                                <FilterRow CssClass="gridViewFilterRow"></FilterRow>
+                                                                                            </Styles>
+                                                                                            <Columns>
+                                                                                                <dx:GridViewDataTextColumn FieldName="ID" ReadOnly="True" Visible="false" VisibleIndex="0">
+                                                                                                    <CellStyle Wrap="False"></CellStyle>
+                                                                                                </dx:GridViewDataTextColumn>
+                                                                                                <dx:GridViewDataTextColumn FieldName="nJobID" ReadOnly="True" Visible="false" VisibleIndex="1">
+                                                                                                    <CellStyle Wrap="False"></CellStyle>
+                                                                                                </dx:GridViewDataTextColumn>
+                                                                                                <dx:GridViewDataTextColumn FieldName="nJobstepID" ReadOnly="True" Visible="false" VisibleIndex="2">
+                                                                                                    <CellStyle Wrap="False"></CellStyle>
+                                                                                                </dx:GridViewDataTextColumn>
+                                                                                                <dx:GridViewDataTextColumn FieldName="ShortName" Caption="Name" Width="200px" VisibleIndex="3">
+                                                                                                    <CellStyle Wrap="False"></CellStyle>
+                                                                                                     <DataItemTemplate>
+                                                                                                        <dx:ASPxHyperLink ID="ASPxHyperLink1" NavigateUrl="javascript:void(0)" runat="server" Text='<%# Eval("ShortName") %>' Width="100%" Theme="Mulberry">
+                                                                                                            <ClientSideEvents Click="onHyperLinkClick" />
+                                                                                                        </dx:ASPxHyperLink>
+                                                                                                     </DataItemTemplate>
+                                                                                                </dx:GridViewDataTextColumn>
+                                                                                                <dx:GridViewDataTextColumn FieldName="DocType" Caption="Name" Width="100px" VisibleIndex="4">
+                                                                                                    <CellStyle Wrap="False"></CellStyle>
+                                                                                                </dx:GridViewDataTextColumn>
+                                                                                                <dx:GridViewDataTextColumn FieldName="Description" Visible="false" Caption="Description" Width="400px" VisibleIndex="5">
+                                                                                                    <CellStyle Wrap="False"></CellStyle>
+                                                                                                </dx:GridViewDataTextColumn>
+                                                                                                <dx:GridViewDataHyperLinkColumn FieldName="LocationOrURL" Caption="Location/URL" Width="600px" VisibleIndex="6">
+                                                                                                    <CellStyle Wrap="False"></CellStyle>
+                                                                                                    <PropertiesHyperLinkEdit ></PropertiesHyperLinkEdit>
+                                                                                                </dx:GridViewDataHyperLinkColumn>
+                                                                                            </Columns>
+                                                                                            <SettingsBehavior EnableRowHotTrack="True" AllowFocusedRow="True" AllowClientEventsOnLoad="false" ColumnResizeMode="NextColumn" />
+                                                                                            <SettingsDataSecurity AllowDelete="False" AllowInsert="False" />
+                                                                                            <Settings VerticalScrollBarMode="Visible" VerticalScrollBarStyle="Virtual" VerticalScrollableHeight="350" />
+                                                                                            <SettingsPager PageSize="10">
+                                                                                                <PageSizeItemSettings Visible="true" />
+                                                                                            </SettingsPager>
+                                                                                            <Templates>
+                                                                                                <FooterRow>
+                                                                                                    
+                                                                                                    <dx:ASPxButton runat="server" ID="DeleteAttachmentButton" OnClick="DeleteAttachmentButton_Click"  Text="Delete Crew Member"></dx:ASPxButton>
+                                                                                                </FooterRow>
+                                                                                            </Templates>
+                                                                                        </dx:ASPxGridView>      
+                                                                                       
+                                                                                    </ContentTemplate>
+                                                                                </asp:UpdatePanel>
+                                                                            </dx:LayoutItemNestedControlContainer>
+                                                                        </LayoutItemNestedControlCollection>
+
+                                                                        <CaptionSettings Location="Top"></CaptionSettings>
+                                                                    </dx:LayoutItem>   
+                             
                 <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer>

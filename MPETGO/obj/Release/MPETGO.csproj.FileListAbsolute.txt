@@ -57,3 +57,4 @@ C:\Users\stinebackd\Projects\MPETGO\MPETGO\obj\Release\MPETGO.dll.licenses
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\obj\Release\MPETGO.dll
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\obj\Release\MPETGO.pdb
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\obj\Release\MPETGO.csprojResolveAssemblyReference.cache
+C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\DevExpress.Web.Bootstrap.v17.1.dll
