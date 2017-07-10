@@ -104,7 +104,7 @@ function getLocation() {
         <dx:ASPxFormLayout ID="ASPxFormLayout1"
             runat="server" Theme="iOS" EnableTheming="True"  Width="100%" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit">            
             <Items>
-                <dx:LayoutItem Caption="Work Request Issue"  CaptionSettings-Location="Top" Width="100%">
+                <dx:LayoutItem Caption="Problem Description"  CaptionSettings-Location="Top" Width="100%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
                             <dx:ASPxTextBox runat="server" ID="txtWorkDescription" MaxLength="250" AutoPostBack="false" Width="100%">
@@ -193,7 +193,7 @@ function getLocation() {
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
-                <dx:LayoutItem Caption="Created Date" CaptionSettings-Location="Top" Width="25%">
+                <dx:LayoutItem Caption="Request Date" CaptionSettings-Location="Top" Width="25%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
                             <dx:ASPxDateEdit runat="server" Width="100%" ID="startDate" AutoPostBack="false"></dx:ASPxDateEdit>
@@ -311,7 +311,6 @@ function getLocation() {
                                                                                 </div>
                                                                             </dx:LayoutItemNestedControlContainer>
                                                                         </LayoutItemNestedControlCollection>
-
                                                                         <CaptionSettings Location="Top"></CaptionSettings>
                                                                     </dx:LayoutItem> <%--upload control--%>   
                                                                                 
@@ -396,8 +395,7 @@ function getLocation() {
                                                                         </LayoutItemNestedControlCollection>
 
                                                                         <CaptionSettings Location="Top"></CaptionSettings>
-                                                                    </dx:LayoutItem>   
-                             
+                                                                    </dx:LayoutItem>                               
                 <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer>
@@ -429,9 +427,7 @@ function getLocation() {
                 </dx:LayoutItem>
             </Items>
         </dx:ASPxFormLayout>
-    
-   
-
+      
         <asp:SqlDataSource ID="AttachmentDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:connection %>" 
         SelectCommand="SELECT [ID], [nJobID], [nJobstepID], [DocType], [Description], [LocationOrURL], [ShortName] 
         FROM [Attachments] 

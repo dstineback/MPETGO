@@ -2065,6 +2065,16 @@ namespace MPETGO.Pages
                 //Remove Old One
                 HttpContext.Current.Session.Remove("ObjectPhoto");
             }
+
+            if (Session["url"] != null)
+            {
+                Session.Remove("url");
+            }
+
+            if (Session["name"] != null)
+            {
+                Session.Remove("name");
+            }
         }
 
         protected void SaveSessionData()

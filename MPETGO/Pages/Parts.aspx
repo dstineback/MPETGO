@@ -203,12 +203,20 @@
                         <div id="PhotoContainer" runat="server">
                             <div class="uploadContainer">
 
-                        <dx:ASPxUploadControl runat="server" Width="100%" ID="UploadControl" 
-                            ClientInstanceName="UploadControl" ShowTextBox="true" 
-                            NullText="Upload image" UploadStorage="Azure" UploadMode="Auto"
-                            FileUploadMode="OnPageLoad" ShowUploadButton="true" 
-                            ShowProgressPanel="true" OnFileUploadComplete="UploadControl_FileUploadComplete" ShowAddRemoveButtons="true">
+                        <dx:ASPxUploadControl runat="server" Width="100%" 
+                            ID="UploadControl" 
+                            ClientInstanceName="UploadControl" 
+                            ShowTextBox="true" 
+                            NullText="Upload image" 
+                            UploadStorage="Azure" 
+                            UploadMode="Auto"
+                            FileUploadMode="OnPageLoad" 
+                            ShowUploadButton="true" 
+                            ShowProgressPanel="true" 
+                            OnFileUploadComplete="UploadControl_FileUploadComplete" 
+                            ShowAddRemoveButtons="true">
                            <%--<AzureSettings AccountName="UploadAzureAccount" ContainerName="attachments" />--%>
+                             
                             <AdvancedModeSettings EnableMultiSelect="true" EnableDragAndDrop="true" EnableFileList="true"></AdvancedModeSettings>
                             <ValidationSettings MaxFileSize="4194304" AllowedFileExtensions=".jpg, .jpeg, .gif, .png"></ValidationSettings>
                             <ClientSideEvents FileUploadComplete="onFileUploadComplete" />
@@ -217,7 +225,7 @@
                         </div>                      
                     </dx:LayoutItemNestedControlContainer>                  
                 </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>
+            </dx:LayoutItem>         
             <dx:LayoutItem Caption="" ShowCaption="False"  CaptionSettings-Location="Top">
                                                                         <LayoutItemNestedControlCollection >
                                                                             <dx:LayoutItemNestedControlContainer>
@@ -316,9 +324,9 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:EmptyLayoutItem Width="50%">
+            <%--<dx:EmptyLayoutItem Width="50%">
 
-            </dx:EmptyLayoutItem>
+            </dx:EmptyLayoutItem>--%>
             <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer>
@@ -328,7 +336,7 @@
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
              </dx:LayoutItem>
-<%-- <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
+            <%--<dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
            
             
             <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
@@ -339,7 +347,7 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem>
+            <dx:LayoutItem Caption="">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
                         <dx:ASPxButton runat="server" Width="50%" ID="SavePartBtn" Text="Save" OnClick="SavePartBtn_Click" ClientInstanceName="SavepartBtn" AutoPostBack="false"></dx:ASPxButton>

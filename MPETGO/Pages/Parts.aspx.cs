@@ -113,7 +113,7 @@ namespace MPETGO.Pages
                 if (!string.IsNullOrEmpty(AzureAccount))
                 {
 
-                    //UploadControl.AzureSettings.StorageAccountName = AzureAccount;
+                    UploadControl.AzureSettings.StorageAccountName = AzureAccount;
                     AzureAccountName = AzureAccount;
 
                 }
@@ -121,14 +121,14 @@ namespace MPETGO.Pages
                 //Check For Null Access Key
                 if (!string.IsNullOrEmpty(AzureAccessKey))
                 {
-                    //UploadControl.AzureSettings.AccessKey = AzureAccessKey;
+                    UploadControl.AzureSettings.AccessKey = AzureAccessKey;
                     AzureAccountKey = AzureAccessKey;
                 }
 
                 //Check For Null Container
                 if (!string.IsNullOrEmpty(AzureContainer))
                 {
-                   // UploadControl.AzureSettings.ContainerName = AzureContainer;
+                    UploadControl.AzureSettings.ContainerName = AzureContainer;
                     AzureAccountContainerName = AzureContainer;
                 }
 
@@ -170,10 +170,12 @@ namespace MPETGO.Pages
             {
                 SavePartBtn.Visible = true;
                 AddPartBtn.Visible = false;
+                AttachmentGrid.Visible = true;
             } else
             {
                 AddPartBtn.Visible = true;
                 SavePartBtn.Visible = false;
+                AttachmentGrid.Visible = false;
             }
 
            
@@ -222,15 +224,15 @@ namespace MPETGO.Pages
             //INSERT JOB ATTACHMENT ROUTINE HERE!!!!
 
             //Check For Job ID
-            if (_oMaintObj.RecordID > 0)
+            if (Session["n_objectID"] != null)
             {
                 //Check For Previous Session Variable
                 if (HttpContext.Current.Session["LogonInfo"] != null)
                 {
                     //Get Logon Info From Session
                     _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
-
-                    if (_oObjAttachments.Add(_oMaintObj.RecordID,
+                    var n_objectID = Convert.ToInt32(Session["n_objectID"]);
+                    if (_oObjAttachments.Add(n_objectID,
                         _oLogon.UserID,
                         url,
                         "JPG",
@@ -957,6 +959,21 @@ namespace MPETGO.Pages
                 //Remove Old One
                 HttpContext.Current.Session.Remove("ObjectPhoto");
             }
+
+            if(Session["n_objectID"] != null)
+            {
+                Session.Remove("n_objectID");
+            }
+
+            if(Session["url"] != null)
+            {
+                Session.Remove("url");
+            }
+
+            if (Session["name"] != null)
+            {
+                Session.Remove("name");
+            }
         }
         #endregion
         #region Add Part
@@ -1073,13 +1090,14 @@ namespace MPETGO.Pages
                     desc, 
                     shortName.Trim()))
                     {
-                       
+                        Response.Write("<script language='javascript'>window.alert('File uploaded & attached to Object.')</script>");
                     } else {
                         throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
                     }
                 }
-
-                Response.Redirect("/pages/parts.aspx?n_objectID=" + n_objectID, true);
+                Response.Write("<script language='javascript'>window.alert('New Object Created and Saved.')</script>");
+                ResetSession();
+                Response.Redirect("/index.aspx",  true);
             } else
             {
                 throw new SystemException(@"Error adding - " + _oMaintObj.LastError);
