@@ -10,13 +10,14 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI;
 using System.Data;
 using System.Web.UI.WebControls;
+using System.Reflection;
 using MPETDSFactory;
 
 namespace MPETGO.Pages
 {
     public partial class Parts : System.Web.UI.Page
     {
-        private WorkOrder _oJob;
+        
         private readonly DateTime _nullDate = Convert.ToDateTime("1/1/1960 23:59:59");
         private LogonObject _oLogon;
         private DateTime date = DateTime.Now;
@@ -100,8 +101,13 @@ namespace MPETGO.Pages
             if(Session["LogonInfo"] != null)
             {
                 _oLogon = ((LogonObject)Session["LogonInfo"]);
+            }
+            else
+            {
+                Response.Redirect("~/index.aspx", true);
+            }
 
-                #region Attempt To Load Azure Details
+            #region Attempt To Load Azure Details
 
                 //Check For Null Azure Account
                 if (!string.IsNullOrEmpty(AzureAccount))
@@ -128,15 +134,13 @@ namespace MPETGO.Pages
 
                 #endregion
 
-            }
-            else
+            if (HttpContext.Current.Request.IsSecureConnection == false)
             {
-                Response.Redirect("~/index.aspx", true);
+                LatLongBtn.Visible = false;
             }
 
-           if (!IsPostBack)
-            {
-               
+            if (!IsPostBack)
+            {       
                 ResetSession();
                 startDate.Value = DateTime.Now;
                 activeCheckBox.Checked = true;     
@@ -150,7 +154,6 @@ namespace MPETGO.Pages
             _useWeb = (ConfigurationManager.AppSettings["UsingWebService"] == "Y");
 
             //Initialize Classes
-
             _oObjAttachments = new MaintAttachmentObject(_connectionString, _useWeb);
 
             //Set DataSource
@@ -158,10 +161,22 @@ namespace MPETGO.Pages
             AreaSqlDatasource.ConnectionString = _connectionString;
             StateRouteDataSource.ConnectionString = _connectionString;
 
-            if (HttpContext.Current.Request.IsSecureConnection == false)
+            if (!String.IsNullOrEmpty(Request.QueryString["n_objectID"]))
             {
-                LatLongBtn.Visible = false;
+
             }
+
+            if(Session["n_objectID"] != null)
+            {
+                SavePartBtn.Visible = true;
+                AddPartBtn.Visible = false;
+            } else
+            {
+                AddPartBtn.Visible = true;
+                SavePartBtn.Visible = false;
+            }
+
+           
 
         }
         #region Azure Setup
@@ -188,6 +203,120 @@ namespace MPETGO.Pages
                 return WebConfigurationManager.AppSettings["StorageContainer"];
             }
         }
+        #endregion
+
+        #region Upload Image
+        protected void UploadControl_FileUploadComplete(object sender, FileUploadCompleteEventArgs e)
+        {
+            // RemoveFileWithDelay(e.UploadedFile.FileNameInStorage, 5);
+
+            string name = e.UploadedFile.FileName;
+            string url = GetImageUrl(e.UploadedFile.FileNameInStorage);
+            long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
+            string sizeText = sizeInKilobytes + " KB";
+            e.CallbackData = name + "|" + url + "|" + sizeText;
+
+            Session.Add("url", url);
+            Session.Add("name", name);
+
+            //INSERT JOB ATTACHMENT ROUTINE HERE!!!!
+
+            //Check For Job ID
+            if (_oMaintObj.RecordID > 0)
+            {
+                //Check For Previous Session Variable
+                if (HttpContext.Current.Session["LogonInfo"] != null)
+                {
+                    //Get Logon Info From Session
+                    _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
+
+                    if (_oObjAttachments.Add(_oMaintObj.RecordID,
+                        _oLogon.UserID,
+                        url,
+                        "JPG",
+                        "Mobile Web Attachment",
+                        name.Trim()))
+                    {
+                        //Check For Prior Value
+                        if (HttpContext.Current.Session["HasAttachments"] != null)
+                        {
+                            //Remove Old One
+                            HttpContext.Current.Session.Remove("HasAttachments");
+                        }
+
+                        //Add New Value
+                        HttpContext.Current.Session.Add("HasAttachments", true);
+
+                        //Refresh Attachments
+                        AttachmentGrid.DataBind();
+                        ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
+
+                    }
+                }
+            }
+            else
+            {
+                Response.Write("<script language='javascript'>window.alert('File uploaded, Attachment Grid will be displayed after a Work Request is submitted.')</script>");
+            }
+        }
+
+        string GetImageUrl(string fileName)
+        {
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+            {
+                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+            }
+            else
+            {
+
+            }
+            FileManagerFile file = new FileManagerFile(provider, fileName);
+            FileManagerFile[] files = new FileManagerFile[] { file };
+            return provider.GetDownloadUrl(files);
+        }
+
+        protected void DeleteAttachmentButton_Click(object sender, EventArgs e)
+        {
+            DeleteGridViewAttachment();
+        }
+
+        public void DeleteGridViewAttachment()
+        {
+            for (int i = 0; i < AttachmentGrid.VisibleRowCount; i++)
+            {
+                if (AttachmentGrid.GetRowLevel(i) == AttachmentGrid.GroupCount)
+                {
+                    object keyValue = AttachmentGrid.GetRowValues(i, new string[] { "ID" });
+                    var id = Convert.ToInt32(keyValue.ToString());
+                    if (keyValue != null)
+
+                        _oObjAttachments.Delete(id);
+                }
+            }
+        }
+
+        protected void UpdatePanel_Unload(object sender, EventArgs e)
+        {
+            //MethodInfo methodInfo = typeof(ScriptManager).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            //    .Where(i => i.Name.Equals("System.Web.UI.IScriptManagerInternal.RegisterUpdatePanel")).First();
+            //methodInfo.Invoke(ScriptManager.GetCurrent(Page),
+            //    new object[] { sender as UpdatePanel });
+
+            RegisterUpdatePanel((UpdatePanel)sender);
+        }
+
+        protected void RegisterUpdatePanel(UpdatePanel panel)
+        {
+            var sType = typeof(ScriptManager);
+            var mInfo = sType.GetMethod("System.Web.UI.IScriptManagerInternal.RegisterUpdatePanel", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (mInfo != null)
+                mInfo.Invoke(ScriptManager.GetCurrent(Page), new object[] { panel });
+        }
+
         #endregion
 
         #region Combo functions
@@ -912,36 +1041,168 @@ namespace MPETGO.Pages
                 _oLogon.UserID
                 ))
             {
+                var n_objectID = _oMaintObj.RecordID;
+                if(Session["n_objectID"] != null)
+                {
+                    Session.Remove("n_objectID");
+                }
+                Session.Add("n_objectID", n_objectid);
+                var file = "";
+                if(Session["url"] != null){
 
+                    file = Session["url"].ToString();
+                }
 
-                var file = Session["url"].ToString();
-                var x = file.Contains("fileName").ToString();
+                if(Session["name"] != null)
+                {
+                    shortName = Session["name"].ToString();
+                }
                           
-                if (file != null)
+                if (file != "")
                 {
                  maintObjectId = objTypeID;
                  creator = _oLogon.UserID;
                  fullPath = file;
                    
                  desc = "M-PET GO upload";
-                 shortName = file.Trim();
-                if(_oObjAttachments.Add(_oMaintObj.RecordID, 
+                
+                if(_oObjAttachments.Add(n_objectID, 
                     creator, 
                     fullPath, 
                     docType, 
                     desc, 
-                    shortName))
+                    shortName.Trim()))
                     {
+                       
                     } else {
                         throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
                     }
                 }
 
-                Response.Redirect("/pages/parts.aspx", true);
+                Response.Redirect("/pages/parts.aspx?n_objectID=" + n_objectID, true);
             } else
             {
                 throw new SystemException(@"Error adding - " + _oMaintObj.LastError);
             }
+        }
+
+        private void updateParts() {
+            tmpPuchaseDate = _nullDate;
+            tmpRebuildDate = _nullDate;
+            tmpWarrantyDate = _nullDate;
+            tmpLifeCycleDate = _nullDate;
+
+            var recordID = Convert.ToInt32(Session["n_objectID"]);
+            objTypeID = Convert.ToInt32(ComboObjectType.Value);
+            var c = Convert.ToInt32(ComboObjectType.SelectedItem.GetFieldValue("n_objtypeid"));
+            int n_objectid = c;
+            areaID = Convert.ToInt32(ComboArea.Value);
+
+            if (_oMaintObj.Update(recordID,objectID.Text.Trim(), objectDesc.Text,
+                taskId,
+                parentObjectID, 
+                areaID, 
+                costCodeID, 
+                locationID,
+                manufacturerID, 
+                objClassID, 
+                objTypeID, 
+                prodLineID, 
+                storeroomID, 
+                txtMaintObjectNotes, 
+                txtAssetNumber, 
+                activeCheckBox.Checked, 
+                true, 
+                true, 
+                true, 
+                txtChargeRate,
+                cboFundamentalType,
+                Convert.ToDecimal(txtLat.Value),
+                Convert.ToDecimal(txtLong.Value),
+                txtGpsZ,
+                txtLogicalOrder,
+                idealCycle,
+                tmpRebuildDate,
+                cboManufacturer,
+                txtModel,
+                txtMiscRef,
+                txtProductionNbr,
+                tmpPuchaseDate,
+                txtPurchasePrice,
+                txtRemarks,
+                txtSerial,
+                date,
+                tmpWarrantyDate,
+                overheadRateID,
+                responsibleID,
+                conditionID,
+                tmpLifeCycleDate,
+                vendorID,
+                txtMilePost,
+                milePostDir,
+                stateRouteID,
+                txtEasting,
+                txtNorthing,
+                txtWarrantyInterval,
+                txtLifeCycleInterval,
+                uom, 
+                milepostTo, 
+                quantity,
+                txtHoursAvailable,
+                txtPMHours,
+                txtTotalAvailHrs,
+                fundSource,
+                workOrder,
+                workOp,
+                orgCode,
+                fundingGroup,
+                equipNumber,
+                controlSection,
+                _oLogon.UserID)) {
+
+                var file = "";
+                if (Session["url"] != null)
+                {
+
+                    file = Session["url"].ToString();
+                }
+
+                if (Session["name"] != null)
+                {
+                    shortName = Session["name"].ToString();
+                }
+
+                if (file != "")
+                {
+                    maintObjectId = objTypeID;
+                    creator = _oLogon.UserID;
+                    fullPath = file;
+
+                    desc = "M-PET GO upload";
+
+                    if (_oObjAttachments.Add(recordID,
+                        creator,
+                        fullPath,
+                        docType,
+                        desc,
+                        shortName.Trim()))
+                    {
+
+                    }
+                    else
+                    {
+                        throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
+                    }
+                }
+
+                Response.Redirect("/pages/parts.aspx?n_objectID=" + recordID, true);
+            }
+            else
+            {
+                throw new SystemException(@"Error adding - " + _oMaintObj.LastError);
+            }
+
+        
         }
 
 
@@ -954,49 +1215,11 @@ namespace MPETGO.Pages
             AddParts();
         }
 
-        protected void addImg(object sender, FileUploadCompleteEventArgs e)
+        protected void SavePartBtn_Click(object sender, EventArgs e)
         {
-            string name = e.UploadedFile.FileName;
-            string url = GetImageUrl(e.UploadedFile.FileNameInStorage);
-           
-            long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
-            string sizeText = sizeInKilobytes + " KB";
-            e.CallbackData = name + "|" + url + "|" + sizeText;
+            SaveSession();
+            updateParts();
 
-            if(Session["url"] != null)
-            {
-                Session.Remove("url");
-            }
-            Session.Add("url", url);
-
-            if(Session["name"] != null)
-            {
-                Session.Remove("name");
-            }
-            Session.Add("name", name);
         }
-
-        string GetImageUrl(string fileName)
-        {
-            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
-
-            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
-            {
-                provider.StorageAccountName = AzureAccountName;
-                provider.AccessKey = AzureAccountKey;
-                provider.ContainerName = AzureAccountContainerName;
-                //provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
-                //provider.AccessKey = UploadControl.AzureSettings.AccessKey;
-                //provider.ContainerName = UploadControl.AzureSettings.ContainerName;
-            }
-            else
-            {
-
-            }
-            FileManagerFile file = new FileManagerFile(provider, fileName);
-            FileManagerFile[] files = new FileManagerFile[] { file };
-            return provider.GetDownloadUrl(files);
-        }
-
     }
 }

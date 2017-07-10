@@ -311,7 +311,6 @@ function getLocation() {
                                                                                 </div>
                                                                             </dx:LayoutItemNestedControlContainer>
                                                                         </LayoutItemNestedControlCollection>
-
                                                                         <CaptionSettings Location="Top"></CaptionSettings>
                                                                     </dx:LayoutItem> <%--upload control--%>   
                                                                                 
@@ -396,8 +395,7 @@ function getLocation() {
                                                                         </LayoutItemNestedControlCollection>
 
                                                                         <CaptionSettings Location="Top"></CaptionSettings>
-                                                                    </dx:LayoutItem>   
-                             
+                                                                    </dx:LayoutItem>                               
                 <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer>
@@ -429,9 +427,7 @@ function getLocation() {
                 </dx:LayoutItem>
             </Items>
         </dx:ASPxFormLayout>
-    
-   
-
+      
         <asp:SqlDataSource ID="AttachmentDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:connection %>" 
         SelectCommand="SELECT [ID], [nJobID], [nJobstepID], [DocType], [Description], [LocationOrURL], [ShortName] 
         FROM [Attachments] 
