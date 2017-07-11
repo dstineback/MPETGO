@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.UI;
 using DevExpress.Web;
 using System.Configuration;
 using System.Web.Configuration;
 using System.Globalization;
 using System.Web.UI.HtmlControls;
-using System.Web.UI;
 using System.Data;
 using System.Web.UI.WebControls;
 using System.Reflection;
@@ -171,11 +171,13 @@ namespace MPETGO.Pages
                 SavePartBtn.Visible = true;
                 AddPartBtn.Visible = false;
                 AttachmentGrid.Visible = true;
+                ASPxRoundPanel1.Visible = false;
             } else
             {
                 AddPartBtn.Visible = true;
                 SavePartBtn.Visible = false;
                 AttachmentGrid.Visible = false;
+                ASPxRoundPanel1.Visible = true;
             }
 
            
@@ -220,6 +222,8 @@ namespace MPETGO.Pages
 
             Session.Add("url", url);
             Session.Add("name", name);
+
+            ASPxRoundPanel1.Visible = true;
 
             //INSERT JOB ATTACHMENT ROUTINE HERE!!!!
 
@@ -271,11 +275,13 @@ namespace MPETGO.Pages
                 provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
                 provider.AccessKey = UploadControl.AzureSettings.AccessKey;
                 provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+                
             }
             else
             {
 
             }
+            
             FileManagerFile file = new FileManagerFile(provider, fileName);
             FileManagerFile[] files = new FileManagerFile[] { file };
             return provider.GetDownloadUrl(files);

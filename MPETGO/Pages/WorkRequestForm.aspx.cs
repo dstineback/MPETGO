@@ -82,7 +82,8 @@ namespace MPETGO.Pages
             if (HttpContext.Current.Session["TxtWorkRequestDate"] != null)
             {
                 //Get Info From Session
-                startDate.Value = Convert.ToDateTime(HttpContext.Current.Session["TxtWorkRequestDate"].ToString());
+                var requestDate = Convert.ToDateTime(Session["TxtWorkRequestDate"]);
+                startDate.Value = requestDate;
             } else
             {
                 startDate.Value = DateTime.Now;
@@ -480,6 +481,7 @@ namespace MPETGO.Pages
                 saveBtn.Visible = true;
                 submitBtn.Visible = false;
                 AttachmentGrid.Visible = true;
+                ASPxRoundPanel1.Visible = false;
                 
 
             } else
@@ -487,6 +489,7 @@ namespace MPETGO.Pages
                 saveBtn.Visible = false;
                 submitBtn.Visible = true;
                 AttachmentGrid.Visible = false;
+                ASPxRoundPanel1.Visible = true;
                            
             }
 
@@ -530,6 +533,8 @@ namespace MPETGO.Pages
 
             Session.Add("url", url);
             Session.Add("name", name);
+
+            ASPxRoundPanel1.Visible = true;
 
             //INSERT JOB ATTACHMENT ROUTINE HERE!!!!
 
@@ -1091,7 +1096,7 @@ namespace MPETGO.Pages
             if (HttpContext.Current.Session["TxtWorkRequestDate"] != null)
             {
                 //Get Info From Session
-                requestDate = Convert.ToDateTime(HttpContext.Current.Session["TxtWorkRequestDate"].ToString());
+                requestDate = Convert.ToDateTime(Session["TxtWorkRequestDate"].ToString());
             }
 
             //Get Priority

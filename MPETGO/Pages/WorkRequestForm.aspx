@@ -98,6 +98,25 @@ function getLocation() {
         }
     }
 </script>
+<script>
+    var fieldSeparator = "|";
+    function FileUploadStart() {
+        document.getElementById("uploadedListFiles").innerHTML = "";
+    }
+
+    function FileUploaded(s, e) {
+        if (e.isValid) {
+            var linkFile = document.createElement("a");
+            var indexSeparator = e.callbackData.indexOf(fieldSeparator);
+            var fileName = e.callbackData.substring(0, indexSeparator);
+            var pictureUrl = e.callbackData.substring(indexSeparator + fieldSeparator.length);          
+            linkFile.innerHTML = fileName;          
+            var container = document.getElementById("uploadedListFiles");
+            container.appendChild(linkFile);
+            container.appendChild(document.createElement("br"));
+        }
+    }
+</script>
      <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
     <dx:ASPxLabel runat="server" ID="lblHeader"></dx:ASPxLabel>
 
@@ -304,8 +323,8 @@ function getLocation() {
                                                                                                 MaxFileSize="4194304" 
                                                                                                 AllowedFileExtensions=".jpg,.jpeg,.gif,.png">
                                                                                             </ValidationSettings>
-                                                                                            <ClientSideEvents 
-                                                                                                FileUploadComplete="onFileUploadComplete"/>
+                                                                                            <ClientSideEvents FileUploadComplete="function(s, e) { FileUploaded(s, e) }" 
+                                FilesUploadStart="function(s, e) { FileUploadStart(); }"/>
                                                                                         </dx:ASPxUploadControl>
                                                                                     </div>
                                                                                 </div>
@@ -313,7 +332,19 @@ function getLocation() {
                                                                         </LayoutItemNestedControlCollection>
                                                                         <CaptionSettings Location="Top"></CaptionSettings>
                                                                     </dx:LayoutItem> <%--upload control--%>   
-                                                                                
+                 <dx:LayoutItem Caption="" Width="50%" CaptionSettings-Location="Top">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer>
+                        <dx:ASPxRoundPanel runat="server" ID="ASPxRoundPanel1" Width="100%" ClientInstanceName="RoundPanel" HeaderText="Uploaded Files">
+                            <PanelCollection>
+                                <dx:PanelContent runat="server">
+                                    <div id="uploadedListFiles" style="height: 50px; font-family: Arial;"></div>
+                                </dx:PanelContent>
+                            </PanelCollection>
+                        </dx:ASPxRoundPanel>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>                                                              
                 <dx:LayoutItem Caption="" ShowCaption="False"  CaptionSettings-Location="Top">
                                                                         <LayoutItemNestedControlCollection >
                                                                             <dx:LayoutItemNestedControlContainer>

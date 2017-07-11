@@ -21,88 +21,110 @@
         txtLong.SetValue(long); 
         txtLong.SetText(long);
     }
-    function onFileUploadComplete(s, e) {
-        if (e.callbackData) {
-            var fileData = e.callbackData.split('|');
-            var fileName = fileData[0],
-                fileUrl = fileData[1],
-                fileSize = fileData[2];
-            DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
-        }
-    }
+    //function onFileUploadComplete(s, e) {
+    //    if (e.callbackData) {
+    //        var fileData = e.callbackData.split('|');
+    //        var fileName = fileData[0],
+    //            fileUrl = fileData[1],
+    //            fileSize = fileData[2];
+    //        DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
+    //    }
+    //}
 </script>
 <script>
-    DXUploadedFilesContainer = {
-        nameCellStyle: "",
-        sizeCellStyle: "",
-        useExtendedPopup: false,
+    //DXUploadedFilesContainer = {
+    //    nameCellStyle: "",
+    //    sizeCellStyle: "",
+    //    useExtendedPopup: false,
 
-        AddFile: function (fileName, fileUrl, fileSize) {
-            var self = DXUploadedFilesContainer;
-            var builder = ["<tr>"];
+    //    AddFile: function (fileName, fileUrl, fileSize) {
+    //        var self = DXUploadedFilesContainer;
+    //        var builder = ["<tr>"];
 
-            builder.push("<td class='nameCell'");
-            if (self.nameCellStyle)
-                builder.push(" style='" + self.nameCellStyle + "'");
-            builder.push(">");
-            self.BuildLink(builder, fileName, fileUrl);
-            builder.push("</td>");
+    //        builder.push("<td class='nameCell'");
+    //        if (self.nameCellStyle)
+    //            builder.push(" style='" + self.nameCellStyle + "'");
+    //        builder.push(">");
+    //        self.BuildLink(builder, fileName, fileUrl);
+    //        builder.push("</td>");
 
-            builder.push("<td class='sizeCell'");
-            if (self.sizeCellStyle)
-                builder.push(" style='" + self.sizeCellStyle + "'");
-            builder.push(">");
-            builder.push(fileSize);
-            builder.push("</td>");
+    //        builder.push("<td class='sizeCell'");
+    //        if (self.sizeCellStyle)
+    //            builder.push(" style='" + self.sizeCellStyle + "'");
+    //        builder.push(">");
+    //        builder.push(fileSize);
+    //        builder.push("</td>");
 
-            builder.push("</tr>");
+    //        builder.push("</tr>");
 
-            var html = builder.join("");
-            DXUploadedFilesContainer.AddHtml(html);
-        },
-        Clear: function () {
-            DXUploadedFilesContainer.ReplaceHtml("");
-        },
-        BuildLink: function (builder, text, url) {
-            builder.push("<a target='blank' onclick='return DXDemo.ShowScreenshotWindow(event, this, " + this.useExtendedPopup + ");'");
-            builder.push(" href='" + url + "'>");
-            builder.push(text);
-            builder.push("</a>");
-        },
-        AddHtml: function (html) {
-            var fileContainer = document.getElementById("uploadedFilesContainer"),
-                fullHtml = html;
-            if (fileContainer) {
-                var containerBody = fileContainer.tBodies[0];
-                fullHtml = containerBody.innerHTML + html;
-            }
-            DXUploadedFilesContainer.ReplaceHtml(fullHtml);
-        },
-        ReplaceHtml: function (html) {
-            var builder = ["<table id='uploadedFilesContainer' class='uploadedFilesContainer'><tbody>"];
-            builder.push(html);
-            builder.push("</tbody></table>");
-            var contentHtml = builder.join("");
-            window.FilesRoundPanel.SetContentHtml(contentHtml);
-        },
-        ApplySettings: function (nameCellStyle, sizeCellStyle, useExtendedPopup) {
-            var self = DXUploadedFilesContainer;
-            self.nameCellStyle = nameCellStyle;
-            self.sizeCellStyle = sizeCellStyle;
-            self.useExtendedPopup = useExtendedPopup;
-        }
-    };
+    //        var html = builder.join("");
+    //        DXUploadedFilesContainer.AddHtml(html);
+    //    },
+    //    Clear: function () {
+    //        DXUploadedFilesContainer.ReplaceHtml("");
+    //    },
+    //    BuildLink: function (builder, text, url) {
+    //        builder.push("<a target='blank' onclick='return DXDemo.ShowScreenshotWindow(event, this, " + this.useExtendedPopup + ");'");
+    //        builder.push(" href='" + url + "'>");
+    //        builder.push(text);
+    //        builder.push("</a>");
+    //    },
+    //    AddHtml: function (html) {
+    //        var fileContainer = document.getElementById("uploadedFilesContainer"),
+    //            fullHtml = html;
+    //        if (fileContainer) {
+    //            var containerBody = fileContainer.tBodies[0];
+    //            fullHtml = containerBody.innerHTML + html;
+    //        }
+    //        DXUploadedFilesContainer.ReplaceHtml(fullHtml);
+    //    },
+    //    ReplaceHtml: function (html) {
+    //        var builder = ["<table id='uploadedFilesContainer' class='uploadedFilesContainer'><tbody>"];
+    //        builder.push(html);
+    //        builder.push("</tbody></table>");
+    //        var contentHtml = builder.join("");
+    //        window.FilesRoundPanel.SetContentHtml(contentHtml);
+    //    },
+    //    ApplySettings: function (nameCellStyle, sizeCellStyle, useExtendedPopup) {
+    //        var self = DXUploadedFilesContainer;
+    //        self.nameCellStyle = nameCellStyle;
+    //        self.sizeCellStyle = sizeCellStyle;
+    //        self.useExtendedPopup = useExtendedPopup;
+    //    }
+    //};
 
-    function onFileUploadComplete(s, e) {
-        if (e.callbackData) {
-            var fileData = e.callbackData.split('|');
-            var fileName = fileData[0],
-                fileUrl = fileData[1],
-                fileSize = fileData[2];
+    //function onFileUploadComplete(s, e) {
+    //    if (e.callbackData) {
+    //        var fileData = e.callbackData.split('|');
+    //        var fileName = fileData[0],
+    //            fileUrl = fileData[1],
+    //            fileSize = fileData[2];
             //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
             //window.AttachmentGrid.Refresh();
+        //}
+    //}
+</script>
+<script>
+    var fieldSeparator = "|";
+    function FileUploadStart() {
+        document.getElementById("uploadedListFiles").innerHTML = "";
+    }
+
+    function FileUploaded(s, e) {
+        if (e.isValid) {
+            var linkFile = document.createElement("a");
+            var indexSeparator = e.callbackData.indexOf(fieldSeparator);
+            var fileName = e.callbackData.substring(0, indexSeparator);
+            var pictureUrl = e.callbackData.substring(indexSeparator + fieldSeparator.length);
+            
+            linkFile.innerHTML = fileName;
+           
+            var container = document.getElementById("uploadedListFiles");
+            container.appendChild(linkFile);
+            container.appendChild(document.createElement("br"));
         }
     }
+
 </script>
 
     <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
@@ -209,7 +231,7 @@
                             ShowTextBox="true" 
                             NullText="Upload image" 
                             UploadStorage="Azure" 
-                            UploadMode="Auto"
+                            UploadMode="Auto" FileInputCount="2"
                             FileUploadMode="OnPageLoad" 
                             ShowUploadButton="true" 
                             ShowProgressPanel="true" 
@@ -219,13 +241,29 @@
                              
                             <AdvancedModeSettings EnableMultiSelect="true" EnableDragAndDrop="true" EnableFileList="true"></AdvancedModeSettings>
                             <ValidationSettings MaxFileSize="4194304" AllowedFileExtensions=".jpg, .jpeg, .gif, .png"></ValidationSettings>
-                            <ClientSideEvents FileUploadComplete="onFileUploadComplete" />
+                            <ClientSideEvents FileUploadComplete="function(s, e) { FileUploaded(s, e) }" 
+                                FilesUploadStart="function(s, e) { FileUploadStart(); }"
+                                 />
                         </dx:ASPxUploadControl>
                             </div>
                         </div>                      
                     </dx:LayoutItemNestedControlContainer>                  
                 </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>         
+            </dx:LayoutItem> 
+            <dx:LayoutItem Caption="" Width="50%" CaptionSettings-Location="Top">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer>
+                        <dx:ASPxRoundPanel runat="server" ID="ASPxRoundPanel1" Width="100%" ClientInstanceName="RoundPanel" HeaderText="Uploaded Files">
+                            <PanelCollection>
+                                <dx:PanelContent runat="server">
+                                    <div id="uploadedListFiles" style="height: 50px; font-family: Arial;"></div>
+                                </dx:PanelContent>
+                            </PanelCollection>
+                        </dx:ASPxRoundPanel>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>
+                   
             <dx:LayoutItem Caption="" ShowCaption="False"  CaptionSettings-Location="Top">
                                                                         <LayoutItemNestedControlCollection >
                                                                             <dx:LayoutItemNestedControlContainer>
