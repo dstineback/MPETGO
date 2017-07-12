@@ -22,6 +22,15 @@ namespace MPETGO.Pages {
         protected global::System.Web.UI.ScriptManager ScriptManager1;
         
         /// <summary>
+        /// objectLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxLabel objectLabel;
+        
+        /// <summary>
         /// PartsForm control.
         /// </summary>
         /// <remarks>

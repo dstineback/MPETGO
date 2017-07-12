@@ -128,6 +128,7 @@
 </script>
 
     <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
+    <dx:ASPxLabel runat="server" ID="objectLabel" Text="Object ID:" Visible="false"></dx:ASPxLabel>
     <dx:ASPxFormLayout ID="PartsForm" runat="server" Width="100%" Theme="iOS" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800">
         <Items>
             <dx:LayoutItem Caption="Active">

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using DevExpress.Web;
+using System.IO;
 using System.Configuration;
 using System.Web.Configuration;
 using System.Globalization;
@@ -139,6 +140,53 @@ namespace MPETGO.Pages
                 LatLongBtn.Visible = false;
             }
 
+            if (IsPostBack)
+            {
+                if (Session["objectID"] != null)
+                {
+                    objectID.Text = Session["objectID"].ToString();
+                }
+
+                if (Session["startDate"] != null)
+                {
+                    startDate.Value = Session["startDate"];
+                }
+                else
+                {
+                    startDate.Value = DateTime.Now;
+                }
+
+                if (Session["ComboObjectType"] != null)
+                {
+                    ComboObjectType.Value = Session["ComboObjectType"];
+                }
+
+                if (Session["objectDesc"] != null)
+                {
+                    objectDesc.Text = Session["objectDesc"].ToString();
+                }
+
+                if (Session["ComboArea"] != null)
+                {
+                    ComboArea.Value = Session["ComboArea"];
+                }
+
+                if (Session["txtLat"] != null)
+                {
+                    txtLat.Text = Session["txtLat"].ToString();
+                }
+
+                if (Session["txtLong"] != null)
+                {
+                    txtLong.Text = Session["txtLong"].ToString();
+                }
+
+                if (Session["ComboStreet"] != null)
+                {
+                    ComboStreet.Value = Session["ComboStreet"];
+                }
+            }
+
             if (!IsPostBack)
             {       
                 ResetSession();
@@ -163,7 +211,8 @@ namespace MPETGO.Pages
 
             if (!String.IsNullOrEmpty(Request.QueryString["n_objectID"]))
             {
-
+                
+               
             }
 
             if(Session["n_objectID"] != null)
@@ -172,16 +221,16 @@ namespace MPETGO.Pages
                 AddPartBtn.Visible = false;
                 AttachmentGrid.Visible = true;
                 ASPxRoundPanel1.Visible = false;
+                UploadControl.Visible = true;
             } else
             {
                 AddPartBtn.Visible = true;
                 SavePartBtn.Visible = false;
                 AttachmentGrid.Visible = false;
-                ASPxRoundPanel1.Visible = true;
+                ASPxRoundPanel1.Visible = false;
+                UploadControl.Visible = false;
             }
-
-           
-
+         
         }
         #region Azure Setup
         string AzureAccount
@@ -213,6 +262,10 @@ namespace MPETGO.Pages
         protected void UploadControl_FileUploadComplete(object sender, FileUploadCompleteEventArgs e)
         {
             // RemoveFileWithDelay(e.UploadedFile.FileNameInStorage, 5);
+            if (Session["n_objectID"] == null)
+            {
+                AddParts();
+            }
 
             string name = e.UploadedFile.FileName;
             string url = GetImageUrl(e.UploadedFile.FileNameInStorage);
@@ -222,10 +275,9 @@ namespace MPETGO.Pages
 
             Session.Add("url", url);
             Session.Add("name", name);
+            SaveSession();
 
             ASPxRoundPanel1.Visible = true;
-
-            //INSERT JOB ATTACHMENT ROUTINE HERE!!!!
 
             //Check For Job ID
             if (Session["n_objectID"] != null)
@@ -274,17 +326,15 @@ namespace MPETGO.Pages
             {
                 provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
                 provider.AccessKey = UploadControl.AzureSettings.AccessKey;
-                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
-                
+                provider.ContainerName = UploadControl.AzureSettings.ContainerName;               
             }
             else
             {
-
             }
-            
+            fileName = Path.Combine(provider.ContainerName, "Maintenance Object Attachments", Session["objectID"].ToString(), fileName);
             FileManagerFile file = new FileManagerFile(provider, fileName);
             FileManagerFile[] files = new FileManagerFile[] { file };
-            return provider.GetDownloadUrl(files);
+            return provider.GetDownloadUrl(files);           
         }
 
         protected void DeleteAttachmentButton_Click(object sender, EventArgs e)
@@ -467,6 +517,7 @@ namespace MPETGO.Pages
         #region Save Session
         private void SaveSession()
         {
+            //Saving all the values for the form fields
            
           if(objectID.Text.Length > 0)
            {
@@ -491,34 +542,45 @@ namespace MPETGO.Pages
             Session.Add("ComboObjectType", ComboObjectType.Value.ToString());
             }
 
+           if(ComboObjectType.Text.Length > 0)
+            {
+                Session.Remove("ComboObjectTypeText");
+                Session.Add("ComboObjectTypeText", ComboObjectType.Text);
+            }
+
+
             if (objectDesc.Text.Length > 0)
             {
                 Session.Remove("objectDesc");
-            Session.Add("objectDesc", objectDesc.Text.Trim());
+                Session.Add("objectDesc", objectDesc.Text.Trim());
             }
 
-            if(ComboArea.Value != null)
+            if(ComboArea.Value != null && ComboArea.Text.Length > 0)
             {
-                Session.Remove("ComboArea"); 
-            Session.Add("ComboArea", ComboArea.Value.ToString());
+                Session.Remove("ComboArea");
+                Session.Remove("ComboAreaText");
+                Session.Add("ComboArea", ComboArea.Value.ToString());
+                Session.Add("ComboAreaText", ComboArea.Text);
             }
 
             if(txtLat.Text.Length > 0)
             {
                 Session.Remove("txtLat");
-            Session.Add("txtLat", txtLat.Text.Trim());
+                Session.Add("txtLat", txtLat.Text.Trim());
             }
 
             if (txtLong.Text.Length > 0)
             {
                 Session.Remove("txtLong");
-            Session.Add("txtLong", txtLong.Text.Trim());
+                Session.Add("txtLong", txtLong.Text.Trim());
             }
 
-            if (ComboStreet.Value != null)
+            if (ComboStreet.Value != null && ComboStreet.Text.Length > 0)
             {
                 Session.Remove("ComboStreet");
-            Session.Add("ComboStreet", ComboStreet.Value.ToString());
+                Session.Remove("ComboStreetText");
+                Session.Add("ComboStreet", ComboStreet.Value.ToString());
+                Session.Add("ComboStreetText", ComboStreet.Text);
             }
            
         }
@@ -526,6 +588,7 @@ namespace MPETGO.Pages
         #region Reset Session
         public void ResetSession()
         {
+            //Clearing out all the session fields for this form
             if (Session["objectID"] != null)
             {
                 Session.Remove("objectID");
@@ -541,6 +604,11 @@ namespace MPETGO.Pages
                 Session.Remove("ComboObjectType");
             }
 
+            if (Session["ComboObjectTypeText"] != null)
+            {
+                Session.Remove("ComboObjectTypeText");
+            }
+
             if (Session["objectDesc"] != null)
             {
                 Session.Remove("objectDesc");
@@ -549,6 +617,11 @@ namespace MPETGO.Pages
             if (Session["ComboArea"] != null)
             {
                 Session.Remove("ComboArea");
+            }
+
+            if (Session["ComboAreaText"] != null)
+            {
+                Session.Remove("ComboAreaText");
             }
 
             if (Session["txtLat"] != null)
@@ -566,7 +639,27 @@ namespace MPETGO.Pages
                 Session.Remove("ComboStreet");
             }
 
-            
+            if(Session["ComboStreetText"] != null)
+            {
+                Session.Remove("CobmoStreetText");
+            }
+
+            if (Session["n_objectID"] != null)
+            {
+                Session.Remove("n_objectID");
+            }
+
+            if (Session["url"] != null)
+            {
+                Session.Remove("url");
+            }
+
+            if (Session["name"] != null)
+            {
+                Session.Remove("name");
+            }
+
+
 
             //Clear Session & Fields
             if (HttpContext.Current.Session["navObject"] != null)
@@ -966,20 +1059,7 @@ namespace MPETGO.Pages
                 HttpContext.Current.Session.Remove("ObjectPhoto");
             }
 
-            if(Session["n_objectID"] != null)
-            {
-                Session.Remove("n_objectID");
-            }
-
-            if(Session["url"] != null)
-            {
-                Session.Remove("url");
-            }
-
-            if (Session["name"] != null)
-            {
-                Session.Remove("name");
-            }
+           
         }
         #endregion
         #region Add Part
@@ -992,15 +1072,16 @@ namespace MPETGO.Pages
 
             
             objTypeID = Convert.ToInt32(ComboObjectType.Value);
-            var c = Convert.ToInt32(ComboObjectType.SelectedItem.GetFieldValue("n_objtypeid"));
-            int n_objectid = c;
+            //var c = Convert.ToInt32(ComboObjectType.SelectedItem.GetFieldValue("n_objtypeid"));
+
+            //int n_objectid = Convert.ToInt32(ComboObjectType.Value);
             areaID = Convert.ToInt32(ComboArea.Value);
             
             
 
             _oMaintObj = new MaintenanceObject(_connectionString, _useWeb);
 
-            if(_oMaintObj.Add(objectID.Text.Trim(),
+            if (_oMaintObj.Add(objectID.Text.Trim(),
                 objectDesc.Text.Trim(),
                 taskId,
                 parentObjectID,
@@ -1065,49 +1146,20 @@ namespace MPETGO.Pages
                 ))
             {
                 var n_objectID = _oMaintObj.RecordID;
-                if(Session["n_objectID"] != null)
+                if (Session["n_objectID"] != null)
                 {
                     Session.Remove("n_objectID");
                 }
-                Session.Add("n_objectID", n_objectid);
-                var file = "";
-                if(Session["url"] != null){
+                Session.Add("n_objectID", n_objectID);
 
-                    file = Session["url"].ToString();
-                }
-
-                if(Session["name"] != null)
-                {
-                    shortName = Session["name"].ToString();
-                }
-                          
-                if (file != "")
-                {
-                 maintObjectId = objTypeID;
-                 creator = _oLogon.UserID;
-                 fullPath = file;
-                   
-                 desc = "M-PET GO upload";
+                SavePartBtn.Visible = true;
+                AddPartBtn.Visible = false;
                 
-                if(_oObjAttachments.Add(n_objectID, 
-                    creator, 
-                    fullPath, 
-                    docType, 
-                    desc, 
-                    shortName.Trim()))
-                    {
-                        Response.Write("<script language='javascript'>window.alert('File uploaded & attached to Object.')</script>");
-                    } else {
-                        throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
-                    }
-                }
-                Response.Write("<script language='javascript'>window.alert('New Object Created and Saved.')</script>");
-                ResetSession();
-                Response.Redirect("/index.aspx",  true);
-            } else
-            {
-                throw new SystemException(@"Error adding - " + _oMaintObj.LastError);
-            }
+                UploadControl.Visible = true;
+                ASPxRoundPanel1.Visible = true;
+                objectLabel.Visible = true;
+                objectLabel.Text = "Object ID: " + n_objectID;
+             }       
         }
 
         private void updateParts() {
@@ -1118,115 +1170,180 @@ namespace MPETGO.Pages
 
             var recordID = Convert.ToInt32(Session["n_objectID"]);
             objTypeID = Convert.ToInt32(ComboObjectType.Value);
-            var c = Convert.ToInt32(ComboObjectType.SelectedItem.GetFieldValue("n_objtypeid"));
-            int n_objectid = c;
+            //var c = Convert.ToInt32(ComboObjectType.SelectedItem.GetFieldValue("n_objtypeid"));
+            //int n_objectid = Convert.ToInt32(ComboObjectType.Value);
             areaID = Convert.ToInt32(ComboArea.Value);
+            var lat = 0;
+            if(txtLat.Text != null)
+            {
+                lat = Convert.ToInt32(txtLat.Value);
+            }
+            var lng = 0;
+            if(txtLong.Text != null)
+            {
+                lng = Convert.ToInt32(txtLat.Value);
+            }
 
-            if (_oMaintObj.Update(recordID,objectID.Text.Trim(), objectDesc.Text,
-                taskId,
-                parentObjectID, 
-                areaID, 
-                costCodeID, 
-                locationID,
-                manufacturerID, 
-                objClassID, 
-                objTypeID, 
-                prodLineID, 
-                storeroomID, 
-                txtMaintObjectNotes, 
-                txtAssetNumber, 
-                activeCheckBox.Checked, 
-                true, 
-                true, 
-                true, 
-                txtChargeRate,
-                cboFundamentalType,
-                Convert.ToDecimal(txtLat.Value),
-                Convert.ToDecimal(txtLong.Value),
-                txtGpsZ,
-                txtLogicalOrder,
-                idealCycle,
-                tmpRebuildDate,
-                cboManufacturer,
-                txtModel,
-                txtMiscRef,
-                txtProductionNbr,
-                tmpPuchaseDate,
-                txtPurchasePrice,
-                txtRemarks,
-                txtSerial,
-                date,
-                tmpWarrantyDate,
-                overheadRateID,
-                responsibleID,
-                conditionID,
-                tmpLifeCycleDate,
-                vendorID,
-                txtMilePost,
-                milePostDir,
-                stateRouteID,
-                txtEasting,
-                txtNorthing,
-                txtWarrantyInterval,
-                txtLifeCycleInterval,
-                uom, 
-                milepostTo, 
-                quantity,
-                txtHoursAvailable,
-                txtPMHours,
-                txtTotalAvailHrs,
-                fundSource,
-                workOrder,
-                workOp,
-                orgCode,
-                fundingGroup,
-                equipNumber,
-                controlSection,
-                _oLogon.UserID)) {
-
-                var file = "";
-                if (Session["url"] != null)
+            try
+            {
+                if (_oMaintObj.Update(recordID, objectID.Text.Trim().ToString(), objectDesc.Text.Trim().ToString(),
+                    taskId,
+                    parentObjectID,
+                    areaID,
+                    costCodeID,
+                    locationID,
+                    manufacturerID,
+                    objClassID,
+                    objTypeID,
+                    prodLineID,
+                    storeroomID,
+                    txtMaintObjectNotes,
+                    txtAssetNumber,
+                    activeCheckBox.Checked,
+                    true,
+                    true,
+                    true,
+                    txtChargeRate,
+                    cboFundamentalType,
+                    Convert.ToDecimal(lat),
+                    Convert.ToDecimal(lng),
+                    txtGpsZ,
+                    txtLogicalOrder,
+                    idealCycle,
+                    tmpRebuildDate,
+                    cboManufacturer,
+                    txtModel,
+                    txtMiscRef,
+                    txtProductionNbr,
+                    tmpPuchaseDate,
+                    txtPurchasePrice,
+                    txtRemarks,
+                    txtSerial,
+                    date,
+                    tmpWarrantyDate,
+                    overheadRateID,
+                    responsibleID,
+                    conditionID,
+                    tmpLifeCycleDate,
+                    vendorID,
+                    txtMilePost,
+                    milePostDir,
+                    stateRouteID,
+                    txtEasting,
+                    txtNorthing,
+                    txtWarrantyInterval,
+                    txtLifeCycleInterval,
+                    uom,
+                    milepostTo,
+                    quantity,
+                    txtHoursAvailable,
+                    txtPMHours,
+                    txtTotalAvailHrs,
+                    fundSource,
+                    workOrder,
+                    workOp,
+                    orgCode,
+                    fundingGroup,
+                    equipNumber,
+                    controlSection,
+                    _oLogon.UserID))
                 {
 
-                    file = Session["url"].ToString();
-                }
-
-                if (Session["name"] != null)
-                {
-                    shortName = Session["name"].ToString();
-                }
-
-                if (file != "")
-                {
-                    maintObjectId = objTypeID;
-                    creator = _oLogon.UserID;
-                    fullPath = file;
-
-                    desc = "M-PET GO upload";
-
-                    if (_oObjAttachments.Add(recordID,
-                        creator,
-                        fullPath,
-                        docType,
-                        desc,
-                        shortName.Trim()))
+                    var file = "";
+                    if (Session["url"] != null)
                     {
 
+                        file = Session["url"].ToString();
                     }
-                    else
-                    {
-                        throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
-                    }
-                }
 
-                Response.Redirect("/pages/parts.aspx?n_objectID=" + recordID, true);
+                    if (Session["name"] != null)
+                    {
+                        shortName = Session["name"].ToString();
+                    }
+
+                    if (file != "")
+                    {
+                        maintObjectId = objTypeID;
+                        creator = _oLogon.UserID;
+                        fullPath = file;
+
+                        desc = "M-PET GO upload";
+
+                        if (_oObjAttachments.Add(recordID,
+                            creator,
+                            fullPath,
+                            docType,
+                            desc,
+                            shortName.Trim()))
+                        {
+
+                        }
+                        else
+                        {
+                            throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
+                        }
+                    }
+
+                    //Response.Redirect("/pages/parts.aspx?n_objectID=" + recordID, true);
+                }
+                else
+                {
+                    throw new SystemException(@"Error adding - " + _oMaintObj.LastError);
+                }
+            }
+            catch
+            {
+                throw new SystemException(@"Error updating Object - " + _oMaintObj.LastError);
+            }
+        
+        }
+
+        private void AddAttachment()
+        {
+            var n_objectID = -1;
+            if(Session["n_objectID"] != null)
+            {
+                n_objectID = Convert.ToInt32(Session["n_objectID"]);
+            }
+
+            var file = "";
+            if (Session["url"] != null)
+            {
+                file = Session["url"].ToString();
+            }
+
+            if (Session["name"] != null)
+            {
+                shortName = Session["name"].ToString();
+            }
+
+            if (file != "")
+            {
+                maintObjectId = objTypeID;
+                creator = _oLogon.UserID;
+                fullPath = file;
+                desc = "M-PET GO upload";
+            }
+
+
+            if (_oObjAttachments.Add(n_objectID,
+                    creator,
+                    fullPath,
+                    docType,
+                    desc,
+                    shortName.Trim()))
+            {
+                Response.Write("<script language='javascript'>window.alert('File uploaded & attached to Object.')</script>");
             }
             else
             {
-                throw new SystemException(@"Error adding - " + _oMaintObj.LastError);
+                throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
             }
-
         
+            Response.Write("<script language='javascript'>window.alert('New Object Created and Saved.')</script>");
+            ResetSession();
+            Response.Redirect("/index.aspx",  true);
+           
         }
 
 
