@@ -76,6 +76,15 @@ namespace MPETGO.Pages {
         protected global::DevExpress.Web.ASPxMemo objectDesc;
         
         /// <summary>
+        /// ComboLocation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxComboBox ComboLocation;
+        
+        /// <summary>
         /// ComboStreet control.
         /// </summary>
         /// <remarks>
@@ -200,6 +209,15 @@ namespace MPETGO.Pages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource AttachmentDataSource;
+        
+        /// <summary>
+        /// LocationDataSource control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource LocationDataSource;
         
         /// <summary>
         /// ObjectTypeDataSource control.

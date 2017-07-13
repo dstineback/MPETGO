@@ -169,11 +169,30 @@
             <dx:LayoutItem Caption="Description" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxMemo runat="server" ID="objectDesc" Width="100%"></dx:ASPxMemo>
+                        <dx:ASPxMemo runat="server" ID="objectDesc" AutoPostBack="true" Width="100%"></dx:ASPxMemo>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
             <%--<dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
+            <dx:LayoutItem Caption="Location" CaptionSettings-Location="Top" Width="50%">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer runat="server">
+                        <dx:ASPxComboBox runat="server" ID="ComboLocation" Width="100%" 
+                            OnItemRequestedByValue="ComboLocation_OnItemRequestedByValue_SQL" 
+                            OnItemsRequestedByFilterCondition="ComboLocation_OnItemRequestedByFilterCondition_SQL" 
+                            DropDownButton-Enabled="true" DropDownStyle="DropDown" 
+                            AutoPostBack="false" EnableCallbackMode="true" CallbackPageSize="10"
+                            TextField="locationid" ValueField="n_locationid" ValueType="System.String" 
+                            TextFormatString="{0} - {1}" ClientInstanceName="ComboLocation" >
+                            <Columns>
+                                <dx:ListBoxColumn FieldName="n_locationid" Visible="false"></dx:ListBoxColumn>
+                                <dx:ListBoxColumn FieldName="locationid" Caption="Location" Width="75px" ToolTip="M-PET Go Location"></dx:ListBoxColumn>
+                                <dx:ListBoxColumn FieldName="description" Caption="Description" Width="150px" ToolTip="M-PET Go Location Description"></dx:ListBoxColumn>
+                            </Columns>
+                        </dx:ASPxComboBox>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>
             <dx:LayoutItem Caption="Street/Road" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
@@ -405,6 +424,7 @@
             <asp:Parameter DefaultValue="-1" Name="nJobstepID" Type="Int32" />
         </SelectParameters>
     </asp:SqlDataSource>
+<asp:SqlDataSource ID="LocationDataSource" runat="server"></asp:SqlDataSource>
 <asp:SqlDataSource ID="ObjectTypeDataSource" runat="server"></asp:SqlDataSource>
 <asp:SqlDataSource ID="AreaSqlDatasource" runat="server" />
 <asp:SqlDataSource ID="StateRouteDataSource" runat="server"></asp:SqlDataSource>

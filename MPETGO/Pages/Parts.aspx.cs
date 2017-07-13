@@ -142,49 +142,49 @@ namespace MPETGO.Pages
 
             if (IsPostBack)
             {
-                if (Session["objectID"] != null)
-                {
-                    objectID.Text = Session["objectID"].ToString();
-                }
+                //if (Session["objectID"] != null)
+                //{
+                //    objectID.Text = Session["objectID"].ToString();
+                //}
 
-                if (Session["startDate"] != null)
-                {
-                    startDate.Value = Session["startDate"];
-                }
-                else
-                {
-                    startDate.Value = DateTime.Now;
-                }
+                //if (Session["startDate"] != null)
+                //{
+                //    startDate.Value = Session["startDate"];
+                //}
+                //else
+                //{
+                //    startDate.Value = DateTime.Now;
+                //}
 
-                if (Session["ComboObjectType"] != null)
-                {
-                    ComboObjectType.Value = Session["ComboObjectType"];
-                }
+                //if (Session["ComboObjectType"] != null)
+                //{
+                //    ComboObjectType.Value = Session["ComboObjectType"];
+                //}
 
-                if (Session["objectDesc"] != null)
-                {
-                    objectDesc.Text = Session["objectDesc"].ToString();
-                }
+                //if (Session["objectDesc"] != null)
+                //{
+                //    objectDesc.Text = Session["objectDesc"].ToString();
+                //}
 
-                if (Session["ComboArea"] != null)
-                {
-                    ComboArea.Value = Session["ComboArea"];
-                }
+                //if (Session["ComboArea"] != null)
+                //{
+                //    ComboArea.Value = Session["ComboArea"];
+                //}
 
-                if (Session["txtLat"] != null)
-                {
-                    txtLat.Text = Session["txtLat"].ToString();
-                }
+                //if (Session["txtLat"] != null)
+                //{
+                //    txtLat.Text = Session["txtLat"].ToString();
+                //}
 
-                if (Session["txtLong"] != null)
-                {
-                    txtLong.Text = Session["txtLong"].ToString();
-                }
+                //if (Session["txtLong"] != null)
+                //{
+                //    txtLong.Text = Session["txtLong"].ToString();
+                //}
 
-                if (Session["ComboStreet"] != null)
-                {
-                    ComboStreet.Value = Session["ComboStreet"];
-                }
+                //if (Session["ComboStreet"] != null)
+                //{
+                //    ComboStreet.Value = Session["ComboStreet"];
+                //}
             }
 
             if (!IsPostBack)
@@ -208,10 +208,36 @@ namespace MPETGO.Pages
             ObjectTypeDataSource.ConnectionString = _connectionString;
             AreaSqlDatasource.ConnectionString = _connectionString;
             StateRouteDataSource.ConnectionString = _connectionString;
+            LocationDataSource.ConnectionString = _connectionString;
+
 
             if (!String.IsNullOrEmpty(Request.QueryString["n_objectID"]))
             {
-                
+                ResetSession();
+                if (Session["n_objectID"] == null)
+                {
+                    var recordID = Convert.ToInt32(Session["n_objectID"]);
+                    
+                    
+                        if (_oMaintObj.LoadData(recordID))
+                        {
+                            var n_objectID = _oMaintObj.Ds.Tables[0].Rows[0]["n_objectid"];
+                            Session.Add("n_objectID", n_objectID);
+
+                        Session.Add("ComboObjectType", _oMaintObj.Ds.Tables[0].Rows[0]["n_objtypeid"]);
+                        Session.Add("objectid", _oMaintObj.Ds.Tables[0].Rows[0]["objectid"]);
+                        Session.Add("description", _oMaintObj.Ds.Tables[0].Rows[0]["description"]);
+                        Session.Add("", _oMaintObj.Ds.Tables[0].Rows[0]["n_areaid"]);
+                        Session.Add("", _oMaintObj.Ds.Tables[0].Rows[0]["GPS_X"]);
+                        Session.Add("", _oMaintObj.Ds.Tables[0].Rows[0]["GPS_Y"]);
+                        Session.Add("", _oMaintObj.Ds.Tables[0].Rows[0]["CreatedOn"]);
+                    }
+
+                        
+
+
+                    
+                }
                
             }
 
@@ -469,6 +495,50 @@ namespace MPETGO.Pages
 
         }
 
+        protected void ComboLocation_OnItemRequestedByFilterCondition_SQL(object source, ListEditItemsRequestedByFilterConditionEventArgs e)
+        {
+            var comboBox = (ASPxComboBox)source;
+            LocationDataSource.SelectCommand =
+                @"SELECT [n_locationid]
+                        ,[locationid]
+                        ,[description]
+                FROM (SELECT dbo.locations.[n_locationid] AS n_locationid,
+                         dbo.locations.[locationid] AS locationid,
+                         dbo.locations.[description] AS description,
+                         ROW_NUMBER() OVER (ORDER BY locationid) AS [rn]
+                FROM    dbo.locations
+                WHERE   ((locationid + ' ' + description) Like @filter)
+                        AND dbo.locations.b_IsActive = 'Y'
+                        AND dbo.locations.n_locationid > 0 ) AS st
+                WHERE st.[rn] BETWEEN @startIndex AND @endIndex";
+            LocationDataSource.SelectParameters.Clear();
+            LocationDataSource.SelectParameters.Add("filter", TypeCode.String, string.Format("%{0}%", e.Filter));
+            LocationDataSource.SelectParameters.Add("startIndex", TypeCode.Int64, (e.BeginIndex + 1).ToString(CultureInfo.InvariantCulture));
+            LocationDataSource.SelectParameters.Add("endIndex", TypeCode.Int64, (e.BeginIndex + 1).ToString(CultureInfo.InvariantCulture));
+            comboBox.DataSource = LocationDataSource;
+            comboBox.DataBind();
+
+        }
+
+        protected void ComboLocation_OnItemRequestedByValue_SQL(object source, ListEditItemRequestedByValueEventArgs e)
+        {
+            var comboBox = (ASPxComboBox)source;
+            LocationDataSource.SelectCommand =
+                @"SELECT  
+                            dbo.locations.[n_locationid] AS n_locationid
+                            ,dbo.locations.[locationid] AS locationid
+                            ,dbo.locations.[description] AS description
+                    FROM    dbo.locations
+                    WHERE   dbo.locations.b_IsActive = 'Y'
+                            AND n_locationid > 0
+                            AND n_locationid = @ID
+                            ORDER By location ASC";
+            LocationDataSource.SelectParameters.Clear();
+            LocationDataSource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
+            comboBox.DataSource = LocationDataSource;
+            comboBox.DataBind();
+
+        }
         protected void ComboArea_OnItemRequestedByFilterCondition_SQL(object source, ListEditItemsRequestedByFilterConditionEventArgs e)
         {
             var comboBox = (ASPxComboBox)source;
@@ -1065,7 +1135,11 @@ namespace MPETGO.Pages
         #region Add Part
         private void AddParts()
         {
-            tmpPuchaseDate = _nullDate;
+  //public virtual bool Update(int recordId, string objectId, string desc, int taskId, int parentObjectId, int areaId, int costcodeId, int locationId, int mfgId, int objectClassId, int objectTypeId, int productLineId, int storeroomId, string notes, string assetNumber, bool active, bool chargeable, bool oeeFocus, bool routeable, decimal chargeRate, string fundMtlType, decimal gpsX, decimal gpsY, decimal gpsZ, int logicalOrder, int idealCycle, DateTime inServiceDate, string mfgIdString, string mfgModel, string miscRef, int objectCount, DateTime purchaseDate, decimal purchasePrice, string remarks, string serialNumber, DateTime statusDate, DateTime warrantyExpireDate, int overheadRateId, int responsiblePersonId, int conditionCode, DateTime equipLifeTerminationDate, int purchaseVendorId, decimal milePost, int milePostDirection, int stateRouteId, decimal easting, decimal northing, int warrantyInterval, int lifeCycleInterval, int uom, decimal milepostTo, decimal quantity, decimal availHrs, decimal pmHours, decimal totalAvailHrs, int fundSourceId, int workOrderId, int workOpId, int orgCodeId, int fundGroupId, int equipmentNumberId, int controlSectionId, int modifiedBy);
+  //public virtual bool Add(                 string objectId, string desc, int taskId, int parentObjectId, int areaId, int costcodeId, int locationId, int mfgId, int objectClassId, int objectTypeId, int productLineId, int storeroomId, string notes, string assetNumber, bool active, bool chargeable, bool oeeFocus, bool routeable, decimal chargeRate, string fundMtlType, decimal gpsX, decimal gpsY, decimal gpsZ, int logicalOrder, int idealCycle, DateTime inServiceDate, string mfgIdString, string mfgModel, string miscRef, int objectCount, DateTime purchaseDate, decimal purchasePrice, string remarks, string serialNumber, DateTime statusDate, DateTime warrantyDate,       int overheadRateId, int responsiblePersonId, int conditionCode, DateTime equipLifeTerminationDate, int purchaseVendorId, decimal milePost, int milePostDirection, int stateRouteId, decimal easting, decimal northing, int warrantyInterval, int lifeCycleInterval, int uom, decimal milepostTo, decimal quantity, decimal availHrs, decimal pmHours, decimal totalAvailHrs, int fundSourceId, int workOrderId, int workOpId, int orgCodeId, int fundGroupId, int equipmentNumberId, int controlSectionId, int createdBy);
+
+
+        tmpPuchaseDate = _nullDate;
             tmpRebuildDate = _nullDate;
             tmpWarrantyDate = _nullDate;
             tmpLifeCycleDate = _nullDate;
@@ -1158,7 +1232,7 @@ namespace MPETGO.Pages
                 UploadControl.Visible = true;
                 ASPxRoundPanel1.Visible = true;
                 objectLabel.Visible = true;
-                objectLabel.Text = "Object ID: " + n_objectID;
+                objectLabel.Text = "Object ID: " + objectID;
              }       
         }
 
@@ -1173,6 +1247,8 @@ namespace MPETGO.Pages
             //var c = Convert.ToInt32(ComboObjectType.SelectedItem.GetFieldValue("n_objtypeid"));
             //int n_objectid = Convert.ToInt32(ComboObjectType.Value);
             areaID = Convert.ToInt32(ComboArea.Value);
+            var txtObjectid = objectID.Text.ToString();
+            var txtObjectDesc = objectDesc.Text.ToString();
             var lat = 0;
             if(txtLat.Text != null)
             {
@@ -1186,7 +1262,9 @@ namespace MPETGO.Pages
 
             try
             {
-                if (_oMaintObj.Update(recordID, objectID.Text.Trim().ToString(), objectDesc.Text.Trim().ToString(),
+                _oMaintObj = new MaintenanceObject(_connectionString, _useWeb);
+
+                if (_oMaintObj.Update(recordID, txtObjectid, txtObjectDesc,
                     taskId,
                     parentObjectID,
                     areaID,
@@ -1285,6 +1363,7 @@ namespace MPETGO.Pages
                     }
 
                     //Response.Redirect("/pages/parts.aspx?n_objectID=" + recordID, true);
+                    
                 }
                 else
                 {
