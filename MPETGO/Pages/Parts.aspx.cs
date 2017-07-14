@@ -142,49 +142,7 @@ namespace MPETGO.Pages
 
             if (IsPostBack)
             {
-                //if (Session["objectID"] != null)
-                //{
-                //    objectID.Text = Session["objectID"].ToString();
-                //}
-
-                //if (Session["startDate"] != null)
-                //{
-                //    startDate.Value = Session["startDate"];
-                //}
-                //else
-                //{
-                //    startDate.Value = DateTime.Now;
-                //}
-
-                //if (Session["ComboObjectType"] != null)
-                //{
-                //    ComboObjectType.Value = Session["ComboObjectType"];
-                //}
-
-                //if (Session["objectDesc"] != null)
-                //{
-                //    objectDesc.Text = Session["objectDesc"].ToString();
-                //}
-
-                //if (Session["ComboArea"] != null)
-                //{
-                //    ComboArea.Value = Session["ComboArea"];
-                //}
-
-                //if (Session["txtLat"] != null)
-                //{
-                //    txtLat.Text = Session["txtLat"].ToString();
-                //}
-
-                //if (Session["txtLong"] != null)
-                //{
-                //    txtLong.Text = Session["txtLong"].ToString();
-                //}
-
-                //if (Session["ComboStreet"] != null)
-                //{
-                //    ComboStreet.Value = Session["ComboStreet"];
-                //}
+                
             }
 
             if (!IsPostBack)
@@ -192,51 +150,158 @@ namespace MPETGO.Pages
                 ResetSession();
                 startDate.Value = DateTime.Now;
                 activeCheckBox.Checked = true;     
-            }
-        }
-
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            // Set Connection Info
-            _connectionString = ConfigurationManager.ConnectionStrings["connection"].ToString();
-            _useWeb = (ConfigurationManager.AppSettings["UsingWebService"] == "Y");
-
-            //Initialize Classes
-            _oObjAttachments = new MaintAttachmentObject(_connectionString, _useWeb);
-
-            //Set DataSource
-            ObjectTypeDataSource.ConnectionString = _connectionString;
-            AreaSqlDatasource.ConnectionString = _connectionString;
-            StateRouteDataSource.ConnectionString = _connectionString;
-            LocationDataSource.ConnectionString = _connectionString;
-
-
+            
+                #region Check for Object id from string
             if (!String.IsNullOrEmpty(Request.QueryString["n_objectID"]))
             {
                 ResetSession();
                 if (Session["n_objectID"] == null)
                 {
-                    var recordID = Convert.ToInt32(Session["n_objectID"]);
-                    
-                    
-                        if (_oMaintObj.LoadData(recordID))
-                        {
-                            var n_objectID = _oMaintObj.Ds.Tables[0].Rows[0]["n_objectid"];
-                            Session.Add("n_objectID", n_objectID);
+                    var recordID = Convert.ToInt32(Request.QueryString["n_objectID"]);
 
-                        Session.Add("ComboObjectType", _oMaintObj.Ds.Tables[0].Rows[0]["n_objtypeid"]);
-                        Session.Add("objectid", _oMaintObj.Ds.Tables[0].Rows[0]["objectid"]);
-                        Session.Add("description", _oMaintObj.Ds.Tables[0].Rows[0]["description"]);
-                        Session.Add("", _oMaintObj.Ds.Tables[0].Rows[0]["n_areaid"]);
-                        Session.Add("", _oMaintObj.Ds.Tables[0].Rows[0]["GPS_X"]);
-                        Session.Add("", _oMaintObj.Ds.Tables[0].Rows[0]["GPS_Y"]);
-                        Session.Add("", _oMaintObj.Ds.Tables[0].Rows[0]["CreatedOn"]);
+
+                    if (_oMaintObj.LoadData(recordID))
+                    {
+                        var n_objectID = _oMaintObj.Ds.Tables[0].Rows[0]["n_objectid"];
+
+                        //Adding Session varibles
+                        //Object ID number
+                        Session.Add("n_objectID", n_objectID);
+                        //Object Type
+                        Session.Add("ComboObjectType", _oMaintObj.Ds.Tables[0].Rows[0]["n_objtypeid"]);         
+                        //Object Name
+                        Session.Add("objectID", _oMaintObj.Ds.Tables[0].Rows[0]["objectid"]);
+                        //Object Description
+                        Session.Add("objectDesc", _oMaintObj.Ds.Tables[0].Rows[0]["description"]);
+                        //Area
+                        Session.Add("ComboArea", _oMaintObj.Ds.Tables[0].Rows[0]["n_areaid"]);
+                        //Longitudee
+                        Session.Add("txtLong", _oMaintObj.Ds.Tables[0].Rows[0]["GPS_X"]);
+                        //Latitude
+                        Session.Add("txtLat", _oMaintObj.Ds.Tables[0].Rows[0]["GPS_Y"]);
+                        //Date Object was Created
+                        Session.Add("StartDate", _oMaintObj.Ds.Tables[0].Rows[0]["CreatedOn"]);
+                        //Location associated with the object
+                        Session.Add("ComboLocation", _oMaintObj.Ds.Tables[0].Rows[0]["n_locationid"]);
+                        //active checked
+                        Session.Add("active", _oMaintObj.Ds.Tables[0].Rows[0]["b_active"]);
                     }
 
+                    //Load form inputs from Session based off of Object ID number
+                    if (Session["n_objectID"] != null)
+                    {
+                        objectID.Value = Convert.ToInt32(Session["objectID"]);
+
+                        if(Session["active"] != null)
+                        {
+                            var active = Session["active"].ToString();
+                            active.ToUpper();
+                            switch (active)
+                            {
+                                //Set Active Checkbox to true
+                                case "Y":
+                                    activeCheckBox.Checked = true;
+                                    break;
+                                //Set Active Checkbox to false
+                                case "N":
+                                    activeCheckBox.Checked = false;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+
+                        //Set the value of Object Name/Type 
+                        if(Session["ComboObjectType"] != null)
+                        {
+                            ComboObjectType.Value = Convert.ToInt32(Session["ComboObjectType"]);
+                        }
+
+                        //Set Object description text
+                        if(Session["objectDesc"] != null)
+                        {
+                            objectDesc.Text = Session["objectDesc"].ToString();
+                        }
+
+                        //Set Object location value
+                        if(Session["ComboLocation"] != null)
+                        {
+                            ComboLocation.Value = Convert.ToInt32(Session["ComboLocation"]);
+                        }
+
+                        //Set Object area value
+                        if(Session["ComboArea"] != null)
+                        {
+                            ComboArea.Value = Convert.ToInt32(Session["ComboArea"]);
+                        }
+                        //Set Object latitude value
+                        if (Session["txtLat"] != null)
+                        {
+                            txtLat.Text = Session["txtLat"].ToString();
+                        }
+                        //Set Object longitude value
+                        if (Session["txtLong"] != null)
+                        {
+                            txtLong.Value = Session["txtLong"].ToString();
+                        }
+
+                        //Set Object Created date
+                        if (Session["startDate"] != null)
+                        {
+                            startDate.Value = Session["startDate"];
+                        }
+                        #region Get attachment phonto
+                        //Get any photo attachments
+                        var n_objectID = Convert.ToInt32(Session["n_objectID"]);
                         
+                        if (_oObjAttachments.GetAttachments(n_objectID))
+                        {
+                            if(_oObjAttachments.Ds.Tables.Count > 0)
+                            {
+                                var firstPicFound = false;
 
+                                for (var rowIndex = 0;
+                                    rowIndex < _oObjAttachments.Ds.Tables[0].Rows.Count;
+                                    rowIndex++) 
+                                {
+                                    switch (_oObjAttachments.Ds.Tables[0].Rows[rowIndex][1].ToString().ToUpper())
+                                    {
+                                        case "JPG":
+                                            {
+                                                if(Session["ObjectPhoto"] != null)
+                                                {
+                                                    Session.Remove("ObjectPhoto");
+                                                }
+                                                var url = _oObjAttachments.Ds.Tables[0].Rows[rowIndex]["LocationORURL"].ToString();
+                                                Session.Add("ObjectPhoto", url);
 
-                    
+                                                firstPicFound = true;
+                                                break;
+                                            }
+                                        default:
+                                            {
+                                                break;
+                                            }
+                                    }
+                                    if (firstPicFound)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        #endregion
+
+                        if(Session["ObjectPhoto"] != null)
+                        {
+                            objectImg.ImageUrl = Session["ObjectPhoto"].ToString();
+                        } else
+                        {
+                            objectImg.Visible = false;
+                        }
+
+                    }
+
                 }
                
             }
@@ -248,6 +313,17 @@ namespace MPETGO.Pages
                 AttachmentGrid.Visible = true;
                 ASPxRoundPanel1.Visible = false;
                 UploadControl.Visible = true;
+
+                if (Session["ObjectPhoto"] != null)
+                {
+                    objectImg.ImageUrl = Session["ObjectPhoto"].ToString();
+                }
+                else
+                {
+                    objectImg.Visible = false;
+                }
+
+
             } else
             {
                 AddPartBtn.Visible = true;
@@ -255,8 +331,28 @@ namespace MPETGO.Pages
                 AttachmentGrid.Visible = false;
                 ASPxRoundPanel1.Visible = false;
                 UploadControl.Visible = false;
+                objectImg.Visible = false;
             }
          
+        #endregion
+            }
+        }
+
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            // Set Connection Info
+            _connectionString = ConfigurationManager.ConnectionStrings["connection"].ToString();
+            _useWeb = (ConfigurationManager.AppSettings["UsingWebService"] == "Y");
+
+            //Initialize Classes
+            _oObjAttachments = new MaintAttachmentObject(_connectionString, _useWeb);
+            _oMaintObj = new MaintenanceObject(_connectionString, _useWeb);
+
+            //Set DataSource
+            ObjectTypeDataSource.ConnectionString = _connectionString;
+            AreaSqlDatasource.ConnectionString = _connectionString;
+            StateRouteDataSource.ConnectionString = _connectionString;
+            LocationDataSource.ConnectionString = _connectionString;
         }
         #region Azure Setup
         string AzureAccount
@@ -299,6 +395,7 @@ namespace MPETGO.Pages
             string sizeText = sizeInKilobytes + " KB";
             e.CallbackData = name + "|" + url + "|" + sizeText;
 
+            Session.Add("ObjectPhoto", url);
             Session.Add("url", url);
             Session.Add("name", name);
             SaveSession();
@@ -331,6 +428,16 @@ namespace MPETGO.Pages
                         //Add New Value
                         HttpContext.Current.Session.Add("HasAttachments", true);
 
+                        if (Session["ObjectPhoto"] != null)
+                        {
+                            objectImg.Visible = true;
+                            objectImg.ImageUrl = Session["ObjectPhoto"].ToString();
+                        }
+                        else
+                        {
+                            objectImg.Visible = false;
+                        }
+
                         //Refresh Attachments
                         AttachmentGrid.DataBind();
                         ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
@@ -357,7 +464,7 @@ namespace MPETGO.Pages
             else
             {
             }
-            fileName = Path.Combine(provider.ContainerName, "Maintenance Object Attachments", Session["objectID"].ToString(), fileName);
+            
             FileManagerFile file = new FileManagerFile(provider, fileName);
             FileManagerFile[] files = new FileManagerFile[] { file };
             return provider.GetDownloadUrl(files);           
@@ -525,14 +632,14 @@ namespace MPETGO.Pages
             var comboBox = (ASPxComboBox)source;
             LocationDataSource.SelectCommand =
                 @"SELECT  
-                            dbo.locations.[n_locationid] AS n_locationid
-                            ,dbo.locations.[locationid] AS locationid
-                            ,dbo.locations.[description] AS description
+                            dbo.locations.[n_locationid] AS n_locationid,
+                            dbo.locations.[locationid] AS locationid,
+                            dbo.locations.[description] AS description
                     FROM    dbo.locations
                     WHERE   dbo.locations.b_IsActive = 'Y'
                             AND n_locationid > 0
                             AND n_locationid = @ID
-                            ORDER By location ASC";
+                    ORDER   By locationid ASC";
             LocationDataSource.SelectParameters.Clear();
             LocationDataSource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
             comboBox.DataSource = LocationDataSource;
@@ -601,58 +708,111 @@ namespace MPETGO.Pages
            
            if(startDate != null)
             {
-                Session.Remove("startDate");
+                if(Session["startDate"] != null)
+                {
+                    Session.Remove("startDate");
+                }
                 Session.Add("startDate", startDate.Value.ToString());
+            } else
+            {
+                Session.Add("startDate", date);
             }
-            else { Session.Add("startDate", date); }
 
            if(ComboObjectType.Value != null)
             {
-                Session.Remove("ComboObjectType");
-            Session.Add("ComboObjectType", ComboObjectType.Value.ToString());
+                if(Session["ComboObjectType"] != null)
+                {
+                    Session.Remove("ComboObjectType");
+                }
+                Session.Add("ComboObjectType", ComboObjectType.Value.ToString());
             }
 
            if(ComboObjectType.Text.Length > 0)
             {
-                Session.Remove("ComboObjectTypeText");
+                if(Session["ComboObjectType"] != null)
+                {
+                    Session.Remove("ComboObjectTypeText");
+                }
                 Session.Add("ComboObjectTypeText", ComboObjectType.Text);
             }
 
-
+            
             if (objectDesc.Text.Length > 0)
             {
-                Session.Remove("objectDesc");
+                if(Session["objectDesc"] != null)
+                {
+                   Session.Remove("objectDesc");
+                }
                 Session.Add("objectDesc", objectDesc.Text.Trim());
             }
 
             if(ComboArea.Value != null && ComboArea.Text.Length > 0)
             {
-                Session.Remove("ComboArea");
-                Session.Remove("ComboAreaText");
+                //check and clear session vars
+                if(Session["ComboArea"] != null)
+                {
+                    Session.Remove("ComboArea");
+                }
+                
+                if(Session["ComboAreaText"] != null)
+                {
+                    Session.Remove("ComboAreaText");
+                }
+                //Save to the session
                 Session.Add("ComboArea", ComboArea.Value.ToString());
                 Session.Add("ComboAreaText", ComboArea.Text);
             }
 
             if(txtLat.Text.Length > 0)
             {
-                Session.Remove("txtLat");
+                if(Session["txtLat"] != null)
+                {
+                    Session.Remove("txtLat");
+                }
                 Session.Add("txtLat", txtLat.Text.Trim());
             }
 
             if (txtLong.Text.Length > 0)
             {
-                Session.Remove("txtLong");
+                if(Session["txtLong"] != null)
+                {
+                    Session.Remove("txtLong");
+                }
                 Session.Add("txtLong", txtLong.Text.Trim());
             }
 
             if (ComboStreet.Value != null && ComboStreet.Text.Length > 0)
-            {
+            {               
                 Session.Remove("ComboStreet");
                 Session.Remove("ComboStreetText");
                 Session.Add("ComboStreet", ComboStreet.Value.ToString());
                 Session.Add("ComboStreetText", ComboStreet.Text);
             }
-           
+
+            if(objectImg.Visible == true)
+            {
+                if(Session["ObjectPhoto"] != null)
+                {
+                    Session.Remove("ObjectPhoto");
+                }
+                Session.Add("ObjectPhoto", objectImg.ImageUrl);
+            }    
+            
+            if(ComboLocation.Value != null && ComboLocation.Text.Length > 0)
+            {
+                if(Session["ComboLocation"] != null)
+                {
+                    Session.Remove("ComboLocation");
+                }
+
+                if (Session["ComboLocationText"] != null)
+                {
+                    Session.Remove("ComboLocationText");
+                }
+
+                Session.Add("ComboLocation", ComboLocation.Value);
+                Session.Add("ComboLocationText", ComboLocation.Text);
+            }   
         }
         #endregion
         #region Reset Session
@@ -727,6 +887,16 @@ namespace MPETGO.Pages
             if (Session["name"] != null)
             {
                 Session.Remove("name");
+            }
+
+            if (Session["ObjectPhoto"] != null)
+            {
+                Session.Remove("ObjectPhoto");
+            }
+
+            if (Session["ComboLocation"] != null)
+            {
+                Session.Remove("ComboLocation");
             }
 
 
@@ -1122,12 +1292,8 @@ namespace MPETGO.Pages
                 HttpContext.Current.Session.Remove("txtAddDetail");
             }
 
-            //Check For Prior Value
-            if (HttpContext.Current.Session["ObjectPhoto"] != null)
-            {
-                //Remove Old One
-                HttpContext.Current.Session.Remove("ObjectPhoto");
-            }
+            
+            
 
            
         }
@@ -1135,24 +1301,13 @@ namespace MPETGO.Pages
         #region Add Part
         private void AddParts()
         {
-  //public virtual bool Update(int recordId, string objectId, string desc, int taskId, int parentObjectId, int areaId, int costcodeId, int locationId, int mfgId, int objectClassId, int objectTypeId, int productLineId, int storeroomId, string notes, string assetNumber, bool active, bool chargeable, bool oeeFocus, bool routeable, decimal chargeRate, string fundMtlType, decimal gpsX, decimal gpsY, decimal gpsZ, int logicalOrder, int idealCycle, DateTime inServiceDate, string mfgIdString, string mfgModel, string miscRef, int objectCount, DateTime purchaseDate, decimal purchasePrice, string remarks, string serialNumber, DateTime statusDate, DateTime warrantyExpireDate, int overheadRateId, int responsiblePersonId, int conditionCode, DateTime equipLifeTerminationDate, int purchaseVendorId, decimal milePost, int milePostDirection, int stateRouteId, decimal easting, decimal northing, int warrantyInterval, int lifeCycleInterval, int uom, decimal milepostTo, decimal quantity, decimal availHrs, decimal pmHours, decimal totalAvailHrs, int fundSourceId, int workOrderId, int workOpId, int orgCodeId, int fundGroupId, int equipmentNumberId, int controlSectionId, int modifiedBy);
-  //public virtual bool Add(                 string objectId, string desc, int taskId, int parentObjectId, int areaId, int costcodeId, int locationId, int mfgId, int objectClassId, int objectTypeId, int productLineId, int storeroomId, string notes, string assetNumber, bool active, bool chargeable, bool oeeFocus, bool routeable, decimal chargeRate, string fundMtlType, decimal gpsX, decimal gpsY, decimal gpsZ, int logicalOrder, int idealCycle, DateTime inServiceDate, string mfgIdString, string mfgModel, string miscRef, int objectCount, DateTime purchaseDate, decimal purchasePrice, string remarks, string serialNumber, DateTime statusDate, DateTime warrantyDate,       int overheadRateId, int responsiblePersonId, int conditionCode, DateTime equipLifeTerminationDate, int purchaseVendorId, decimal milePost, int milePostDirection, int stateRouteId, decimal easting, decimal northing, int warrantyInterval, int lifeCycleInterval, int uom, decimal milepostTo, decimal quantity, decimal availHrs, decimal pmHours, decimal totalAvailHrs, int fundSourceId, int workOrderId, int workOpId, int orgCodeId, int fundGroupId, int equipmentNumberId, int controlSectionId, int createdBy);
-
-
-        tmpPuchaseDate = _nullDate;
+            tmpPuchaseDate = _nullDate;
             tmpRebuildDate = _nullDate;
             tmpWarrantyDate = _nullDate;
             tmpLifeCycleDate = _nullDate;
-
             
             objTypeID = Convert.ToInt32(ComboObjectType.Value);
-            //var c = Convert.ToInt32(ComboObjectType.SelectedItem.GetFieldValue("n_objtypeid"));
-
-            //int n_objectid = Convert.ToInt32(ComboObjectType.Value);
             areaID = Convert.ToInt32(ComboArea.Value);
-            
-            
-
             _oMaintObj = new MaintenanceObject(_connectionString, _useWeb);
 
             if (_oMaintObj.Add(objectID.Text.Trim(),
@@ -1244,8 +1399,6 @@ namespace MPETGO.Pages
 
             var recordID = Convert.ToInt32(Session["n_objectID"]);
             objTypeID = Convert.ToInt32(ComboObjectType.Value);
-            //var c = Convert.ToInt32(ComboObjectType.SelectedItem.GetFieldValue("n_objtypeid"));
-            //int n_objectid = Convert.ToInt32(ComboObjectType.Value);
             areaID = Convert.ToInt32(ComboArea.Value);
             var txtObjectid = objectID.Text.ToString();
             var txtObjectDesc = objectDesc.Text.ToString();
@@ -1354,7 +1507,8 @@ namespace MPETGO.Pages
                             desc,
                             shortName.Trim()))
                         {
-
+                            objectImg.Visible = true;
+                            objectImg.ImageUrl = Session["ObjectPhoto"].ToString();
                         }
                         else
                         {

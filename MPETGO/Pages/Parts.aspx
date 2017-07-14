@@ -169,30 +169,28 @@
             <dx:LayoutItem Caption="Description" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxMemo runat="server" ID="objectDesc" AutoPostBack="true" Width="100%"></dx:ASPxMemo>
+                        <dx:ASPxMemo runat="server" ID="objectDesc" AutoPostBack="true" Width="100%">
+                            
+                        </dx:ASPxMemo>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <%--<dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
-            <dx:LayoutItem Caption="Location" CaptionSettings-Location="Top" Width="50%">
+            <dx:LayoutItem Caption="" HelpText="" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
-                    <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxComboBox runat="server" ID="ComboLocation" Width="100%" 
-                            OnItemRequestedByValue="ComboLocation_OnItemRequestedByValue_SQL" 
-                            OnItemsRequestedByFilterCondition="ComboLocation_OnItemRequestedByFilterCondition_SQL" 
-                            DropDownButton-Enabled="true" DropDownStyle="DropDown" 
-                            AutoPostBack="false" EnableCallbackMode="true" CallbackPageSize="10"
-                            TextField="locationid" ValueField="n_locationid" ValueType="System.String" 
-                            TextFormatString="{0} - {1}" ClientInstanceName="ComboLocation" >
-                            <Columns>
-                                <dx:ListBoxColumn FieldName="n_locationid" Visible="false"></dx:ListBoxColumn>
-                                <dx:ListBoxColumn FieldName="locationid" Caption="Location" Width="75px" ToolTip="M-PET Go Location"></dx:ListBoxColumn>
-                                <dx:ListBoxColumn FieldName="description" Caption="Description" Width="150px" ToolTip="M-PET Go Location Description"></dx:ListBoxColumn>
-                            </Columns>
-                        </dx:ASPxComboBox>
+                    <dx:LayoutItemNestedControlContainer>
+                        <dx:ASPxImage ID="objectImg" ImageAlign="Left" 
+                            ImageUrl="~/Content/Images/noImage.png" 
+                            AlternateText="No Picture Associated" Width="100%" 
+                            ClientInstanceName="objectImg" runat="server" 
+                            ShowLoadingImage="true">
+                        </dx:ASPxImage>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>
+
+                <CaptionSettings Location="Top"></CaptionSettings>
+            </dx:LayoutItem>                                
+
+            <%--<dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
             <dx:LayoutItem Caption="Street/Road" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
@@ -231,6 +229,45 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
+            <dx:LayoutItem>
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer>
+                        <dx:ASPxComboBox runat="server" ID="ComboLocation" Width="100%" 
+                            OnItemsRequestedByFilterCondition="ComboLocation_OnItemRequestedByFilterCondition_SQL" 
+                            OnItemRequestedByValue="ComboLocation_OnItemRequestedByValue_SQL" 
+                            DropDownButton-Enabled="true" DropDownStyle="DropDown"
+                            AutoPostBack="false" EnableCallbackMode="true" CallbackPageSize="10" 
+                            TextField="locationid" ValueField="n_locationid" ValueType="System.String" 
+                            TextFormatString="{0} - {1}" ClientInstanceName="ComboLocation" >
+                            <Columns>
+                                <dx:ListBoxColumn FieldName="n_locationid" Visible="false"></dx:ListBoxColumn>
+                                <dx:ListBoxColumn FieldName="locationid" Caption="Location" Width="75px"></dx:ListBoxColumn>
+                                <dx:ListBoxColumn FieldName="description" Caption="Description"></dx:ListBoxColumn>
+                            </Columns>
+
+                        </dx:ASPxComboBox>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>
+           <%-- <dx:LayoutItem Caption="Location" CaptionSettings-Location="Top" Width="50%">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer runat="server">
+                        <dx:ASPxComboBox runat="server" ID="ComboLocation" Width="100%" 
+                            OnItemRequestedByValue="ComboLocation_OnItemRequestedByValue_SQL" 
+                            OnItemsRequestedByFilterCondition="ComboLocation_OnItemRequestedByFilterCondition_SQL" 
+                            DropDownButton-Enabled="true" DropDownStyle="DropDown" 
+                            AutoPostBack="false" EnableCallbackMode="true" CallbackPageSize="10"
+                            TextField="locationid" ValueField="n_locationid" ValueType="System.String" 
+                            TextFormatString="{0} - {1}" ClientInstanceName="ComboLocation" >
+                            <Columns>
+                                <dx:ListBoxColumn FieldName="n_locationid" Visible="false"></dx:ListBoxColumn>
+                                <dx:ListBoxColumn FieldName="locationid" Caption="Location" Width="75px" ToolTip="M-PET Go Location"></dx:ListBoxColumn>
+                                <dx:ListBoxColumn FieldName="description" Caption="Description" Width="150px" ToolTip="M-PET Go Location Description"></dx:ListBoxColumn>
+                            </Columns>
+                        </dx:ASPxComboBox>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>--%>
             <dx:LayoutItem Caption="As Of" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
@@ -395,8 +432,7 @@
                     </LayoutItemNestedControlCollection>
              </dx:LayoutItem>
             <%--<dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
-           
-            
+               
             <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
@@ -411,10 +447,12 @@
                         <dx:ASPxButton runat="server" Width="50%" ID="SavePartBtn" Text="Save" OnClick="SavePartBtn_Click" ClientInstanceName="SavepartBtn" AutoPostBack="false"></dx:ASPxButton>
                      </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>
-           
+            </dx:LayoutItem>          
         </Items>
     </dx:ASPxFormLayout>
+    <dx:ASPxHint runat="server" Content="Add Description of Object" ID="objectDescHint" TargetSelector=".objectDesc" TriggerAction="Hover" Animation="true" AllowFlip="true">
+        
+    </dx:ASPxHint>
     <asp:SqlDataSource ID="AttachmentDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:connection %>" 
         SelectCommand="SELECT [ID], [nJobID], [nJobstepID], [DocType], [Description], [LocationOrURL], [ShortName] 
         FROM [Attachments] 

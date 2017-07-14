@@ -76,13 +76,13 @@ namespace MPETGO.Pages {
         protected global::DevExpress.Web.ASPxMemo objectDesc;
         
         /// <summary>
-        /// ComboLocation control.
+        /// objectImg control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxComboBox ComboLocation;
+        protected global::DevExpress.Web.ASPxImage objectImg;
         
         /// <summary>
         /// ComboStreet control.
@@ -101,6 +101,15 @@ namespace MPETGO.Pages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::DevExpress.Web.ASPxComboBox ComboArea;
+        
+        /// <summary>
+        /// ComboLocation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxComboBox ComboLocation;
         
         /// <summary>
         /// startDate control.
@@ -200,6 +209,15 @@ namespace MPETGO.Pages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::DevExpress.Web.ASPxButton SavePartBtn;
+        
+        /// <summary>
+        /// objectDescHint control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxHint objectDescHint;
         
         /// <summary>
         /// AttachmentDataSource control.
