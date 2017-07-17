@@ -134,7 +134,7 @@ namespace MPETGO.Pages
                 }
 
                 #endregion
-
+                
             if (HttpContext.Current.Request.IsSecureConnection == false)
             {
                 LatLongBtn.Visible = false;
@@ -621,7 +621,7 @@ namespace MPETGO.Pages
             LocationDataSource.SelectParameters.Clear();
             LocationDataSource.SelectParameters.Add("filter", TypeCode.String, string.Format("%{0}%", e.Filter));
             LocationDataSource.SelectParameters.Add("startIndex", TypeCode.Int64, (e.BeginIndex + 1).ToString(CultureInfo.InvariantCulture));
-            LocationDataSource.SelectParameters.Add("endIndex", TypeCode.Int64, (e.BeginIndex + 1).ToString(CultureInfo.InvariantCulture));
+            LocationDataSource.SelectParameters.Add("endIndex", TypeCode.Int64, (e.EndIndex + 1).ToString(CultureInfo.InvariantCulture));
             comboBox.DataSource = LocationDataSource;
             comboBox.DataBind();
 
@@ -639,7 +639,7 @@ namespace MPETGO.Pages
                     WHERE   dbo.locations.b_IsActive = 'Y'
                             AND n_locationid > 0
                             AND n_locationid = @ID
-                    ORDER   By locationid ASC";
+                   ORDER   By locationid ASC";
             LocationDataSource.SelectParameters.Clear();
             LocationDataSource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
             comboBox.DataSource = LocationDataSource;
@@ -712,7 +712,7 @@ namespace MPETGO.Pages
                 {
                     Session.Remove("startDate");
                 }
-                Session.Add("startDate", startDate.Value.ToString());
+                Session.Add("startDate", startDate.Value);
             } else
             {
                 Session.Add("startDate", date);
@@ -781,13 +781,13 @@ namespace MPETGO.Pages
                 Session.Add("txtLong", txtLong.Text.Trim());
             }
 
-            if (ComboStreet.Value != null && ComboStreet.Text.Length > 0)
-            {               
-                Session.Remove("ComboStreet");
-                Session.Remove("ComboStreetText");
-                Session.Add("ComboStreet", ComboStreet.Value.ToString());
-                Session.Add("ComboStreetText", ComboStreet.Text);
-            }
+            //if (ComboStreet.Value != null && ComboStreet.Text.Length > 0)
+            //{               
+            //    Session.Remove("ComboStreet");
+            //    Session.Remove("ComboStreetText");
+            //    Session.Add("ComboStreet", ComboStreet.Value.ToString());
+            //    Session.Add("ComboStreetText", ComboStreet.Text);
+            //}
 
             if(objectImg.Visible == true)
             {
@@ -1307,6 +1307,7 @@ namespace MPETGO.Pages
             tmpLifeCycleDate = _nullDate;
             
             objTypeID = Convert.ToInt32(ComboObjectType.Value);
+            locationID = Convert.ToInt32(ComboLocation.Value);
             areaID = Convert.ToInt32(ComboArea.Value);
             _oMaintObj = new MaintenanceObject(_connectionString, _useWeb);
 
@@ -1386,9 +1387,12 @@ namespace MPETGO.Pages
                 
                 UploadControl.Visible = true;
                 ASPxRoundPanel1.Visible = true;
+                var objectText = objectID.Text.ToString();
                 objectLabel.Visible = true;
-                objectLabel.Text = "Object ID: " + objectID;
-             }       
+                objectLabel.Text = "Object ID: " + objectText;
+
+                Response.Write("<script language='javascript'>window.alert('Object: " + objectText + " was created. ');</script>");
+            }       
         }
 
         private void updateParts() {
@@ -1399,6 +1403,7 @@ namespace MPETGO.Pages
 
             var recordID = Convert.ToInt32(Session["n_objectID"]);
             objTypeID = Convert.ToInt32(ComboObjectType.Value);
+            locationID = Convert.ToInt32(ComboLocation.Value);
             areaID = Convert.ToInt32(ComboArea.Value);
             var txtObjectid = objectID.Text.ToString();
             var txtObjectDesc = objectDesc.Text.ToString();
@@ -1479,7 +1484,8 @@ namespace MPETGO.Pages
                     controlSection,
                     _oLogon.UserID))
                 {
-
+                    var objectText = objectID.Text.ToString();
+                    Response.Write("<script language='javascript'>window.alert('Object: " + objectText + " was updated. ');</script>");
                     var file = "";
                     if (Session["url"] != null)
                     {
@@ -1583,6 +1589,7 @@ namespace MPETGO.Pages
 
         #endregion
 
+        #region Submit/Save Buttons
         protected void AddPartBtn_Click(object sender, EventArgs e)
         {
             SaveSession();
@@ -1595,5 +1602,6 @@ namespace MPETGO.Pages
             updateParts();
 
         }
+        #endregion
     }
 }

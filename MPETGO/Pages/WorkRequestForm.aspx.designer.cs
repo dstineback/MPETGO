@@ -67,6 +67,15 @@ namespace MPETGO.Pages {
         protected global::DevExpress.Web.ASPxTextBox txtObjectDescription;
         
         /// <summary>
+        /// objectImg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxImage objectImg;
+        
+        /// <summary>
         /// ComboRequestor control.
         /// </summary>
         /// <remarks>

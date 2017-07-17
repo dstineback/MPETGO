@@ -77,17 +77,21 @@ namespace MPETGO.Pages
             if (HttpContext.Current.Request.IsSecureConnection == false)
             {
                 LatLongBtn.Visible = false;
+            } else
+            {
+                LatLongBtn.Visible = true;
             }
 
             if (HttpContext.Current.Session["TxtWorkRequestDate"] != null)
             {
                 //Get Info From Session
+                
                 var requestDate = Convert.ToDateTime(Session["TxtWorkRequestDate"]);
                 startDate.Value = requestDate;
             } else
             {
                 startDate.Value = DateTime.Now;
-                Session.Add("txtWorkRequestDate", startDate);
+                Session.Add("txtWorkRequestDate", startDate.Value);
             }
 
             #endregion
@@ -343,6 +347,7 @@ namespace MPETGO.Pages
                                         //Check Control
                                         if (firstPicFound)
                                         {
+                                            objectImg.ImageUrl = Session["ObjectPhoto"].ToString();
                                             //Break Loop
                                             break;
                                         }
@@ -366,6 +371,12 @@ namespace MPETGO.Pages
                     //Get Additional Info From Session
                     txtWorkDescription.Text = (HttpContext.Current.Session["txtWorkDescription"].ToString());
                 }
+
+                //if(Session["TxtWorkRequestDate"] != null)
+                //{
+                    
+                //    startDate.Value = Convert.ToDateTime(Session["TxtWorkRequestDate"].ToString());
+                //}
 
                 //Job ID
                 if (HttpContext.Current.Session["AssignedJobID"] != null)
@@ -448,7 +459,7 @@ namespace MPETGO.Pages
                 if (HttpContext.Current.Session["ObjectPhoto"] != null)
                 {
                     //Set Image
-//objectImg.ImageUrl = HttpContext.Current.Session["ObjectPhoto"].ToString();
+                    objectImg.ImageUrl = HttpContext.Current.Session["ObjectPhoto"].ToString();
                 }
             }
             #endregion
@@ -482,6 +493,8 @@ namespace MPETGO.Pages
                 submitBtn.Visible = false;
                 AttachmentGrid.Visible = true;
                 ASPxRoundPanel1.Visible = false;
+
+                
                 
 
             } else
@@ -984,6 +997,8 @@ namespace MPETGO.Pages
 
             }
             comboBox.DataBind();
+
+            
         }
 
         protected void ComboRequestor_OnItemsRequestedByFilterCondition_SQL(object source, ListEditItemsRequestedByFilterConditionEventArgs e)
@@ -1323,10 +1338,10 @@ namespace MPETGO.Pages
                     HttpContext.Current.Session.Add("AssignedJobID", AssignedJobId);
 
                     //Refresh Attachments
-               ////     AttachmentGrid.DataBind();
+                   AttachmentGrid.DataBind();
 
                     //Set Text
-               ////     lblHeader.Text = (HttpContext.Current.Session["AssignedJobID"].ToString());
+                   lblHeader.Text = (HttpContext.Current.Session["AssignedJobID"].ToString());
 
                     //Update Costing Information
                     if (!_oJob.UpdateJobCosting(_oJob.RecordID,
@@ -1352,16 +1367,14 @@ namespace MPETGO.Pages
 
                 }
 
-                //Return False To Prevent Navigation
-                return false;
+                //Show Error
+                throw new SystemException(@"Error adding new Work Request - " + _oJob.LastError);
+               
             }
-            catch (Exception ex)
+            catch 
             {
                 //Show Error
-          ////      Master.ShowError(ex.Message);
-
-                //Return False To Prevent Navigation
-                return false;
+                throw new SystemException(@"Error adding new Work Request - " + _oJob.LastError);          
             }
         }
 
@@ -1644,7 +1657,7 @@ namespace MPETGO.Pages
                     if (HttpContext.Current.Session["AssignedJobID"] != null)
                     {
                         //Get Additional Info From Session
-                ////        lblHeader.Text = (HttpContext.Current.Session["AssignedJobID"].ToString());
+                       lblHeader.Text = (HttpContext.Current.Session["AssignedJobID"].ToString());
 
                         //Refresh Attachments
                ///         AttachmentGrid.DataBind();
@@ -2159,8 +2172,12 @@ namespace MPETGO.Pages
                 HttpContext.Current.Session.Add("txtObjectDescription", txtObjectDescription.Text.Trim());
 
                 #endregion
-
-
+                
+                if(Session["TxtWorkRequestDate"] != null)
+                {
+                    Session.Remove("TxtWorkRequestDate");
+                }
+                Session.Add("TxtWorkRequestDate", startDate.Value);
 
                 #region Photo
 
@@ -2357,7 +2374,7 @@ namespace MPETGO.Pages
             UpdateRequest();
             var savedID = Session["AssignedJobID"];
 
-            Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');</script>");
+            Response.Write("<script language='javascript'>window.alert('Work Request Updated. " + savedID + "');</script>");
         }
 
         protected void LatLongBtn_Click(object sender, EventArgs e)

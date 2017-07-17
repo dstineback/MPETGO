@@ -128,7 +128,7 @@
 </script>
 
     <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
-    <dx:ASPxLabel runat="server" ID="objectLabel" Text="Object ID:" Visible="false"></dx:ASPxLabel>
+    <dx:ASPxLabel runat="server" ID="objectLabel" Theme="iOS" Text="Object ID:" Visible="false"></dx:ASPxLabel>
     <dx:ASPxFormLayout ID="PartsForm" runat="server" Width="100%" Theme="iOS" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800">
         <Items>
             <dx:LayoutItem Caption="Active">
@@ -182,7 +182,7 @@
                             ImageUrl="~/Content/Images/noImage.png" 
                             AlternateText="No Picture Associated" Width="100%" 
                             ClientInstanceName="objectImg" runat="server" 
-                            ShowLoadingImage="true">
+                            ShowLoadingImage="true"> 
                         </dx:ASPxImage>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
@@ -191,7 +191,7 @@
             </dx:LayoutItem>                                
 
             <%--<dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
-            <dx:LayoutItem Caption="Street/Road" CaptionSettings-Location="Top" Width="50%">
+         <%--   <dx:LayoutItem Caption="Street/Road" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
                         <dx:ASPxComboBox runat="server" ID="ComboStreet" Width="100%" 
@@ -209,7 +209,7 @@
                         </dx:ASPxComboBox>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>
+            </dx:LayoutItem>--%>
             <dx:LayoutItem Caption="Area" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
@@ -229,27 +229,8 @@
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
-            <dx:LayoutItem>
-                <LayoutItemNestedControlCollection>
-                    <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxComboBox runat="server" ID="ComboLocation" Width="100%" 
-                            OnItemsRequestedByFilterCondition="ComboLocation_OnItemRequestedByFilterCondition_SQL" 
-                            OnItemRequestedByValue="ComboLocation_OnItemRequestedByValue_SQL" 
-                            DropDownButton-Enabled="true" DropDownStyle="DropDown"
-                            AutoPostBack="false" EnableCallbackMode="true" CallbackPageSize="10" 
-                            TextField="locationid" ValueField="n_locationid" ValueType="System.String" 
-                            TextFormatString="{0} - {1}" ClientInstanceName="ComboLocation" >
-                            <Columns>
-                                <dx:ListBoxColumn FieldName="n_locationid" Visible="false"></dx:ListBoxColumn>
-                                <dx:ListBoxColumn FieldName="locationid" Caption="Location" Width="75px"></dx:ListBoxColumn>
-                                <dx:ListBoxColumn FieldName="description" Caption="Description"></dx:ListBoxColumn>
-                            </Columns>
-
-                        </dx:ASPxComboBox>
-                    </dx:LayoutItemNestedControlContainer>
-                </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>
-           <%-- <dx:LayoutItem Caption="Location" CaptionSettings-Location="Top" Width="50%">
+            
+           <dx:LayoutItem Caption="Location" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
                         <dx:ASPxComboBox runat="server" ID="ComboLocation" Width="100%" 
@@ -267,7 +248,7 @@
                         </dx:ASPxComboBox>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>--%>
+            </dx:LayoutItem>
             <dx:LayoutItem Caption="As Of" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">

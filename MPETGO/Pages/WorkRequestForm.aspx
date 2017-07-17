@@ -142,29 +142,23 @@ function getLocation() {
                                     <dx:ASPxComboBox ID="ObjectIDCombo" Width="100%"
                                         OnItemRequestedByValue="ASPxComboBox_OnItemRequestedByValue_SQL" 
                                         OnItemsRequestedByFilterCondition="ASPxComboBox_OnItemsRequestedByFilterCondition_SQL"
-                                        runat="server" TextFormatString="{0} - {1} - {2} - {3} - {4} - {5} - {6} - {7} - {8}" 
+                                        runat="server" TextFormatString="{0} - {1} - {2} - {3}" 
                                         EnableCallbackMode="true" CallbackPageSize="10" ValueType="System.String" ValueField="n_objectid" 
                                         DropDownStyle="DropDown" TextField="objectid" AutoPostBack="false" DropDownButton-Enabled="true" ClientInstanceName="ObjectIDCombo"  >
                                         <ClientSideEvents ValueChanged="function(s, e) { 
                                             var objectHasValue = ObjectIDCombo.GetValue();
                                                                                                     var selectedItem = s.GetSelectedItem();
-                                                                                                    console.log('object', objectHasValue);
-                                                                                                    console.log('selected object', selectedItem);
+                                                  
                                                                                                     if(objectHasValue!=null)
                                                                                                     {
                                                                                                         txtObjectDescription.SetText(selectedItem.GetColumnText('description'));
-                                                                                                        ObjectIDComboText.SetText(selectedItem.GetColumnText('objectid'));
-                                                                                                        txtObjectArea.SetText(selectedItem.GetColumnText('areaid'));
-                                                                                                        txtObjectLocation.SetText(selectedItem.GetColumnText('locationid'));
-                                                                                                        txtObjectAssetNumber.SetText(selectedItem.GetColumnText('assetnumber'));
                                                                                                         objectImg.SetImageUrl(selectedItem.GetColumnText('LocationOrURL'));
+                                                                                                      
                                                                                                     }
                                                                                                     else
                                                                                                     {
                                                                                                         txtObjectDescription.SetText('');
-                                                                                                        txtObjectArea.SetText('');
-                                                                                                        txtObjectLocation.SetText('');
-                                                                                                        txtObjectAssetNumber.SetText('');
+                                                                                                       
                                                                                                     }
                                              }"  />
                                         <Columns>
@@ -173,11 +167,11 @@ function getLocation() {
                                             <dx:ListBoxColumn FieldName="description" Caption="Description" Width="250px" ToolTip="M-PET.NET Maintenance Object Description"/>
                                             <dx:ListBoxColumn FieldName="areaid" Caption="Area ID" Width="75px" ToolTip="M-PET.NET Maintenance Object Assigned Area ID" />
                                             <dx:ListBoxColumn FieldName="locationid" Caption="Location ID" Width="75px" ToolTip="M-PET.NET Maintenance Object Assigned Location ID" />
-                                            <dx:ListBoxColumn FieldName="assetnumber" Caption="Asset #" Width="50px" ToolTip="M-PET.NET Maintenance Object Asset Number"/>
+                                            <%--<dx:ListBoxColumn FieldName="assetnumber" Caption="Asset #" Width="50px" ToolTip="M-PET.NET Maintenance Object Asset Number"/>
                                             <dx:ListBoxColumn FieldName="OrganizationCodeID" Caption="Org. Code ID" Width="100px" ToolTip="M-PET.NET Maintenance Object Assigned Org. Code ID" />
                                             <dx:ListBoxColumn FieldName="FundingGroupCodeID" Caption="Fund. Group Code ID" Width="100px" ToolTip="M-PET.NET Maintenance Object Assigned Funding Group Code ID" />
-                                            <dx:ListBoxColumn FieldName="Following" Caption="Following" Width="50px" ToolTip="M-PET.NET Maintenance Object Following Yes/No?"/>
-                                            <dx:ListBoxColumn FieldName="LocationOrURL" Caption="Photo" Width="50px" ToolTip="M-PET.NET Maintenance Object Photo"/>
+                                            <dx:ListBoxColumn FieldName="Following" Caption="Following" Width="50px" ToolTip="M-PET.NET Maintenance Object Following Yes/No?"/>--%>
+                                            <dx:ListBoxColumn FieldName="LocationOrURL"   Caption="Photo" Width="50px" ToolTip="M-PET.NET Maintenance Object Photo"/>
                                         </Columns>
                                     </dx:ASPxComboBox>
                                 </dx:LayoutItemNestedControlContainer>
@@ -193,6 +187,20 @@ function getLocation() {
                                 </dx:LayoutItemNestedControlContainer>
                             </LayoutItemNestedControlCollection>
                         </dx:LayoutItem>
+                         <dx:LayoutItem Caption="" HelpText="" CaptionSettings-Location="Top" Width="50%">
+                            <LayoutItemNestedControlCollection>
+                                <dx:LayoutItemNestedControlContainer>
+                                    <dx:ASPxImage ID="objectImg" ImageAlign="Left" 
+                                        ImageUrl="~/Content/Images/noImage.png" 
+                                        AlternateText="No Picture Associated" Width="100%" 
+                                        ClientInstanceName="objectImg" runat="server" 
+                                        ShowLoadingImage="true">
+                                    </dx:ASPxImage>
+                                </dx:LayoutItemNestedControlContainer>
+                            </LayoutItemNestedControlCollection>
+
+                            <CaptionSettings Location="Top"></CaptionSettings>
+                        </dx:LayoutItem>               
                     </Items>
                 </dx:LayoutGroup>
                 <dx:LayoutItem Caption="Requestor" CaptionSettings-Location="Top" Width="25%">
