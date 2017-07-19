@@ -26,77 +26,77 @@ function getLocation() {
     }
 </script>
 <script type="text/javascript">
-    DXUploadedFilesContainer = {
-        nameCellStyle: "",
-        sizeCellStyle: "",
-        useExtendedPopup: false,
+    //DXUploadedFilesContainer = {
+    //    nameCellStyle: "",
+    //    sizeCellStyle: "",
+    //    useExtendedPopup: false,
 
-        AddFile: function (fileName, fileUrl, fileSize) {
-            var self = DXUploadedFilesContainer;
-            var builder = ["<tr>"];
+    //    AddFile: function (fileName, fileUrl, fileSize) {
+    //        var self = DXUploadedFilesContainer;
+    //        var builder = ["<tr>"];
 
-            builder.push("<td class='nameCell'");
-            if (self.nameCellStyle)
-                builder.push(" style='" + self.nameCellStyle + "'");
-            builder.push(">");
-            self.BuildLink(builder, fileName, fileUrl);
-            builder.push("</td>");
+    //        builder.push("<td class='nameCell'");
+    //        if (self.nameCellStyle)
+    //            builder.push(" style='" + self.nameCellStyle + "'");
+    //        builder.push(">");
+    //        self.BuildLink(builder, fileName, fileUrl);
+    //        builder.push("</td>");
 
-            builder.push("<td class='sizeCell'");
-            if (self.sizeCellStyle)
-                builder.push(" style='" + self.sizeCellStyle + "'");
-            builder.push(">");
-            builder.push(fileSize);
-            builder.push("</td>");
+    //        builder.push("<td class='sizeCell'");
+    //        if (self.sizeCellStyle)
+    //            builder.push(" style='" + self.sizeCellStyle + "'");
+    //        builder.push(">");
+    //        builder.push(fileSize);
+    //        builder.push("</td>");
 
-            builder.push("</tr>");
+    //        builder.push("</tr>");
 
-            var html = builder.join("");
-            DXUploadedFilesContainer.AddHtml(html);
-        },
-        Clear: function () {
-            DXUploadedFilesContainer.ReplaceHtml("");
-        },
-        BuildLink: function (builder, text, url) {
-            builder.push("<a target='blank' onclick='return DXDemo.ShowScreenshotWindow(event, this, " + this.useExtendedPopup + ");'");
-            builder.push(" href='" + url + "'>");
-            builder.push(text);
-            builder.push("</a>");
-        },
-        AddHtml: function (html) {
-            var fileContainer = document.getElementById("uploadedFilesContainer"),
-                fullHtml = html;
-            if (fileContainer) {
-                var containerBody = fileContainer.tBodies[0];
-                fullHtml = containerBody.innerHTML + html;
-            }
-            DXUploadedFilesContainer.ReplaceHtml(fullHtml);
-        },
-        ReplaceHtml: function (html) {
-            var builder = ["<table id='uploadedFilesContainer' class='uploadedFilesContainer'><tbody>"];
-            builder.push(html);
-            builder.push("</tbody></table>");
-            var contentHtml = builder.join("");
-            window.FilesRoundPanel.SetContentHtml(contentHtml);
-        },
-        ApplySettings: function (nameCellStyle, sizeCellStyle, useExtendedPopup) {
-            var self = DXUploadedFilesContainer;
-            self.nameCellStyle = nameCellStyle;
-            self.sizeCellStyle = sizeCellStyle;
-            self.useExtendedPopup = useExtendedPopup;
-        }
-    };
+    //        var html = builder.join("");
+    //        DXUploadedFilesContainer.AddHtml(html);
+    //    },
+    //    Clear: function () {
+    //        DXUploadedFilesContainer.ReplaceHtml("");
+    //    },
+    //    BuildLink: function (builder, text, url) {
+    //        builder.push("<a target='blank' onclick='return DXDemo.ShowScreenshotWindow(event, this, " + this.useExtendedPopup + ");'");
+    //        builder.push(" href='" + url + "'>");
+    //        builder.push(text);
+    //        builder.push("</a>");
+    //    },
+    //    AddHtml: function (html) {
+    //        var fileContainer = document.getElementById("uploadedFilesContainer"),
+    //            fullHtml = html;
+    //        if (fileContainer) {
+    //            var containerBody = fileContainer.tBodies[0];
+    //            fullHtml = containerBody.innerHTML + html;
+    //        }
+    //        DXUploadedFilesContainer.ReplaceHtml(fullHtml);
+    //    },
+    //    ReplaceHtml: function (html) {
+    //        var builder = ["<table id='uploadedFilesContainer' class='uploadedFilesContainer'><tbody>"];
+    //        builder.push(html);
+    //        builder.push("</tbody></table>");
+    //        var contentHtml = builder.join("");
+    //        window.FilesRoundPanel.SetContentHtml(contentHtml);
+    //    },
+    //    ApplySettings: function (nameCellStyle, sizeCellStyle, useExtendedPopup) {
+    //        var self = DXUploadedFilesContainer;
+    //        self.nameCellStyle = nameCellStyle;
+    //        self.sizeCellStyle = sizeCellStyle;
+    //        self.useExtendedPopup = useExtendedPopup;
+    //    }
+    //};
 
-    function onFileUploadComplete(s, e) {
-        if (e.callbackData) {
-            var fileData = e.callbackData.split('|');
-            var fileName = fileData[0],
-                fileUrl = fileData[1],
-                fileSize = fileData[2];
-            //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
-            //window.AttachmentGrid.Refresh();
-        }
-    }
+    //function onFileUploadComplete(s, e) {
+    //    if (e.callbackData) {
+    //        var fileData = e.callbackData.split('|');
+    //        var fileName = fileData[0],
+    //            fileUrl = fileData[1],
+    //            fileSize = fileData[2];
+    //        //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
+    //        //window.AttachmentGrid.Refresh();
+    //    }
+    //}
 </script>
 <script>
     var fieldSeparator = "|";
@@ -118,7 +118,7 @@ function getLocation() {
     }
 </script>
      <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
-    <dx:ASPxLabel runat="server" ID="lblHeader"></dx:ASPxLabel>
+    <dx:ASPxLabel runat="server" ID="lblHeader" Text="Work Request: " Theme="iOS"></dx:ASPxLabel>
 
         <dx:ASPxFormLayout ID="ASPxFormLayout1"
             runat="server" Theme="iOS" EnableTheming="True"  Width="100%" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit">            
@@ -295,7 +295,26 @@ function getLocation() {
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
                 <dx:EmptyLayoutItem Width="50%" ></dx:EmptyLayoutItem>
+                <dx:LayoutItem Caption="" Width="50%" CaptionSettings-Location="Top">
+                    <LayoutItemNestedControlCollection>
+                        <dx:LayoutItemNestedControlContainer>
+                            <dx:ASPxImage runat="server" ID="attachImg" Width="200px" Height="200px" ImageAlign="Left" 
+                                        ImageUrl="~/Content/Images/noImage.png" 
+                                        AlternateText="No Picture Associated"  
+                                        ClientInstanceName="attachImg"  
+                                        ShowLoadingImage="true"> </dx:ASPxImage>
+                        </dx:LayoutItemNestedControlContainer>
+                    </LayoutItemNestedControlCollection>
+                </dx:LayoutItem>
+                <dx:LayoutItem>
+                    <LayoutItemNestedControlCollection>
+                        <dx:LayoutItemNestedControlContainer>
+                            <asp:PlaceHolder runat="server" ID="place"></asp:PlaceHolder>
 
+
+                        </dx:LayoutItemNestedControlContainer>
+                    </LayoutItemNestedControlCollection>
+                </dx:LayoutItem>
                 <dx:LayoutItem Caption="" ShowCaption="False" CaptionSettings-Location="Top">
                                                                         <LayoutItemNestedControlCollection >
                                                                             <dx:LayoutItemNestedControlContainer>
@@ -466,14 +485,15 @@ function getLocation() {
                 </dx:LayoutItem>
             </Items>
         </dx:ASPxFormLayout>
+                  
+            
       
         <asp:SqlDataSource ID="AttachmentDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:connection %>" 
-        SelectCommand="SELECT [ID], [nJobID], [nJobstepID], [DocType], [Description], [LocationOrURL], [ShortName] 
+        SelectCommand="SELECT [ID], [nJobID], [DocType], [Description], [LocationOrURL], [ShortName] 
         FROM [Attachments] 
-        WHERE (([nJobID] = @nJobID) AND ([nJobstepID] = @nJobstepID))">
+        WHERE (([nJobID] = @nJobID))">
         <SelectParameters>
             <asp:SessionParameter DefaultValue="0" Name="nJobID" SessionField="editingJobID" Type="Int32" />
-            <asp:Parameter DefaultValue="-1" Name="nJobstepID" Type="Int32" />
         </SelectParameters>
     </asp:SqlDataSource>
     <asp:SqlDataSource ID="ObjectDataSource" runat="server" />

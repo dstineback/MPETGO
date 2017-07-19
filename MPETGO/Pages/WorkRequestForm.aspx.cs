@@ -6,9 +6,11 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Reflection;
 using System.Web.Configuration;
+using System.Web.UI.HtmlControls;
 using DevExpress.Web;
 using MPETDSFactory;
 using MPETGO;
@@ -85,9 +87,7 @@ namespace MPETGO.Pages
             if (HttpContext.Current.Session["TxtWorkRequestDate"] != null)
             {
                 //Get Info From Session
-                
-                var requestDate = Convert.ToDateTime(Session["TxtWorkRequestDate"]);
-                startDate.Value = requestDate;
+                startDate.Value = Convert.ToDateTime(Session["TxtWorkRequestDate"]);
             } else
             {
                 startDate.Value = DateTime.Now;
@@ -159,6 +159,7 @@ namespace MPETGO.Pages
                                 _oJob.Ds.Tables[0].Rows[0]["RequestDate"]);
 
                             #endregion
+
 
                             #region Setup Object Info
 
@@ -297,6 +298,8 @@ namespace MPETGO.Pages
 
                             #endregion
 
+                            GetAttachments();
+
                             #region Load attachments
                             //Load Object Attachments To Get First Photo
                             if (_oObjAttachments.GetAttachments(((int)_oJob.Ds.Tables[0].Rows[0]["n_MaintObjectID"])))
@@ -347,7 +350,8 @@ namespace MPETGO.Pages
                                         //Check Control
                                         if (firstPicFound)
                                         {
-                                            objectImg.ImageUrl = Session["ObjectPhoto"].ToString();
+                                            objectImg.Visible = true;
+                                            objectImg.ImageUrl = Session["ObjectPhoto"].ToString();                      
                                             //Break Loop
                                             break;
                                         }
@@ -361,6 +365,8 @@ namespace MPETGO.Pages
                     #endregion
                 }
             }
+            //This is the final line of code ran before page is displayed
+
 
             #region set form var values from session data
             if (!IsPostBack)
@@ -459,6 +465,7 @@ namespace MPETGO.Pages
                 if (HttpContext.Current.Session["ObjectPhoto"] != null)
                 {
                     //Set Image
+                    objectImg.Visible = true;
                     objectImg.ImageUrl = HttpContext.Current.Session["ObjectPhoto"].ToString();
                 }
             }
@@ -487,15 +494,14 @@ namespace MPETGO.Pages
 
 
             //Setup Fields
+
+            //checks if their is a job id
             if (Session["editingJobID"] != null)
             {
                 saveBtn.Visible = true;
                 submitBtn.Visible = false;
                 AttachmentGrid.Visible = true;
-                ASPxRoundPanel1.Visible = false;
-
-                
-                
+               
 
             } else
             {
@@ -544,7 +550,16 @@ namespace MPETGO.Pages
             string sizeText = sizeInKilobytes + " KB";
             e.CallbackData = name + "|" + url + "|" + sizeText;
 
+            if(Session["url"] != null)
+            {
+                Session.Remove("url");
+            }
             Session.Add("url", url);
+
+            if(Session["name"] != null)
+            {
+                Session.Remove("name");
+            }
             Session.Add("name", name);
 
             ASPxRoundPanel1.Visible = true;
@@ -584,7 +599,10 @@ namespace MPETGO.Pages
                         //Add New Value
                         HttpContext.Current.Session.Add("HasAttachments", true);
 
+                       
+
                         //Refresh Attachments
+                        AttachmentGrid.Visible = true;
                         AttachmentGrid.DataBind();
                         ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
 
@@ -664,10 +682,14 @@ namespace MPETGO.Pages
                                 //Add New Value
                                 HttpContext.Current.Session.Add("HasAttachments", true);
 
+                                
+
                                 //Refresh Attachments
+                                AttachmentGrid.Visible = true;
                                 AttachmentGrid.DataBind();
                                 ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
 
+                                
                             }
                         }
                     }
@@ -677,6 +699,74 @@ namespace MPETGO.Pages
             {
                 Response.Write("<script language='javascript'>window.alert('Error, Could not attach photo')</script>");
                 return false;
+            }
+
+        }
+
+        protected void GetAttachments()
+        {
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+            {
+                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+            }
+            else
+            {
+
+            }
+
+            var jobid = Convert.ToInt32(Session["editingJobID"]);
+
+            Configuration rootWebConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");
+            ConnectionStringSettings strConnString = rootWebConfig.ConnectionStrings.ConnectionStrings["ClientConnectionString"];
+
+            SqlConnection con = new SqlConnection(strConnString.ConnectionString);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "form_WorkOrders_GetAttachments";
+
+            cmd.Parameters.Add("@jobid", SqlDbType.Int).Value = jobid;
+            cmd.Parameters.Add("@jobStepid", SqlDbType.Int).Value = -1;
+
+            cmd.Connection = con;
+            try
+            {
+                var dt = new DataTable();
+                con.Open();
+                var dataReader= cmd.ExecuteReader();
+                dt.Load(dataReader);
+
+                if(dt.Rows.Count > 1)
+                {
+                    foreach(DataRow rows in dt.Rows)
+                    {
+                        //loop through rows too collect url's and create more objects imagaes.
+                        HtmlGenericControl myImg = new HtmlGenericControl("dx:ASPxImage");
+                        myImg.ID = "attachImg2";
+                        
+                        
+                        place.Controls.Add(myImg);
+                       
+                        
+                        
+                       
+                        
+                        attachImg.ImageUrl = dt.Rows[0]["LocationOrUrl"].ToString();
+                                             
+                    }
+                }
+
+                var url = dt.Rows[0]["LocationOrUrl"].ToString();
+                attachImg.ImageUrl = url;
+                attachImg.Visible = true;
+                
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
 
         }
@@ -719,12 +809,7 @@ namespace MPETGO.Pages
                 mInfo.Invoke(ScriptManager.GetCurrent(Page), new object[] { panel });
         }
 
-
-
-
         #region Combo Loading Events
-
-
 
         protected void ComboPriority_OnItemsRequestedByFilterCondition_SQL(object source, ListEditItemsRequestedByFilterConditionEventArgs e)
         {
@@ -1337,9 +1422,6 @@ namespace MPETGO.Pages
                     HttpContext.Current.Session.Add("editingJobID", _oJob.RecordID);
                     HttpContext.Current.Session.Add("AssignedJobID", AssignedJobId);
 
-                    //Refresh Attachments
-                   AttachmentGrid.DataBind();
-
                     //Set Text
                    lblHeader.Text = (HttpContext.Current.Session["AssignedJobID"].ToString());
 
@@ -1392,7 +1474,6 @@ namespace MPETGO.Pages
                 //Get Logon Info From Session
                 _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
             }
-
 
             var objectAgainstId = -1;
             if (HttpContext.Current.Session["ObjectIDCombo"] != null)
@@ -1649,38 +1730,31 @@ namespace MPETGO.Pages
                             controlSection,
                             _oLogon.UserID))
                     {
-                        //Return False To Prevent Navigation
-                        return false;
+                        //Show Error
+                        throw new SystemException(@"Could not update work request Cost Codes - " + _oJob.LastError);                     
                     }
+
+                    
 
                     //Check For Value
                     if (HttpContext.Current.Session["AssignedJobID"] != null)
                     {
                         //Get Additional Info From Session
                        lblHeader.Text = (HttpContext.Current.Session["AssignedJobID"].ToString());
-
-                        //Refresh Attachments
-               ///         AttachmentGrid.DataBind();
-
-                        //Setup For Editing
-               ///         SetupForEditing();
                     }
 
                     //Success Return True
                     return true;
                 }
 
-                //Return False To Prevent Navigation
-                return false;
+                //Show Error
+                throw new SystemException(@"Could not update work request - " + _oJob.LastError);
 
             }
-            catch (Exception ex)
+            catch 
             {
                 //Show Error
-            ////    Master.ShowError(ex.Message);
-
-                //Return False To Prevent Navigation
-                return false;
+                throw new SystemException(@"Could not update Work Request - " + _oJob.LastError);  
             }
         }
 
@@ -2189,7 +2263,7 @@ namespace MPETGO.Pages
                 }
 
                 //Add New Value
-     ////           HttpContext.Current.Session.Add("ObjectPhoto", objectImg.ImageUrl);
+                HttpContext.Current.Session.Add("ObjectPhoto", objectImg.ImageUrl);
 
                 #endregion
             }
@@ -2359,21 +2433,33 @@ namespace MPETGO.Pages
         protected void submitBtn_Click(object sender, EventArgs e)
         {
             SaveSessionData();
-            //Update Job
+            //Add Job
             AddRequest();
+            //add attachment upload
             AddAttachment();
 
+            //set lable header text to Work Request ID
             var savedID = Session["AssignedJobID"];
+            lblHeader.Text = savedID.ToString();
 
-            Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');window.location='./../../index.aspx';</script>");
+            //Set Alert
+            //Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');window.location='./../../index.aspx';</script>");
+            Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');</script>");
         }
 
         protected void saveBtn_Click(object sender, EventArgs e)
         {
             SaveSessionData();
+            //Update Job
             UpdateRequest();
-            var savedID = Session["AssignedJobID"];
 
+            
+
+            //set lable header text to Work Request ID
+            var savedID = Session["AssignedJobID"];
+            lblHeader.Text = savedID.ToString();
+
+            //Set Alert
             Response.Write("<script language='javascript'>window.alert('Work Request Updated. " + savedID + "');</script>");
         }
 
@@ -2381,5 +2467,7 @@ namespace MPETGO.Pages
         {
 
         }
+
+       
     }
 }

@@ -130,6 +130,24 @@ namespace MPETGO.Pages {
         protected global::DevExpress.Web.ASPxTextBox txtLat;
         
         /// <summary>
+        /// attachImg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxImage attachImg;
+        
+        /// <summary>
+        /// place control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder place;
+        
+        /// <summary>
         /// PhotoContainer control.
         /// </summary>
         /// <remarks>
