@@ -10,6 +10,7 @@ using System.Web.Configuration;
 using System.Globalization;
 using System.Web.UI.HtmlControls;
 using System.Data;
+using System.Data.SqlClient;
 using System.Web.UI.WebControls;
 using System.Reflection;
 using MPETDSFactory;
@@ -95,6 +96,8 @@ namespace MPETGO.Pages
         private string AzureAccountKey = "";
         private string AzureAccountContainerName = "";
 
+        private object ses = HttpContext.Current.Session;
+
         
 
         protected void Page_Load(object sender, EventArgs e)
@@ -158,7 +161,33 @@ namespace MPETGO.Pages
                 if (Session["n_objectID"] == null)
                 {
                     var recordID = Convert.ToInt32(Request.QueryString["n_objectID"]);
+                    if(recordID > 0)
+                        {
+                            Configuration rootWebConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");
+                            ConnectionStringSettings strConnString = rootWebConfig.ConnectionStrings.ConnectionStrings["ClientConnectionString"];
 
+                            SqlConnection con = new SqlConnection(strConnString.ConnectionString);
+                            SqlCommand cmd = new SqlCommand();
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.CommandText = "form_MaintenanceObjects_GetMaintenanceObjectInfo";
+                            cmd.Parameters.Add("@RecordID", SqlDbType.Int).Value = recordID;
+                            cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = _oLogon.UserID;
+
+                            cmd.Connection = con;
+                            try
+                            {
+                                var dt = new DataTable();
+                                con.Open();
+                                var dataReader = cmd.ExecuteReader();
+                                dt.Load(dataReader);
+                                //ComboLocation.Value = dt.Rows[0]["locationid"].ToString();
+                                
+                            }
+                            catch (Exception ex)
+                            {
+                                throw ex;
+                            }
+                        }
 
                     if (_oMaintObj.LoadData(recordID))
                     {
@@ -190,7 +219,7 @@ namespace MPETGO.Pages
                     //Load form inputs from Session based off of Object ID number
                     if (Session["n_objectID"] != null)
                     {
-                        objectID.Value = Convert.ToInt32(Session["objectID"]);
+                        objectID.Value = (Session["objectID"].ToString());
 
                         if(Session["active"] != null)
                         {
@@ -226,7 +255,8 @@ namespace MPETGO.Pages
                         //Set Object location value
                         if(Session["ComboLocation"] != null)
                         {
-                            ComboLocation.Value = Convert.ToInt32(Session["ComboLocation"]);
+                            //ComboLocation.Value = Convert.ToInt32(Session["ComboLocation"]);
+                               
                         }
 
                         //Set Object area value
@@ -336,6 +366,34 @@ namespace MPETGO.Pages
          
         #endregion
             }
+        }
+
+        private void ComboLocation_ValueChanged(object source, EventArgs e)
+        {
+            try
+            {
+                
+               
+                LocationDataSource.SelectCommand =
+                    @"SELECT  
+                            dbo.locations.[n_locationid] AS n_locationid,
+                            dbo.locations.[locationid] AS locationid,
+                            dbo.locations.[description] AS description
+                    FROM    dbo.locations
+                    WHERE   dbo.locations.b_IsActive = 'Y'
+                            AND n_locationid > 0
+                            AND n_locationid = @ID
+                   ORDER   By locationid ASC";
+                LocationDataSource.SelectParameters.Clear();
+                LocationDataSource.SelectParameters.Add("ID", TypeCode.Int32, source.ToString());
+                ComboLocation.DataSource = LocationDataSource;
+                ComboLocation.DataBind();
+            } catch
+            {
+                throw new NotImplementedException();
+
+            }
+
         }
 
         protected void Page_Init(object sender, EventArgs e)
@@ -642,8 +700,10 @@ namespace MPETGO.Pages
                    ORDER   By locationid ASC";
             LocationDataSource.SelectParameters.Clear();
             LocationDataSource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
+            
             comboBox.DataSource = LocationDataSource;
             comboBox.DataBind();
+            comboBox.TextField = comboBox.ValueField[1].ToString();
 
         }
         protected void ComboArea_OnItemRequestedByFilterCondition_SQL(object source, ListEditItemsRequestedByFilterConditionEventArgs e)

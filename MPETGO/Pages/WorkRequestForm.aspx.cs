@@ -745,8 +745,7 @@ namespace MPETGO.Pages
                     {
                         //loop through rows too collect url's and create more objects imagaes.
                         HtmlGenericControl myImg = new HtmlGenericControl("dx:ASPxImage");
-                        myImg.ID = "attachImg2";
-                        
+                        myImg.ID = "attachImg2";                      
                         
                         place.Controls.Add(myImg);
                        

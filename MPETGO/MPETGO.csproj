@@ -113,7 +113,7 @@
     <Content Include="Pages\Contact.aspx" />
     <Content Include="LogOut.aspx" />
     <Content Include="Pages\ObjectList.aspx" />
-    <Content Include="Pages\Parts.aspx" />
+    <Content Include="Pages\Objects.aspx" />
     <Content Include="Pages\UpdateObject.aspx" />
     <Content Include="Pages\WorkRequestForm.aspx" />
     <Content Include="Pages\WorkRequestList.aspx" />
@@ -207,12 +207,12 @@
     <Compile Include="Pages\ObjectList.aspx.designer.cs">
       <DependentUpon>ObjectList.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Parts.aspx.cs">
-      <DependentUpon>Parts.aspx</DependentUpon>
+    <Compile Include="Pages\Objects.aspx.cs">
+      <DependentUpon>Objects.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Pages\Parts.aspx.designer.cs">
-      <DependentUpon>Parts.aspx</DependentUpon>
+    <Compile Include="Pages\Objects.aspx.designer.cs">
+      <DependentUpon>Objects.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\UpdateObject.aspx.cs">
       <DependentUpon>UpdateObject.aspx</DependentUpon>
