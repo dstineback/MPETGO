@@ -378,12 +378,6 @@ namespace MPETGO.Pages
                     txtWorkDescription.Text = (HttpContext.Current.Session["txtWorkDescription"].ToString());
                 }
 
-                //if(Session["TxtWorkRequestDate"] != null)
-                //{
-                    
-                //    startDate.Value = Convert.ToDateTime(Session["TxtWorkRequestDate"].ToString());
-                //}
-
                 //Job ID
                 if (HttpContext.Current.Session["AssignedJobID"] != null)
                 {
@@ -467,6 +461,11 @@ namespace MPETGO.Pages
                     //Set Image
                     objectImg.Visible = true;
                     objectImg.ImageUrl = HttpContext.Current.Session["ObjectPhoto"].ToString();
+                }
+
+                if(Session["attachmentImage"] != null)
+                {
+                    attachImg.ImageUrl = Session["attachmentImage"].ToString();
                 }
             }
             #endregion
@@ -739,28 +738,17 @@ namespace MPETGO.Pages
                 var dataReader= cmd.ExecuteReader();
                 dt.Load(dataReader);
 
-                if(dt.Rows.Count > 1)
+                if(dt.Rows.Count > 0)
+                {                 
+                    var url = dt.Rows[0]["LocationOrUrl"].ToString();
+                    attachImg.ImageUrl = url;
+                    attachImg.Visible = true;
+                    Session.Add("attachmentImage", attachImg.ImageUrl.ToString());
+                } else
                 {
-                    foreach(DataRow rows in dt.Rows)
-                    {
-                        //loop through rows too collect url's and create more objects imagaes.
-                        HtmlGenericControl myImg = new HtmlGenericControl("dx:ASPxImage");
-                        myImg.ID = "attachImg2";                      
-                        
-                        place.Controls.Add(myImg);
-                       
-                        
-                        
-                       
-                        
-                        attachImg.ImageUrl = dt.Rows[0]["LocationOrUrl"].ToString();
-                                             
-                    }
+                    attachImg.Visible = false;
                 }
 
-                var url = dt.Rows[0]["LocationOrUrl"].ToString();
-                attachImg.ImageUrl = url;
-                attachImg.Visible = true;
                 
             }
             catch (Exception ex)
@@ -2166,6 +2154,11 @@ namespace MPETGO.Pages
             {
                 Session.Remove("name");
             }
+
+            if(Session["attachmentImage"] != null)
+            {
+                Session.Remove("attachmentImage");
+            }
         }
 
         protected void SaveSessionData()
@@ -2269,7 +2262,19 @@ namespace MPETGO.Pages
 
             #endregion
 
+            #region Attachment
 
+            if (attachImg.ImageUrl != null)
+            {
+                if(Session["attachmentImage"] != null)
+                {
+                    Session.Remove("attachmentImage");
+                }
+                Session.Add("attachmentImage", attachImg.ImageUrl.ToString());
+            }
+
+            
+            #endregion
 
             #region Priority
 
