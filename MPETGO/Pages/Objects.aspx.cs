@@ -157,6 +157,8 @@ namespace MPETGO.Pages
                 #region Check for Object id from string
             if (!String.IsNullOrEmpty(Request.QueryString["n_objectID"]))
             {
+                    var location = "";
+                    var area = "";
                 ResetSession();
                 if (Session["n_objectID"] == null)
                 {
@@ -181,7 +183,10 @@ namespace MPETGO.Pages
                                 var dataReader = cmd.ExecuteReader();
                                 dt.Load(dataReader);
                                 //ComboLocation.Value = dt.Rows[0]["locationid"].ToString();
-                                
+                                dt.Load(dataReader);
+                                location = dt.Rows[0]["locationid"].ToString();
+                                area = dt.Rows[0]["areaid"].ToString();
+                                                                
                             }
                             catch (Exception ex)
                             {
@@ -204,6 +209,8 @@ namespace MPETGO.Pages
                         Session.Add("objectDesc", _oMaintObj.Ds.Tables[0].Rows[0]["description"]);
                         //Area
                         Session.Add("ComboArea", _oMaintObj.Ds.Tables[0].Rows[0]["n_areaid"]);
+                            var areaValue = Session["ComboArea"];
+                        Session.Add("ComboAreaText", area);
                         //Longitudee
                         Session.Add("txtLong", _oMaintObj.Ds.Tables[0].Rows[0]["GPS_X"]);
                         //Latitude
@@ -212,6 +219,8 @@ namespace MPETGO.Pages
                         Session.Add("StartDate", _oMaintObj.Ds.Tables[0].Rows[0]["CreatedOn"]);
                         //Location associated with the object
                         Session.Add("ComboLocation", _oMaintObj.Ds.Tables[0].Rows[0]["n_locationid"]);
+                            var locationValue = Session["ComboLocation"];
+                        Session.Add("ComboLocationText", location);
                         //active checked
                         Session.Add("active", _oMaintObj.Ds.Tables[0].Rows[0]["b_active"]);
                     }
@@ -255,8 +264,13 @@ namespace MPETGO.Pages
                         //Set Object location value
                         if(Session["ComboLocation"] != null)
                         {
-                            //ComboLocation.Value = Convert.ToInt32(Session["ComboLocation"]);
+                            ComboLocation.Value = Convert.ToInt32(Session["ComboLocation"]);
                                
+                        }
+
+                        if(Session["ComboLocationText"] != null)
+                        {
+                            ComboLocation.Text = Session["ComboLocationText"].ToString();
                         }
 
                         //Set Object area value
@@ -264,6 +278,12 @@ namespace MPETGO.Pages
                         {
                             ComboArea.Value = Convert.ToInt32(Session["ComboArea"]);
                         }
+
+                        if (Session["ComboAreaText"] != null)
+                        {
+                            ComboArea.Text = Session["ComboAreaText"].ToString();
+                        }
+
                         //Set Object latitude value
                         if (Session["txtLat"] != null)
                         {
@@ -368,33 +388,6 @@ namespace MPETGO.Pages
             }
         }
 
-        private void ComboLocation_ValueChanged(object source, EventArgs e)
-        {
-            try
-            {
-                
-               
-                LocationDataSource.SelectCommand =
-                    @"SELECT  
-                            dbo.locations.[n_locationid] AS n_locationid,
-                            dbo.locations.[locationid] AS locationid,
-                            dbo.locations.[description] AS description
-                    FROM    dbo.locations
-                    WHERE   dbo.locations.b_IsActive = 'Y'
-                            AND n_locationid > 0
-                            AND n_locationid = @ID
-                   ORDER   By locationid ASC";
-                LocationDataSource.SelectParameters.Clear();
-                LocationDataSource.SelectParameters.Add("ID", TypeCode.Int32, source.ToString());
-                ComboLocation.DataSource = LocationDataSource;
-                ComboLocation.DataBind();
-            } catch
-            {
-                throw new NotImplementedException();
-
-            }
-
-        }
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -699,11 +692,24 @@ namespace MPETGO.Pages
                             AND n_locationid = @ID
                    ORDER   By locationid ASC";
             LocationDataSource.SelectParameters.Clear();
-            LocationDataSource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
-            
+            if (!IsPostBack)
+            {
+                LocationDataSource.SelectParameters.Add("ID", TypeCode.Int32, Convert.ToInt32(Session["ComboLocation"]).ToString());
+            }
+            else
+            {
+                LocationDataSource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
+
+            }           
             comboBox.DataSource = LocationDataSource;
             comboBox.DataBind();
-            comboBox.TextField = comboBox.ValueField[1].ToString();
+            DataView dv = (DataView)LocationDataSource.Select(DataSourceSelectArguments.Empty );
+            foreach (DataRowView drv in dv)
+            {
+                comboBox.Text = drv["locationid"].ToString() + " - " + drv["description"].ToString();
+            }
+            
+            
 
         }
         protected void ComboArea_OnItemRequestedByFilterCondition_SQL(object source, ListEditItemsRequestedByFilterConditionEventArgs e)
@@ -746,9 +752,27 @@ namespace MPETGO.Pages
                             AND n_areaid = @ID 
 	                ORDER BY areaid ASC	";
             AreaSqlDatasource.SelectParameters.Clear();
-            AreaSqlDatasource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
+            if (!IsPostBack)
+            {
+                AreaSqlDatasource.SelectParameters.Add("ID", TypeCode.Int32, Convert.ToInt32(Session["ComboArea"]).ToString());
+            } else
+            {
+                AreaSqlDatasource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
+
+            }
             comboBox.DataSource = AreaSqlDatasource;
             comboBox.DataBind();
+
+            if (!IsPostBack)
+            {
+                DataView dv = (DataView)AreaSqlDatasource.Select(DataSourceSelectArguments.Empty);
+                foreach (DataRowView drv in dv)
+                {
+                    comboBox.Text = drv["areaid"].ToString() + " - " + drv["descr"].ToString();
+                }
+            }
+            
+            
         }
         #endregion
         #region Save Session
@@ -957,6 +981,11 @@ namespace MPETGO.Pages
             if (Session["ComboLocation"] != null)
             {
                 Session.Remove("ComboLocation");
+            }
+
+            if (Session["ComboLocationText"] != null)
+            {
+                Session.Remove("ComboLocationText");
             }
 
 

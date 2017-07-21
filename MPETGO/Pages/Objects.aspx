@@ -219,7 +219,7 @@
                             DropDownButton-Enabled="true" DropDownStyle="DropDown" 
                             AutoPostBack="false" EnableCallbackMode="true" 
                             CallbackPageSize="10" TextFormatString="{0} - {1}" ClientInstanceName="ComboArea" 
-                            TextField="areaid" ValueField="n_areaid" ValueType="System.String">
+                            TextField="areaid" ValueField="n_areaid" ValueType="System.Int32">
                             <Columns>
                                 <dx:ListBoxColumn FieldName="n_areaid" Visible="false"></dx:ListBoxColumn>
                                 <dx:ListBoxColumn FieldName="areaid" Caption="Area" Width="75px" ToolTip="M-PET Go Area ID"></dx:ListBoxColumn>
@@ -238,7 +238,7 @@
                             OnItemsRequestedByFilterCondition="ComboLocation_OnItemRequestedByFilterCondition_SQL" 
                             DropDownButton-Enabled="true" DropDownStyle="DropDown" 
                             AutoPostBack="false" EnableCallbackMode="true" CallbackPageSize="10"
-                            TextField="locationid" ValueField="n_locationid" ValueType="System.String" 
+                            TextField="locationid" ValueField="n_locationid" ValueType="System.Int32"
                             TextFormatString="{0} - {1}" ClientInstanceName="ComboLocation" >
                             <Columns>
                                 <dx:ListBoxColumn FieldName="n_locationid" Visible="false"></dx:ListBoxColumn>
