@@ -1496,15 +1496,15 @@ namespace MPETGO.Pages
             areaID = Convert.ToInt32(ComboArea.Value);
             var txtObjectid = objectID.Text.ToString();
             var txtObjectDesc = objectDesc.Text.ToString();
-            var lat = 0;
+            decimal lat = 0;
             if(txtLat.Text != null)
             {
-                lat = Convert.ToInt32(txtLat.Value);
+                lat = Convert.ToDecimal(txtLat.Value.ToString());
             }
-            var lng = 0;
+            decimal lng = 0;
             if(txtLong.Text != null)
             {
-                lng = Convert.ToInt32(txtLat.Value);
+                lng = Convert.ToDecimal(txtLat.Value.ToString());
             }
 
             try
