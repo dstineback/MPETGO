@@ -17,9 +17,12 @@
     <Styles Cell-Paddings-Padding="5px" Header-Paddings-Padding="5px"><Cell Wrap="False"></Cell></Styles>
     <SettingsBehavior AllowGroup="true" AllowDragDrop="true" AllowSort="true" AllowHeaderFilter="true" />
     <Columns>
-        <dx:GridViewDataColumn FieldName="n_objectid" ReadOnly="true" Visible="false"></dx:GridViewDataColumn>
-        <dx:GridViewDataHyperLinkColumn FieldName="objectid" Caption="Object ID" VisibleIndex="0">
-            <PropertiesHyperLinkEdit NavigateUrlFormatString="~/pages/UpdateObject.aspx?n_objectid={0}"></PropertiesHyperLinkEdit>
+        <dx:GridViewDataColumn FieldName="n_objectid" ReadOnly="true" Visible="false" VisibleIndex="0"></dx:GridViewDataColumn>
+        <dx:GridViewDataHyperLinkColumn FieldName="n_objectid" VisibleIndex="0" Caption="Go to Object" >
+            <PropertiesHyperLinkEdit Text="Go to object" NavigateUrlFormatString="~/pages/Objects.aspx?n_objectid={0}"></PropertiesHyperLinkEdit>
+        </dx:GridViewDataHyperLinkColumn>
+        <dx:GridViewDataHyperLinkColumn FieldName="objectid" Caption="Object ID" VisibleIndex="1">
+            <PropertiesHyperLinkEdit NavigateUrlFormatString="~/pages/Objects.aspx?n_objectid={0}"></PropertiesHyperLinkEdit>
         </dx:GridViewDataHyperLinkColumn>
         <dx:GridViewDataTextColumn FieldName="description" ReadOnly="true" VisibleIndex="1" Width="200px"></dx:GridViewDataTextColumn>
         <dx:GridViewDataColumn FieldName="Current Condition" ReadOnly="true" VisibleIndex="2" ></dx:GridViewDataColumn>

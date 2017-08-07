@@ -26,80 +26,99 @@ function getLocation() {
     }
 </script>
 <script type="text/javascript">
-    DXUploadedFilesContainer = {
-        nameCellStyle: "",
-        sizeCellStyle: "",
-        useExtendedPopup: false,
+    //DXUploadedFilesContainer = {
+    //    nameCellStyle: "",
+    //    sizeCellStyle: "",
+    //    useExtendedPopup: false,
 
-        AddFile: function (fileName, fileUrl, fileSize) {
-            var self = DXUploadedFilesContainer;
-            var builder = ["<tr>"];
+    //    AddFile: function (fileName, fileUrl, fileSize) {
+    //        var self = DXUploadedFilesContainer;
+    //        var builder = ["<tr>"];
 
-            builder.push("<td class='nameCell'");
-            if (self.nameCellStyle)
-                builder.push(" style='" + self.nameCellStyle + "'");
-            builder.push(">");
-            self.BuildLink(builder, fileName, fileUrl);
-            builder.push("</td>");
+    //        builder.push("<td class='nameCell'");
+    //        if (self.nameCellStyle)
+    //            builder.push(" style='" + self.nameCellStyle + "'");
+    //        builder.push(">");
+    //        self.BuildLink(builder, fileName, fileUrl);
+    //        builder.push("</td>");
 
-            builder.push("<td class='sizeCell'");
-            if (self.sizeCellStyle)
-                builder.push(" style='" + self.sizeCellStyle + "'");
-            builder.push(">");
-            builder.push(fileSize);
-            builder.push("</td>");
+    //        builder.push("<td class='sizeCell'");
+    //        if (self.sizeCellStyle)
+    //            builder.push(" style='" + self.sizeCellStyle + "'");
+    //        builder.push(">");
+    //        builder.push(fileSize);
+    //        builder.push("</td>");
 
-            builder.push("</tr>");
+    //        builder.push("</tr>");
 
-            var html = builder.join("");
-            DXUploadedFilesContainer.AddHtml(html);
-        },
-        Clear: function () {
-            DXUploadedFilesContainer.ReplaceHtml("");
-        },
-        BuildLink: function (builder, text, url) {
-            builder.push("<a target='blank' onclick='return DXDemo.ShowScreenshotWindow(event, this, " + this.useExtendedPopup + ");'");
-            builder.push(" href='" + url + "'>");
-            builder.push(text);
-            builder.push("</a>");
-        },
-        AddHtml: function (html) {
-            var fileContainer = document.getElementById("uploadedFilesContainer"),
-                fullHtml = html;
-            if (fileContainer) {
-                var containerBody = fileContainer.tBodies[0];
-                fullHtml = containerBody.innerHTML + html;
-            }
-            DXUploadedFilesContainer.ReplaceHtml(fullHtml);
-        },
-        ReplaceHtml: function (html) {
-            var builder = ["<table id='uploadedFilesContainer' class='uploadedFilesContainer'><tbody>"];
-            builder.push(html);
-            builder.push("</tbody></table>");
-            var contentHtml = builder.join("");
-            window.FilesRoundPanel.SetContentHtml(contentHtml);
-        },
-        ApplySettings: function (nameCellStyle, sizeCellStyle, useExtendedPopup) {
-            var self = DXUploadedFilesContainer;
-            self.nameCellStyle = nameCellStyle;
-            self.sizeCellStyle = sizeCellStyle;
-            self.useExtendedPopup = useExtendedPopup;
-        }
-    };
+    //        var html = builder.join("");
+    //        DXUploadedFilesContainer.AddHtml(html);
+    //    },
+    //    Clear: function () {
+    //        DXUploadedFilesContainer.ReplaceHtml("");
+    //    },
+    //    BuildLink: function (builder, text, url) {
+    //        builder.push("<a target='blank' onclick='return DXDemo.ShowScreenshotWindow(event, this, " + this.useExtendedPopup + ");'");
+    //        builder.push(" href='" + url + "'>");
+    //        builder.push(text);
+    //        builder.push("</a>");
+    //    },
+    //    AddHtml: function (html) {
+    //        var fileContainer = document.getElementById("uploadedFilesContainer"),
+    //            fullHtml = html;
+    //        if (fileContainer) {
+    //            var containerBody = fileContainer.tBodies[0];
+    //            fullHtml = containerBody.innerHTML + html;
+    //        }
+    //        DXUploadedFilesContainer.ReplaceHtml(fullHtml);
+    //    },
+    //    ReplaceHtml: function (html) {
+    //        var builder = ["<table id='uploadedFilesContainer' class='uploadedFilesContainer'><tbody>"];
+    //        builder.push(html);
+    //        builder.push("</tbody></table>");
+    //        var contentHtml = builder.join("");
+    //        window.FilesRoundPanel.SetContentHtml(contentHtml);
+    //    },
+    //    ApplySettings: function (nameCellStyle, sizeCellStyle, useExtendedPopup) {
+    //        var self = DXUploadedFilesContainer;
+    //        self.nameCellStyle = nameCellStyle;
+    //        self.sizeCellStyle = sizeCellStyle;
+    //        self.useExtendedPopup = useExtendedPopup;
+    //    }
+    //};
 
-    function onFileUploadComplete(s, e) {
-        if (e.callbackData) {
-            var fileData = e.callbackData.split('|');
-            var fileName = fileData[0],
-                fileUrl = fileData[1],
-                fileSize = fileData[2];
-            //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
-            //window.AttachmentGrid.Refresh();
+    //function onFileUploadComplete(s, e) {
+    //    if (e.callbackData) {
+    //        var fileData = e.callbackData.split('|');
+    //        var fileName = fileData[0],
+    //            fileUrl = fileData[1],
+    //            fileSize = fileData[2];
+    //        //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
+    //        //window.AttachmentGrid.Refresh();
+    //    }
+    //}
+</script>
+<script>
+    var fieldSeparator = "|";
+    function FileUploadStart() {
+        document.getElementById("uploadedListFiles").innerHTML = "";
+    }
+
+    function FileUploaded(s, e) {
+        if (e.isValid) {
+            var linkFile = document.createElement("a");
+            var indexSeparator = e.callbackData.indexOf(fieldSeparator);
+            var fileName = e.callbackData.substring(0, indexSeparator);
+            var pictureUrl = e.callbackData.substring(indexSeparator + fieldSeparator.length);          
+            linkFile.innerHTML = fileName;          
+            var container = document.getElementById("uploadedListFiles");
+            container.appendChild(linkFile);
+            container.appendChild(document.createElement("br"));
         }
     }
 </script>
      <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
-    <dx:ASPxLabel runat="server" ID="lblHeader"></dx:ASPxLabel>
+    <dx:ASPxLabel runat="server" ID="lblHeader" Text="Work Request: " Theme="iOS"></dx:ASPxLabel>
 
         <dx:ASPxFormLayout ID="ASPxFormLayout1"
             runat="server" Theme="iOS" EnableTheming="True"  Width="100%" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit">            
@@ -123,29 +142,23 @@ function getLocation() {
                                     <dx:ASPxComboBox ID="ObjectIDCombo" Width="100%"
                                         OnItemRequestedByValue="ASPxComboBox_OnItemRequestedByValue_SQL" 
                                         OnItemsRequestedByFilterCondition="ASPxComboBox_OnItemsRequestedByFilterCondition_SQL"
-                                        runat="server" TextFormatString="{0} - {1} - {2} - {3} - {4} - {5} - {6} - {7} - {8}" 
+                                        runat="server" TextFormatString="{0} - {1} - {2} - {3}" 
                                         EnableCallbackMode="true" CallbackPageSize="10" ValueType="System.String" ValueField="n_objectid" 
                                         DropDownStyle="DropDown" TextField="objectid" AutoPostBack="false" DropDownButton-Enabled="true" ClientInstanceName="ObjectIDCombo"  >
                                         <ClientSideEvents ValueChanged="function(s, e) { 
                                             var objectHasValue = ObjectIDCombo.GetValue();
                                                                                                     var selectedItem = s.GetSelectedItem();
-                                                                                                    console.log('object', objectHasValue);
-                                                                                                    console.log('selected object', selectedItem);
+                                                  
                                                                                                     if(objectHasValue!=null)
                                                                                                     {
                                                                                                         txtObjectDescription.SetText(selectedItem.GetColumnText('description'));
-                                                                                                        ObjectIDComboText.SetText(selectedItem.GetColumnText('objectid'));
-                                                                                                        txtObjectArea.SetText(selectedItem.GetColumnText('areaid'));
-                                                                                                        txtObjectLocation.SetText(selectedItem.GetColumnText('locationid'));
-                                                                                                        txtObjectAssetNumber.SetText(selectedItem.GetColumnText('assetnumber'));
                                                                                                         objectImg.SetImageUrl(selectedItem.GetColumnText('LocationOrURL'));
+                                                                                                      
                                                                                                     }
                                                                                                     else
                                                                                                     {
                                                                                                         txtObjectDescription.SetText('');
-                                                                                                        txtObjectArea.SetText('');
-                                                                                                        txtObjectLocation.SetText('');
-                                                                                                        txtObjectAssetNumber.SetText('');
+                                                                                                       
                                                                                                     }
                                              }"  />
                                         <Columns>
@@ -154,11 +167,11 @@ function getLocation() {
                                             <dx:ListBoxColumn FieldName="description" Caption="Description" Width="250px" ToolTip="M-PET.NET Maintenance Object Description"/>
                                             <dx:ListBoxColumn FieldName="areaid" Caption="Area ID" Width="75px" ToolTip="M-PET.NET Maintenance Object Assigned Area ID" />
                                             <dx:ListBoxColumn FieldName="locationid" Caption="Location ID" Width="75px" ToolTip="M-PET.NET Maintenance Object Assigned Location ID" />
-                                            <dx:ListBoxColumn FieldName="assetnumber" Caption="Asset #" Width="50px" ToolTip="M-PET.NET Maintenance Object Asset Number"/>
+                                            <%--<dx:ListBoxColumn FieldName="assetnumber" Caption="Asset #" Width="50px" ToolTip="M-PET.NET Maintenance Object Asset Number"/>
                                             <dx:ListBoxColumn FieldName="OrganizationCodeID" Caption="Org. Code ID" Width="100px" ToolTip="M-PET.NET Maintenance Object Assigned Org. Code ID" />
                                             <dx:ListBoxColumn FieldName="FundingGroupCodeID" Caption="Fund. Group Code ID" Width="100px" ToolTip="M-PET.NET Maintenance Object Assigned Funding Group Code ID" />
-                                            <dx:ListBoxColumn FieldName="Following" Caption="Following" Width="50px" ToolTip="M-PET.NET Maintenance Object Following Yes/No?"/>
-                                            <dx:ListBoxColumn FieldName="LocationOrURL" Caption="Photo" Width="50px" ToolTip="M-PET.NET Maintenance Object Photo"/>
+                                            <dx:ListBoxColumn FieldName="Following" Caption="Following" Width="50px" ToolTip="M-PET.NET Maintenance Object Following Yes/No?"/>--%>
+                                            <dx:ListBoxColumn FieldName="LocationOrURL"   Caption="Photo" Width="50px" ToolTip="M-PET.NET Maintenance Object Photo"/>
                                         </Columns>
                                     </dx:ASPxComboBox>
                                 </dx:LayoutItemNestedControlContainer>
@@ -174,6 +187,20 @@ function getLocation() {
                                 </dx:LayoutItemNestedControlContainer>
                             </LayoutItemNestedControlCollection>
                         </dx:LayoutItem>
+                         <dx:LayoutItem Caption="" HelpText="" CaptionSettings-Location="Top" Width="50%">
+                            <LayoutItemNestedControlCollection>
+                                <dx:LayoutItemNestedControlContainer>
+                                    <dx:ASPxImage ID="objectImg" ImageAlign="Left" 
+                                        ImageUrl="~/Content/Images/noImage.png" 
+                                        AlternateText="No Picture Associated" Width="100%" 
+                                        ClientInstanceName="objectImg" runat="server" 
+                                        ShowLoadingImage="true">
+                                    </dx:ASPxImage>
+                                </dx:LayoutItemNestedControlContainer>
+                            </LayoutItemNestedControlCollection>
+
+                            <CaptionSettings Location="Top"></CaptionSettings>
+                        </dx:LayoutItem>               
                     </Items>
                 </dx:LayoutGroup>
                 <dx:LayoutItem Caption="Requestor" CaptionSettings-Location="Top" Width="25%">
@@ -268,7 +295,26 @@ function getLocation() {
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
                 <dx:EmptyLayoutItem Width="50%" ></dx:EmptyLayoutItem>
+                <dx:LayoutItem Caption="" Width="50%" CaptionSettings-Location="Top">
+                    <LayoutItemNestedControlCollection>
+                        <dx:LayoutItemNestedControlContainer>
+                            <dx:ASPxImage runat="server" ID="attachImg" Width="200px" Height="200px" ImageAlign="Left" 
+                                        ImageUrl="~/Content/Images/noImage.png" 
+                                        AlternateText="No Picture Associated"  
+                                        ClientInstanceName="attachImg"  
+                                        ShowLoadingImage="true"> </dx:ASPxImage>
+                        </dx:LayoutItemNestedControlContainer>
+                    </LayoutItemNestedControlCollection>
+                </dx:LayoutItem>
+                <dx:LayoutItem>
+                    <LayoutItemNestedControlCollection>
+                        <dx:LayoutItemNestedControlContainer>
+                            <asp:PlaceHolder runat="server" ID="place"></asp:PlaceHolder>
 
+
+                        </dx:LayoutItemNestedControlContainer>
+                    </LayoutItemNestedControlCollection>
+                </dx:LayoutItem>
                 <dx:LayoutItem Caption="" ShowCaption="False" CaptionSettings-Location="Top">
                                                                         <LayoutItemNestedControlCollection >
                                                                             <dx:LayoutItemNestedControlContainer>
@@ -304,8 +350,8 @@ function getLocation() {
                                                                                                 MaxFileSize="4194304" 
                                                                                                 AllowedFileExtensions=".jpg,.jpeg,.gif,.png">
                                                                                             </ValidationSettings>
-                                                                                            <ClientSideEvents 
-                                                                                                FileUploadComplete="onFileUploadComplete"/>
+                                                                                            <ClientSideEvents FileUploadComplete="function(s, e) { FileUploaded(s, e) }" 
+                                FilesUploadStart="function(s, e) { FileUploadStart(); }"/>
                                                                                         </dx:ASPxUploadControl>
                                                                                     </div>
                                                                                 </div>
@@ -313,7 +359,19 @@ function getLocation() {
                                                                         </LayoutItemNestedControlCollection>
                                                                         <CaptionSettings Location="Top"></CaptionSettings>
                                                                     </dx:LayoutItem> <%--upload control--%>   
-                                                                                
+                 <dx:LayoutItem Caption="" Width="50%" CaptionSettings-Location="Top">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer>
+                        <dx:ASPxRoundPanel runat="server" ID="ASPxRoundPanel1" Width="100%" ClientInstanceName="RoundPanel" HeaderText="Uploaded Files">
+                            <PanelCollection>
+                                <dx:PanelContent runat="server">
+                                    <div id="uploadedListFiles" style="height: 50px; font-family: Arial;"></div>
+                                </dx:PanelContent>
+                            </PanelCollection>
+                        </dx:ASPxRoundPanel>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>                                                              
                 <dx:LayoutItem Caption="" ShowCaption="False"  CaptionSettings-Location="Top">
                                                                         <LayoutItemNestedControlCollection >
                                                                             <dx:LayoutItemNestedControlContainer>
@@ -427,14 +485,15 @@ function getLocation() {
                 </dx:LayoutItem>
             </Items>
         </dx:ASPxFormLayout>
+                  
+            
       
         <asp:SqlDataSource ID="AttachmentDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:connection %>" 
-        SelectCommand="SELECT [ID], [nJobID], [nJobstepID], [DocType], [Description], [LocationOrURL], [ShortName] 
+        SelectCommand="SELECT [ID], [nJobID], [DocType], [Description], [LocationOrURL], [ShortName] 
         FROM [Attachments] 
-        WHERE (([nJobID] = @nJobID) AND ([nJobstepID] = @nJobstepID))">
+        WHERE (([nJobID] = @nJobID))">
         <SelectParameters>
             <asp:SessionParameter DefaultValue="0" Name="nJobID" SessionField="editingJobID" Type="Int32" />
-            <asp:Parameter DefaultValue="-1" Name="nJobstepID" Type="Int32" />
         </SelectParameters>
     </asp:SqlDataSource>
     <asp:SqlDataSource ID="ObjectDataSource" runat="server" />

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Main.master" CodeBehind="Parts.aspx.cs" Inherits="MPETGO.Pages.Parts" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Main.master" CodeBehind="Objects.aspx.cs" Inherits="MPETGO.Pages.Parts" %>
 <asp:Content ID="Content" ContentPlaceHolderID="MainContent" runat="server">
 
  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARk0BJK-cnQ27jHObwdI4xtqsNY9n7z9E"></script>
@@ -21,91 +21,114 @@
         txtLong.SetValue(long); 
         txtLong.SetText(long);
     }
-    function onFileUploadComplete(s, e) {
-        if (e.callbackData) {
-            var fileData = e.callbackData.split('|');
-            var fileName = fileData[0],
-                fileUrl = fileData[1],
-                fileSize = fileData[2];
-            DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
-        }
-    }
+    //function onFileUploadComplete(s, e) {
+    //    if (e.callbackData) {
+    //        var fileData = e.callbackData.split('|');
+    //        var fileName = fileData[0],
+    //            fileUrl = fileData[1],
+    //            fileSize = fileData[2];
+    //        DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
+    //    }
+    //}
 </script>
 <script>
-    DXUploadedFilesContainer = {
-        nameCellStyle: "",
-        sizeCellStyle: "",
-        useExtendedPopup: false,
+    //DXUploadedFilesContainer = {
+    //    nameCellStyle: "",
+    //    sizeCellStyle: "",
+    //    useExtendedPopup: false,
 
-        AddFile: function (fileName, fileUrl, fileSize) {
-            var self = DXUploadedFilesContainer;
-            var builder = ["<tr>"];
+    //    AddFile: function (fileName, fileUrl, fileSize) {
+    //        var self = DXUploadedFilesContainer;
+    //        var builder = ["<tr>"];
 
-            builder.push("<td class='nameCell'");
-            if (self.nameCellStyle)
-                builder.push(" style='" + self.nameCellStyle + "'");
-            builder.push(">");
-            self.BuildLink(builder, fileName, fileUrl);
-            builder.push("</td>");
+    //        builder.push("<td class='nameCell'");
+    //        if (self.nameCellStyle)
+    //            builder.push(" style='" + self.nameCellStyle + "'");
+    //        builder.push(">");
+    //        self.BuildLink(builder, fileName, fileUrl);
+    //        builder.push("</td>");
 
-            builder.push("<td class='sizeCell'");
-            if (self.sizeCellStyle)
-                builder.push(" style='" + self.sizeCellStyle + "'");
-            builder.push(">");
-            builder.push(fileSize);
-            builder.push("</td>");
+    //        builder.push("<td class='sizeCell'");
+    //        if (self.sizeCellStyle)
+    //            builder.push(" style='" + self.sizeCellStyle + "'");
+    //        builder.push(">");
+    //        builder.push(fileSize);
+    //        builder.push("</td>");
 
-            builder.push("</tr>");
+    //        builder.push("</tr>");
 
-            var html = builder.join("");
-            DXUploadedFilesContainer.AddHtml(html);
-        },
-        Clear: function () {
-            DXUploadedFilesContainer.ReplaceHtml("");
-        },
-        BuildLink: function (builder, text, url) {
-            builder.push("<a target='blank' onclick='return DXDemo.ShowScreenshotWindow(event, this, " + this.useExtendedPopup + ");'");
-            builder.push(" href='" + url + "'>");
-            builder.push(text);
-            builder.push("</a>");
-        },
-        AddHtml: function (html) {
-            var fileContainer = document.getElementById("uploadedFilesContainer"),
-                fullHtml = html;
-            if (fileContainer) {
-                var containerBody = fileContainer.tBodies[0];
-                fullHtml = containerBody.innerHTML + html;
-            }
-            DXUploadedFilesContainer.ReplaceHtml(fullHtml);
-        },
-        ReplaceHtml: function (html) {
-            var builder = ["<table id='uploadedFilesContainer' class='uploadedFilesContainer'><tbody>"];
-            builder.push(html);
-            builder.push("</tbody></table>");
-            var contentHtml = builder.join("");
-            window.FilesRoundPanel.SetContentHtml(contentHtml);
-        },
-        ApplySettings: function (nameCellStyle, sizeCellStyle, useExtendedPopup) {
-            var self = DXUploadedFilesContainer;
-            self.nameCellStyle = nameCellStyle;
-            self.sizeCellStyle = sizeCellStyle;
-            self.useExtendedPopup = useExtendedPopup;
-        }
-    };
+    //        var html = builder.join("");
+    //        DXUploadedFilesContainer.AddHtml(html);
+    //    },
+    //    Clear: function () {
+    //        DXUploadedFilesContainer.ReplaceHtml("");
+    //    },
+    //    BuildLink: function (builder, text, url) {
+    //        builder.push("<a target='blank' onclick='return DXDemo.ShowScreenshotWindow(event, this, " + this.useExtendedPopup + ");'");
+    //        builder.push(" href='" + url + "'>");
+    //        builder.push(text);
+    //        builder.push("</a>");
+    //    },
+    //    AddHtml: function (html) {
+    //        var fileContainer = document.getElementById("uploadedFilesContainer"),
+    //            fullHtml = html;
+    //        if (fileContainer) {
+    //            var containerBody = fileContainer.tBodies[0];
+    //            fullHtml = containerBody.innerHTML + html;
+    //        }
+    //        DXUploadedFilesContainer.ReplaceHtml(fullHtml);
+    //    },
+    //    ReplaceHtml: function (html) {
+    //        var builder = ["<table id='uploadedFilesContainer' class='uploadedFilesContainer'><tbody>"];
+    //        builder.push(html);
+    //        builder.push("</tbody></table>");
+    //        var contentHtml = builder.join("");
+    //        window.FilesRoundPanel.SetContentHtml(contentHtml);
+    //    },
+    //    ApplySettings: function (nameCellStyle, sizeCellStyle, useExtendedPopup) {
+    //        var self = DXUploadedFilesContainer;
+    //        self.nameCellStyle = nameCellStyle;
+    //        self.sizeCellStyle = sizeCellStyle;
+    //        self.useExtendedPopup = useExtendedPopup;
+    //    }
+    //};
 
-    function onFileUploadComplete(s, e) {
-        if (e.callbackData) {
-            var fileData = e.callbackData.split('|');
-            var fileName = fileData[0],
-                fileUrl = fileData[1],
-                fileSize = fileData[2];
+    //function onFileUploadComplete(s, e) {
+    //    if (e.callbackData) {
+    //        var fileData = e.callbackData.split('|');
+    //        var fileName = fileData[0],
+    //            fileUrl = fileData[1],
+    //            fileSize = fileData[2];
             //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
             //window.AttachmentGrid.Refresh();
+        //}
+    //}
+</script>
+<script>
+    var fieldSeparator = "|";
+    function FileUploadStart() {
+        document.getElementById("uploadedListFiles").innerHTML = "";
+    }
+
+    function FileUploaded(s, e) {
+        if (e.isValid) {
+            var linkFile = document.createElement("a");
+            var indexSeparator = e.callbackData.indexOf(fieldSeparator);
+            var fileName = e.callbackData.substring(0, indexSeparator);
+            var pictureUrl = e.callbackData.substring(indexSeparator + fieldSeparator.length);
+            
+            linkFile.innerHTML = fileName;
+           
+            var container = document.getElementById("uploadedListFiles");
+            container.appendChild(linkFile);
+            container.appendChild(document.createElement("br"));
         }
     }
+
 </script>
 
     <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
+    <dx:ASPxLabel runat="server" ID="objectLabel" Theme="iOS" Text="Object ID:" Visible="false"></dx:ASPxLabel>
     <dx:ASPxFormLayout ID="PartsForm" runat="server" Width="100%" Theme="iOS" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800">
         <Items>
             <dx:LayoutItem Caption="Active">
@@ -146,12 +169,29 @@
             <dx:LayoutItem Caption="Description" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxMemo runat="server" ID="objectDesc" Width="100%"></dx:ASPxMemo>
+                        <dx:ASPxMemo runat="server" ID="objectDesc" AutoPostBack="true" Width="100%">
+                            
+                        </dx:ASPxMemo>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
+            <dx:LayoutItem Caption="" HelpText="" CaptionSettings-Location="Top" Width="50%">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer>
+                        <dx:ASPxImage ID="objectImg" ImageAlign="Left" 
+                            ImageUrl="~/Content/Images/noImage.png" 
+                            AlternateText="No Picture Associated" Width="100%" 
+                            ClientInstanceName="objectImg" runat="server" 
+                            ShowLoadingImage="true"> 
+                        </dx:ASPxImage>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+
+                <CaptionSettings Location="Top"></CaptionSettings>
+            </dx:LayoutItem>                                
+
             <%--<dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
-            <dx:LayoutItem Caption="Street/Road" CaptionSettings-Location="Top" Width="50%">
+         <%--   <dx:LayoutItem Caption="Street/Road" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
                         <dx:ASPxComboBox runat="server" ID="ComboStreet" Width="100%" 
@@ -169,7 +209,7 @@
                         </dx:ASPxComboBox>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>
+            </dx:LayoutItem>--%>
             <dx:LayoutItem Caption="Area" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
@@ -179,11 +219,31 @@
                             DropDownButton-Enabled="true" DropDownStyle="DropDown" 
                             AutoPostBack="false" EnableCallbackMode="true" 
                             CallbackPageSize="10" TextFormatString="{0} - {1}" ClientInstanceName="ComboArea" 
-                            TextField="areaid" ValueField="n_areaid" ValueType="System.String">
+                            TextField="areaid" ValueField="n_areaid" ValueType="System.Int32">
                             <Columns>
                                 <dx:ListBoxColumn FieldName="n_areaid" Visible="false"></dx:ListBoxColumn>
                                 <dx:ListBoxColumn FieldName="areaid" Caption="Area" Width="75px" ToolTip="M-PET Go Area ID"></dx:ListBoxColumn>
                                 <dx:ListBoxColumn FieldName="descr" Caption="Description" Width="150px" ToolTip="M-PET Go Area Description"></dx:ListBoxColumn>
+                            </Columns>
+                        </dx:ASPxComboBox>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>
+            
+           <dx:LayoutItem Caption="Location" CaptionSettings-Location="Top" Width="50%">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer runat="server">
+                        <dx:ASPxComboBox runat="server" ID="ComboLocation" Width="100%" 
+                            OnItemRequestedByValue="ComboLocation_OnItemRequestedByValue_SQL" 
+                            OnItemsRequestedByFilterCondition="ComboLocation_OnItemRequestedByFilterCondition_SQL" 
+                            DropDownButton-Enabled="true" DropDownStyle="DropDown" 
+                            AutoPostBack="false" EnableCallbackMode="true" CallbackPageSize="10"
+                            TextField="locationid" ValueField="n_locationid" ValueType="System.Int32"
+                            TextFormatString="{0} - {1}" ClientInstanceName="ComboLocation" >
+                            <Columns>
+                                <dx:ListBoxColumn FieldName="n_locationid" Visible="false"></dx:ListBoxColumn>
+                                <dx:ListBoxColumn FieldName="locationid" Caption="Location" Width="75px" ToolTip="M-PET Go Location"></dx:ListBoxColumn>
+                                <dx:ListBoxColumn FieldName="description" Caption="Description" Width="150px" ToolTip="M-PET Go Location Description"></dx:ListBoxColumn>
                             </Columns>
                         </dx:ASPxComboBox>
                     </dx:LayoutItemNestedControlContainer>
@@ -209,7 +269,7 @@
                             ShowTextBox="true" 
                             NullText="Upload image" 
                             UploadStorage="Azure" 
-                            UploadMode="Auto"
+                            UploadMode="Auto" FileInputCount="2"
                             FileUploadMode="OnPageLoad" 
                             ShowUploadButton="true" 
                             ShowProgressPanel="true" 
@@ -219,13 +279,29 @@
                              
                             <AdvancedModeSettings EnableMultiSelect="true" EnableDragAndDrop="true" EnableFileList="true"></AdvancedModeSettings>
                             <ValidationSettings MaxFileSize="4194304" AllowedFileExtensions=".jpg, .jpeg, .gif, .png"></ValidationSettings>
-                            <ClientSideEvents FileUploadComplete="onFileUploadComplete" />
+                            <ClientSideEvents FileUploadComplete="function(s, e) { FileUploaded(s, e) }" 
+                                FilesUploadStart="function(s, e) { FileUploadStart(); }"
+                                 />
                         </dx:ASPxUploadControl>
                             </div>
                         </div>                      
                     </dx:LayoutItemNestedControlContainer>                  
                 </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>         
+            </dx:LayoutItem> 
+            <dx:LayoutItem Caption="" Width="50%" CaptionSettings-Location="Top">
+                <LayoutItemNestedControlCollection>
+                    <dx:LayoutItemNestedControlContainer>
+                        <dx:ASPxRoundPanel runat="server" ID="ASPxRoundPanel1" Width="100%" ClientInstanceName="RoundPanel" HeaderText="Uploaded Files">
+                            <PanelCollection>
+                                <dx:PanelContent runat="server">
+                                    <div id="uploadedListFiles" style="height: 50px; font-family: Arial;"></div>
+                                </dx:PanelContent>
+                            </PanelCollection>
+                        </dx:ASPxRoundPanel>
+                    </dx:LayoutItemNestedControlContainer>
+                </LayoutItemNestedControlCollection>
+            </dx:LayoutItem>
+                   
             <dx:LayoutItem Caption="" ShowCaption="False"  CaptionSettings-Location="Top">
                                                                         <LayoutItemNestedControlCollection >
                                                                             <dx:LayoutItemNestedControlContainer>
@@ -337,8 +413,7 @@
                     </LayoutItemNestedControlCollection>
              </dx:LayoutItem>
             <%--<dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
-           
-            
+               
             <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
@@ -353,10 +428,12 @@
                         <dx:ASPxButton runat="server" Width="50%" ID="SavePartBtn" Text="Save" OnClick="SavePartBtn_Click" ClientInstanceName="SavepartBtn" AutoPostBack="false"></dx:ASPxButton>
                      </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
-            </dx:LayoutItem>
-           
+            </dx:LayoutItem>          
         </Items>
     </dx:ASPxFormLayout>
+    <dx:ASPxHint runat="server" Content="Add Description of Object" ID="objectDescHint" TargetSelector=".objectDesc" TriggerAction="Hover" Animation="true" AllowFlip="true">
+        
+    </dx:ASPxHint>
     <asp:SqlDataSource ID="AttachmentDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:connection %>" 
         SelectCommand="SELECT [ID], [nJobID], [nJobstepID], [DocType], [Description], [LocationOrURL], [ShortName] 
         FROM [Attachments] 
@@ -366,6 +443,7 @@
             <asp:Parameter DefaultValue="-1" Name="nJobstepID" Type="Int32" />
         </SelectParameters>
     </asp:SqlDataSource>
+<asp:SqlDataSource ID="LocationDataSource" runat="server"></asp:SqlDataSource>
 <asp:SqlDataSource ID="ObjectTypeDataSource" runat="server"></asp:SqlDataSource>
 <asp:SqlDataSource ID="AreaSqlDatasource" runat="server" />
 <asp:SqlDataSource ID="StateRouteDataSource" runat="server"></asp:SqlDataSource>

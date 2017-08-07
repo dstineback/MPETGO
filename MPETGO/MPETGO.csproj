@@ -137,6 +137,7 @@
     </Content>
     <None Include="Properties\PublishProfiles\MPETGO-CKRoards.pubxml" />
     <None Include="Properties\PublishProfiles\MPETGO-HWYK.pubxml" />
+    <None Include="Properties\PublishProfiles\MPETGO.pubxml" />
     <None Include="Properties\PublishProfiles\MPETGO1.pubxml" />
     <None Include="Properties\PublishProfiles\MPETGOTEST.pubxml" />
     <None Include="Web.Debug.config">

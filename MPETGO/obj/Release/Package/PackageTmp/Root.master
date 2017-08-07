@@ -41,10 +41,11 @@
         </dx:MenuItem>
         <dx:MenuItem Text="Objects/Machines">
            <Items>
-               <dx:MenuItem Text="Add Object" NavigateUrl="Pages/Parts.aspx"></dx:MenuItem>       
+               <dx:MenuItem Text="Add Object" NavigateUrl="Pages/Objects.aspx"></dx:MenuItem>
+               <dx:MenuItem Text="Object List" NavigateUrl="Pages/ObjectList.aspx"></dx:MenuItem>       
            </Items>
         </dx:MenuItem>
-        <dx:MenuItem Text="Contact US" NavigateUrl="Pages/Contact.aspx"></dx:MenuItem>
+        <dx:MenuItem Text="Contact US" NavigateUrl="Pages/Objects.aspx"></dx:MenuItem>
         <dx:MenuItem Text="Sign Out" NavigateUrl="LogOut.aspx"></dx:MenuItem>
 
     </Items>
