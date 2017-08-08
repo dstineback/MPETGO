@@ -21,8 +21,8 @@
         <dx:GridViewDataHyperLinkColumn FieldName="n_objectid" VisibleIndex="0" Caption="Go to Object" >
             <PropertiesHyperLinkEdit Text="Update object" NavigateUrlFormatString="~/pages/Objects.aspx?n_objectid={0}"></PropertiesHyperLinkEdit>
         </dx:GridViewDataHyperLinkColumn>
-        <dx:GridViewDataHyperLinkColumn FieldName="objectid" Caption="Object ID" VisibleIndex="1">         
-        </dx:GridViewDataHyperLinkColumn>
+        <dx:GridViewDataColumn FieldName="objectid" Caption="Object ID" VisibleIndex="1">         
+        </dx:GridViewDataColumn>
         <dx:GridViewDataTextColumn FieldName="description" ReadOnly="true" VisibleIndex="1" Width="200px"></dx:GridViewDataTextColumn>
         <dx:GridViewDataColumn FieldName="Current Condition" ReadOnly="true" VisibleIndex="2" ></dx:GridViewDataColumn>
         <dx:GridViewDataTextColumn FieldName="Storeroom" ReadOnly="true" VisibleIndex="3">
