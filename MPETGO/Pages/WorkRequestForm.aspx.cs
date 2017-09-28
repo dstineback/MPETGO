@@ -356,6 +356,9 @@ namespace MPETGO.Pages
                                             break;
                                         }
                                     }
+                                } else
+                                {
+                                    objectImg.Visible = false;
                                 }
                             }
                             #endregion
@@ -499,8 +502,23 @@ namespace MPETGO.Pages
             {
                 saveBtn.Visible = true;
                 submitBtn.Visible = false;
-                AttachmentGrid.Visible = true;
-               
+                if(AttachmentGrid.VisibleRowCount > 0)
+                {
+                    AttachmentGrid.Visible = true;
+                } else
+                {
+                    AttachmentGrid.Visible = false;
+                }
+                if(AzureAccessKey != null)
+                {
+                    UploadControl.Visible = true;                  
+                } else
+                {
+                    UploadControl.Visible = false;
+                    attachImg.Visible = false;
+                    ASPxRoundPanel1.Visible = true;
+                    AttachmentGrid.Visible = false;
+                }
 
             } else
             {
@@ -508,6 +526,7 @@ namespace MPETGO.Pages
                 submitBtn.Visible = true;
                 AttachmentGrid.Visible = false;
                 ASPxRoundPanel1.Visible = true;
+                attachImg.Visible = false;
                            
             }
 
@@ -562,6 +581,7 @@ namespace MPETGO.Pages
             Session.Add("name", name);
 
             ASPxRoundPanel1.Visible = true;
+            
 
             //Check For Job ID
             if (HttpContext.Current.Session["editingJobID"] != null)
@@ -600,6 +620,7 @@ namespace MPETGO.Pages
 
                         //Refresh Attachments
                         AttachmentGrid.Visible = true;
+                        GetAttachments();
                         AttachmentGrid.DataBind();
                         ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
 
@@ -683,6 +704,7 @@ namespace MPETGO.Pages
 
                                 //Refresh Attachments
                                 AttachmentGrid.Visible = true;
+                                GetAttachments();
                                 AttachmentGrid.DataBind();
                                 ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
 
@@ -712,7 +734,7 @@ namespace MPETGO.Pages
             }
             else
             {
-
+                AttachmentGrid.Visible = false;
             }
 
             var jobid = Convert.ToInt32(Session["editingJobID"]);

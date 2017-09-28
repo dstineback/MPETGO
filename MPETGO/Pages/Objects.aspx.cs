@@ -361,7 +361,7 @@ namespace MPETGO.Pages
                 SavePartBtn.Visible = true;
                 AddPartBtn.Visible = false;
                 AttachmentGrid.Visible = true;
-                ASPxRoundPanel1.Visible = false;
+                ASPxRoundPanel1.Visible = true;
                 UploadControl.Visible = true;
 
                 if (Session["ObjectPhoto"] != null)
@@ -379,8 +379,8 @@ namespace MPETGO.Pages
                 AddPartBtn.Visible = true;
                 SavePartBtn.Visible = false;
                 AttachmentGrid.Visible = false;
-                ASPxRoundPanel1.Visible = false;
-                UploadControl.Visible = false;
+                ASPxRoundPanel1.Visible = true;
+                UploadControl.Visible = true;
                 objectImg.Visible = false;
             }
          
@@ -439,7 +439,7 @@ namespace MPETGO.Pages
             {
                 AddParts();
             }
-
+            
             string name = e.UploadedFile.FileName;
             string url = GetImageUrl(e.UploadedFile.FileNameInStorage);
             long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
@@ -490,6 +490,7 @@ namespace MPETGO.Pages
                         }
 
                         //Refresh Attachments
+                        
                         AttachmentGrid.DataBind();
                         ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
 
@@ -516,8 +517,10 @@ namespace MPETGO.Pages
             {
             }
             
+
             FileManagerFile file = new FileManagerFile(provider, fileName);
             FileManagerFile[] files = new FileManagerFile[] { file };
+            
             return provider.GetDownloadUrl(files);           
         }
 
@@ -1672,6 +1675,65 @@ namespace MPETGO.Pages
             ResetSession();
             Response.Redirect("/index.aspx",  true);
            
+        }
+
+        protected void GetAttachments()
+        {
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+            {
+                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+            }
+            else
+            {
+                AttachmentGrid.Visible = false;
+            }
+
+            if (Convert.ToInt32(Session["n_objectID"]) > 0)
+            {
+                var objectID = Convert.ToInt32(Session["objectId"]);
+
+
+
+                Configuration rootWebConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");
+                ConnectionStringSettings strConnString = rootWebConfig.ConnectionStrings.ConnectionStrings["ClientConnectionString"];
+
+                SqlConnection con = new SqlConnection(strConnString.ConnectionString);
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "form_MaintenanceObjects_GetMaintObjectAttachments";
+
+                cmd.Parameters.Add("@MaintObjectID", SqlDbType.Int).Value = objectID;
+
+
+                cmd.Connection = con;
+                try
+                {
+                    var dt = new DataTable();
+                    con.Open();
+                    var dataReader = cmd.ExecuteReader();
+                    dt.Load(dataReader);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        var url = dt.Rows[0]["LocationOrUrl"].ToString();
+                        objectImg.ImageUrl = url;
+                        objectImg.Visible = true;
+                        Session.Add("attachmentImage", objectImg.ImageUrl.ToString());
+                    }
+                    else
+                    {
+                        objectImg.Visible = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
         }
 
 
