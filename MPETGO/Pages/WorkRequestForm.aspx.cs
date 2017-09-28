@@ -563,8 +563,6 @@ namespace MPETGO.Pages
 
             ASPxRoundPanel1.Visible = true;
 
-            //INSERT JOB ATTACHMENT ROUTINE HERE!!!!
-
             //Check For Job ID
             if (HttpContext.Current.Session["editingJobID"] != null)
             {
