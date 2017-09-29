@@ -13,6 +13,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI.WebControls;
 using System.Reflection;
+using Microsoft.WindowsAzure.Storage.Blob;
 using MPETDSFactory;
 
 namespace MPETGO.Pages
@@ -516,10 +517,37 @@ namespace MPETGO.Pages
             else
             {
             }
+            FileManagerFolder folder = new FileManagerFolder(provider, "Maintenance Object Attachments");
+            FileManagerFile file = new FileManagerFile(provider, fileName);
+            var newFolderName = "";
+            if(objectID.Text.Length > 0)
+            {
+                newFolderName = objectID.Text;
+            }
+            else
+            {
+                provider.DeleteFile(file);
+                objectID.Focus();
+            }
+            var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
+            FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
             
 
-            FileManagerFile file = new FileManagerFile(provider, fileName);
-            FileManagerFile[] files = new FileManagerFile[] { file };
+            
+            
+            provider.MoveFile(file, newFolder);
+            var path = Path.Combine(folder.Name.ToString(), newFolder.Name.ToString(), file.Name.ToString());
+            FileManagerFile d = new FileManagerFile(provider, path);
+            var b = provider.GetFiles(newFolder);
+            var wut = b.Contains(d);
+            
+            var f = b.ToList();
+            var wat = f.IndexOf(d);
+            var index = wat;
+            
+            var value = f[index].FullName.ToString();
+            FileManagerFile newLocation = new FileManagerFile(provider, value );
+            FileManagerFile[] files = new FileManagerFile[] { newLocation };
             
             return provider.GetDownloadUrl(files);           
         }

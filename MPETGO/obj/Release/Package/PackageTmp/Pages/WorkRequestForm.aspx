@@ -306,7 +306,7 @@ function getLocation() {
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
-                <dx:LayoutItem>
+                <dx:LayoutItem Caption="">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer>
                             <asp:PlaceHolder runat="server" ID="place"></asp:PlaceHolder>
@@ -315,7 +315,7 @@ function getLocation() {
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
-                <dx:LayoutItem Caption="" ShowCaption="False" CaptionSettings-Location="Top">
+                <dx:LayoutItem Caption="Add an image" ShowCaption="true" CaptionSettings-Location="Top">
                                                                         <LayoutItemNestedControlCollection >
                                                                             <dx:LayoutItemNestedControlContainer>
                                                                                 <div id="PhotoContainer" runat="server">
@@ -330,7 +330,7 @@ function getLocation() {
                                                                                             UploadStorage="Azure" 
                                                                                             FileUploadMode="OnPageLoad" 
                                                                                             ShowUploadButton="True" 
-                                                                                            ShowProgressPanel="True" 
+                                                                                            ShowProgressPanel="True"
                                                                                             OnFileUploadComplete="UploadControl_FileUploadComplete" 
                                                                                             ShowAddRemoveButtons="True">
                                                                                             
@@ -352,6 +352,7 @@ function getLocation() {
                                                                                             </ValidationSettings>
                                                                                             <ClientSideEvents FileUploadComplete="function(s, e) { FileUploaded(s, e) }" 
                                 FilesUploadStart="function(s, e) { FileUploadStart(); }"/>
+                                                                                            
                                                                                         </dx:ASPxUploadControl>
                                                                                     </div>
                                                                                 </div>
@@ -385,7 +386,7 @@ function getLocation() {
                                                                                             Width="98%" 
                                                                                             KeyboardSupport="True" 
                                                                                             ClientInstanceName="AttachmentGrid" 
-                                                                                            AutoPostBack="true" 
+                                                                                            AutoPostBack="true"
                                                                                             
                                                                                             Settings-HorizontalScrollBarMode="Auto" 
                                                                                             SettingsPager-Mode="ShowPager" 
@@ -404,6 +405,7 @@ function getLocation() {
 
                                                                                                 <FilterRow CssClass="gridViewFilterRow"></FilterRow>
                                                                                             </Styles>
+                                                                                            
                                                                                             <Columns>
                                                                                                 <dx:GridViewDataTextColumn FieldName="ID" ReadOnly="True" Visible="false" VisibleIndex="0">
                                                                                                     <CellStyle Wrap="False"></CellStyle>

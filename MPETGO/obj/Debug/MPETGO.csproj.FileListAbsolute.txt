@@ -57,4 +57,8 @@ C:\Users\stinebackd\Projects\MPETGO\MPETGO\obj\Debug\MPETGO.dll.licenses
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\DevExpress.Web.Resources.v17.1.dll
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\MPETDSFactory.dll
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\DevExpress.Web.Bootstrap.v17.1.dll
+C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\Microsoft.WindowsAzure.Storage.dll
+C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\Microsoft.Data.Edm.dll
+C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\Microsoft.Data.Services.Client.dll
+C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\Microsoft.Data.OData.dll
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\obj\Debug\MPETGO.csprojResolveAssemblyReference.cache
