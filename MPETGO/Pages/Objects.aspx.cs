@@ -531,10 +531,7 @@ namespace MPETGO.Pages
             }
             var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
             FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
-            
 
-            
-            
             provider.MoveFile(file, newFolder);
             var path = Path.Combine(folder.Name.ToString(), newFolder.Name.ToString(), file.Name.ToString());
             FileManagerFile d = new FileManagerFile(provider, path);

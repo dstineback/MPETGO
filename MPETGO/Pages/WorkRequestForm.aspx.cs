@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.IO;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -20,8 +21,8 @@ namespace MPETGO.Pages
     public partial class WorkRequestForm : Page
     {
         private WorkOrder _oJob;
-        
-        
+
+
         private LogonObject _oLogon;
         private JobIdGenerator _oJobIdGenerator;
         private AttachmentObject _oAttachments;
@@ -43,7 +44,7 @@ namespace MPETGO.Pages
         protected void Page_Load(object sender, EventArgs e)
         {
             #region Check for Logon
-            if(Session["LogonInfo"] != null)
+            if (Session["LogonInfo"] != null)
             {
                 _oLogon = ((LogonObject)Session["logonInfo"]);
                 userFirstName = _oLogon.FirstName;
@@ -101,10 +102,10 @@ namespace MPETGO.Pages
                 if (Session["editingJobID"] != null)
                 {
                     ResetSession();
-                   
+
                 } else
                 {
-                   
+
                     txtWorkDescription.Focus();
                 }
             }
@@ -351,7 +352,7 @@ namespace MPETGO.Pages
                                         if (firstPicFound)
                                         {
                                             objectImg.Visible = true;
-                                            objectImg.ImageUrl = Session["ObjectPhoto"].ToString();                      
+                                            objectImg.ImageUrl = Session["ObjectPhoto"].ToString();
                                             //Break Loop
                                             break;
                                         }
@@ -466,7 +467,7 @@ namespace MPETGO.Pages
                     objectImg.ImageUrl = HttpContext.Current.Session["ObjectPhoto"].ToString();
                 }
 
-                if(Session["attachmentImage"] != null)
+                if (Session["attachmentImage"] != null)
                 {
                     attachImg.ImageUrl = Session["attachmentImage"].ToString();
                 }
@@ -475,7 +476,7 @@ namespace MPETGO.Pages
             #endregion
 
         }
-            
+
         protected void Page_Init(object sender, EventArgs e)
         {
             //Set Connection Info
@@ -502,32 +503,25 @@ namespace MPETGO.Pages
             {
                 saveBtn.Visible = true;
                 submitBtn.Visible = false;
-                if(AttachmentGrid.VisibleRowCount > 0)
+                if (AttachmentGrid.VisibleRowCount > 0)
                 {
                     AttachmentGrid.Visible = true;
+                    attachImg.Visible = true;
                 } else
                 {
                     AttachmentGrid.Visible = false;
                 }
-                if(AzureAccessKey != null)
-                {
-                    UploadControl.Visible = true;                  
-                } else
-                {
-                    UploadControl.Visible = false;
-                    attachImg.Visible = false;
-                    ASPxRoundPanel1.Visible = true;
-                    AttachmentGrid.Visible = false;
-                }
+                
 
             } else
             {
                 saveBtn.Visible = false;
                 submitBtn.Visible = true;
                 AttachmentGrid.Visible = false;
+                UploadControl.Visible = true;
                 ASPxRoundPanel1.Visible = true;
                 attachImg.Visible = false;
-                           
+
             }
 
         }
@@ -568,20 +562,26 @@ namespace MPETGO.Pages
             string sizeText = sizeInKilobytes + " KB";
             e.CallbackData = name + "|" + url + "|" + sizeText;
 
-            if(Session["url"] != null)
+            if (Session["url"] != null)
             {
                 Session.Remove("url");
             }
             Session.Add("url", url);
 
-            if(Session["name"] != null)
+            if (Session["OriginalUrl"] != null)
+            {
+                Session.Remove("OriginalUrl");
+            }
+            Session.Add("OriginalUrl", url);
+
+            if (Session["name"] != null)
             {
                 Session.Remove("name");
             }
             Session.Add("name", name);
 
             ASPxRoundPanel1.Visible = true;
-            
+
 
             //Check For Job ID
             if (HttpContext.Current.Session["editingJobID"] != null)
@@ -593,7 +593,7 @@ namespace MPETGO.Pages
                     _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
 
                     var jobStepID = -1;
-                    if(Session["editingJobStepID"] != null)
+                    if (Session["editingJobStepID"] != null)
                     {
                         jobStepID = Convert.ToInt32(Session["editingJobStepID"].ToString());
                     }
@@ -616,7 +616,7 @@ namespace MPETGO.Pages
                         //Add New Value
                         HttpContext.Current.Session.Add("HasAttachments", true);
 
-                       
+
 
                         //Refresh Attachments
                         AttachmentGrid.Visible = true;
@@ -646,11 +646,102 @@ namespace MPETGO.Pages
             {
 
             }
+            FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachements");
             FileManagerFile file = new FileManagerFile(provider, fileName);
-            FileManagerFile[] files = new FileManagerFile[] { file };
-            return provider.GetDownloadUrl(files);
+            var newFolderName = "";
+            if (Session["AssignedJobID"] != null)
+            {
+                newFolderName = Session["AssignedJobID"].ToString();
+                var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
+                FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
+
+                provider.MoveFile(file, newFolder);
+                var path = Path.Combine(folder.Name.ToString(), newFolder.Name.ToString(), file.Name.ToString());
+                FileManagerFile d = new FileManagerFile(provider, path);
+                var b = provider.GetFiles(newFolder);
+                var wut = b.Contains(d);
+
+                var f = b.ToList();
+                var wat = f.IndexOf(d);
+                var index = wat;
+
+                var value = f[index].FullName.ToString();
+
+                FileManagerFile newLocation = new FileManagerFile(provider, value);
+                FileManagerFile[] files = new FileManagerFile[] { newLocation };
+                return provider.GetDownloadUrl(files);
+            } else
+            {
+                if(Session["MoveNewFile"] != null)
+                {
+                    Session.Remove("MoveNewFile");
+                }
+                Session.Add("MoveNewFile", true);
+                var folderPath = Path.Combine(folder.Name.ToString(), file.Name.ToString());
+                provider.MoveFile(file, folder);
+                FileManagerFile newFilePath = new FileManagerFile(provider, folderPath);
+                FileManagerFile[] filesWithNoWRID = new FileManagerFile[] { newFilePath };
+                return provider.GetDownloadUrl(filesWithNoWRID);
+            }
+
         }
 
+       
+        string MoveAttachement(string fileName)
+        {
+            if (Session["OldImage"] != null)
+            {
+                Session.Remove("OldImage");
+            };
+            Session.Add("OldImage", fileName);
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+            {
+                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+            }
+            else
+            {
+                 Console.WriteLine("No Azzure Account");
+            }
+
+            FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
+            FileManagerFolder newfolder = new FileManagerFolder(provider, Session["AssignedJobID"].ToString());
+            FileManagerFile file = new FileManagerFile(provider, fileName);
+            provider.CreateFolder(folder, newfolder.Name.ToString());
+            provider.MoveFile(file, newfolder);
+            var path = Path.Combine(folder.Name.ToString(),  Session["AssignedJobID"].ToString(), file.FullName.ToString());
+            FileManagerFile newFilePathItem = new FileManagerFile(provider, path);
+            var fileList = provider.GetFiles(newfolder);
+            var newWut = fileList.Contains(newFilePathItem);
+            var list = fileList.ToList();
+            var index = list.IndexOf(newFilePathItem);
+            var value = list[index].FullName.ToString();
+            
+            
+            var originalFile = Session["OriginalUrl"].ToString();
+  
+            FileManagerFile newLocation = new FileManagerFile(provider, value);
+
+
+            //FileManagerFile newLocation1 = new FileManagerFile(provider, filePath);
+            FileManagerFile[] files = new FileManagerFile[] { newLocation };
+
+            _oAttachments.Update();
+            if( Session["url"] != null)
+            {
+                
+                Session.Remove("url");
+            }
+            provider.DeleteFile(file);
+            string url = GetImageUrl(newLocation.FullName.ToString());
+            Session.Add("url", url);
+            return provider.GetDownloadUrl(files);
+
+        }
+        
         protected bool AddAttachment()
         {
             try
@@ -697,6 +788,8 @@ namespace MPETGO.Pages
                                     HttpContext.Current.Session.Remove("HasAttachments");
                                 }
 
+                                
+                                    
                                 //Add New Value
                                 HttpContext.Current.Session.Add("HasAttachments", true);
 
@@ -722,6 +815,87 @@ namespace MPETGO.Pages
 
         }
 
+        protected void GetAttachments(string url)
+        {
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+            {
+                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+            }
+            else
+            {
+                AttachmentGrid.Visible = false;
+            }
+
+            var jobid = Convert.ToInt32(Session["editingJobID"]);
+
+            Configuration rootWebConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");
+            ConnectionStringSettings strConnString = rootWebConfig.ConnectionStrings.ConnectionStrings["ClientConnectionString"];
+
+            SqlConnection con = new SqlConnection(strConnString.ConnectionString);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "form_WorkOrders_GetAttachments";
+
+            cmd.Parameters.Add("@jobid", SqlDbType.Int).Value = jobid;
+            cmd.Parameters.Add("@jobStepid", SqlDbType.Int).Value = -1;
+
+            cmd.Connection = con;
+            try
+            {
+                var imageID = 0;
+                var dt = new DataTable();
+                con.Open();
+                var dataReader = cmd.ExecuteReader();
+                dt.Load(dataReader);
+
+                if (dt.Rows.Count > 0)
+                {
+                    var newUrl = "";
+                    var shortName = "";
+                    for (var i = 0; dt.Rows.Count > i; i++ )
+                    {
+                         newUrl = dt.Rows[i]["LocationOrUrl"].ToString();
+                        if(newUrl == url)
+                        {
+                            url = newUrl;
+                            imageID = Convert.ToInt32(dt.Rows[i]["ID"]);
+                            shortName = dt.Rows[i]["ShortName"].ToString();
+
+
+                            if(Session["OldImage"] != null)
+                            {
+                                Session.Remove("OldImage");
+                            }
+                            Session.Add("OldImage", imageID);
+                            if(Session["shortName"] != null)
+                            {
+                                Session.Remove("shortName");
+                            }
+                            Session.Add("shortName", shortName);
+
+                            break;
+                        }
+
+                    }
+            
+                    
+                }
+                else
+                {
+                    
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         protected void GetAttachments()
         {
             AzureFileSystemProvider provider = new AzureFileSystemProvider("");
@@ -1429,6 +1603,40 @@ namespace MPETGO.Pages
                     HttpContext.Current.Session.Add("editingJobID", _oJob.RecordID);
                     HttpContext.Current.Session.Add("AssignedJobID", AssignedJobId);
 
+                    if(Convert.ToBoolean(Session["MoveNewFile"]) == true)
+                    {
+                        var url = "";
+                        if (Session["url"] != null)
+                        {
+                         url = Session["url"].ToString();
+
+                        }
+                        var name = "";
+                        if(Session["name"] != null)
+                        {
+                            name = Session["name"].ToString();
+                        }
+                        
+                        AddAttachment();
+                        GetAttachments(url);
+                        MoveAttachement(url);
+                        GetAttachments(url);
+                        var oldImage = 0;
+                        if(Session["OldImage"] != null)
+                        {
+                            oldImage = Convert.ToInt32(Session["OldImage"]);
+                        }
+                        _oAttachments.Update(oldImage, Convert.ToInt32(HttpContext.Current.Session["editingJobID"].ToString()),
+                                -1,
+                                _oLogon.UserID,
+                                url,
+                                "JPG",
+                                "Mobile Web Attachment",
+                                name.Trim());
+                        
+                        Session.Remove("MoveNewFile"); 
+                    }
+
                     //Set Text
                    lblHeader.Text = (HttpContext.Current.Session["AssignedJobID"].ToString());
 
@@ -1460,11 +1668,12 @@ namespace MPETGO.Pages
                 throw new SystemException(@"Error adding new Work Request - " + _oJob.LastError);
                
             }
-            catch 
+             catch 
             {
                 //Show Error
                 throw new SystemException(@"Error adding new Work Request - " + _oJob.LastError);          
             }
+            
         }
 
         protected bool UpdateRequest()
