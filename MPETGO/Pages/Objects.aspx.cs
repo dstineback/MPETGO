@@ -98,9 +98,7 @@ namespace MPETGO.Pages
         private string AzureAccountContainerName = "";
 
         private object ses = HttpContext.Current.Session;
-
-        
-
+       
         protected void Page_Load(object sender, EventArgs e)
         {
             if(Session["LogonInfo"] != null)
@@ -350,11 +348,8 @@ namespace MPETGO.Pages
                         {
                             objectImg.Visible = false;
                         }
-
                     }
-
-                }
-               
+                }            
             }
 
             if(Session["n_objectID"] != null)
@@ -373,7 +368,6 @@ namespace MPETGO.Pages
                 {
                     objectImg.Visible = false;
                 }
-
 
             } else
             {
@@ -491,7 +485,7 @@ namespace MPETGO.Pages
                         }
 
                         //Refresh Attachments
-                        
+                        AttachmentGrid.Visible = true;
                         AttachmentGrid.DataBind();
                         ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
 
@@ -536,8 +530,7 @@ namespace MPETGO.Pages
             var path = Path.Combine(folder.Name.ToString(), newFolder.Name.ToString(), file.Name.ToString());
             FileManagerFile d = new FileManagerFile(provider, path);
             var b = provider.GetFiles(newFolder);
-            var wut = b.Contains(d);
-            
+            var wut = b.Contains(d);           
             var f = b.ToList();
             var wat = f.IndexOf(d);
             var index = wat;
@@ -1776,6 +1769,8 @@ namespace MPETGO.Pages
         {
             SaveSession();
             updateParts();
+            AttachmentGrid.DataBind();
+            Response.Write("<script language='javascript'>window.alert('Object Updated.');</script>");
 
         }
         #endregion

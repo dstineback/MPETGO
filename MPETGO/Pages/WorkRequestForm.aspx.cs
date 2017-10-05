@@ -41,6 +41,38 @@ namespace MPETGO.Pages
         private int requestorValue = -1;
         private string requestorText = "";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            //Set Connection Info
+            _connectionString = ConfigurationManager.ConnectionStrings["connection"].ToString();
+            _useWeb = (ConfigurationManager.AppSettings["UsingWebService"] == "Y");
+
+            //Initialize Classes
+            _oJob = new WorkOrder(_connectionString, _useWeb);
+            _oAttachments = new AttachmentObject(_connectionString, _useWeb);
+            _oObjAttachments = new MaintAttachmentObject(_connectionString, _useWeb);
+
+            //Set Datasources
+
+            ObjectDataSource.ConnectionString = _connectionString;
+            PrioritySqlDatasource.ConnectionString = _connectionString;
+            ReasonSqlDatasource.ConnectionString = _connectionString;
+            RequestorSqlDatasource.ConnectionString = _connectionString;
+            HwyRouteSqlDatasource.ConnectionString = _connectionString;
+
+            AttachmentGrid.Enabled = true;
+            AttachmentGrid.Visible = false;     
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             #region Check for Logon
@@ -212,9 +244,9 @@ namespace MPETGO.Pages
 
                             #region Setup Hwy Route
 
-                            HttpContext.Current.Session.Add("comboHwyRoute",
+                            HttpContext.Current.Session.Add("ComboStateRoute",
                                 _oJob.Ds.Tables[0].Rows[0]["n_StateRouteID"]);
-                            HttpContext.Current.Session.Add("comboHwyRouteText",
+                            HttpContext.Current.Session.Add("ComboStateRouteText",
                                 _oJob.Ds.Tables[0].Rows[0]["StateRouteID"]);
 
                             #endregion
@@ -308,6 +340,7 @@ namespace MPETGO.Pages
                                 //Check For Table
                                 if (_oObjAttachments.Ds.Tables.Count > 0)
                                 {
+                                    AttachmentGrid.Visible = true;
                                     //Create Control Flag
                                     var firstPicFound = false;
 
@@ -360,6 +393,8 @@ namespace MPETGO.Pages
                                 } else
                                 {
                                     objectImg.Visible = false;
+                                    
+                                    
                                 }
                             }
                             #endregion
@@ -438,6 +473,17 @@ namespace MPETGO.Pages
                     ComboReason.Text = (HttpContext.Current.Session["comboReasonText"].ToString());
                 }
 
+                if ((Session["ComboStateRoute"] != null) && (Session["ComboStateRouteText"] != null))
+                {
+                    ComboStateRoute.Value = Convert.ToInt32(Session["ComboStateRoute"]);
+                    ComboStateRoute.Text = Session["ComboStateRouteText"].ToString();
+                }
+
+                if(Session["txtMilepost"] != null)
+                {
+                    txtMilepost.Value = Convert.ToInt32(Session["txtMilepost"]);
+                }
+
                 //Check For Previous Session Variables
                 if (requestorValue > -1 && requestorText != null)
                 {
@@ -475,27 +521,6 @@ namespace MPETGO.Pages
             #endregion
             #endregion
 
-        }
-
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            //Set Connection Info
-            _connectionString = ConfigurationManager.ConnectionStrings["connection"].ToString();
-            _useWeb = (ConfigurationManager.AppSettings["UsingWebService"] == "Y");
-
-            //Initialize Classes
-            _oJob = new WorkOrder(_connectionString, _useWeb);
-            _oAttachments = new AttachmentObject(_connectionString, _useWeb);
-            _oObjAttachments = new MaintAttachmentObject(_connectionString, _useWeb);
-
-            //Set Datasources
-
-            ObjectDataSource.ConnectionString = _connectionString;
-            PrioritySqlDatasource.ConnectionString = _connectionString;
-            ReasonSqlDatasource.ConnectionString = _connectionString;
-            RequestorSqlDatasource.ConnectionString = _connectionString;
-
-
             //Setup Fields
 
             //checks if their is a job id
@@ -503,17 +528,9 @@ namespace MPETGO.Pages
             {
                 saveBtn.Visible = true;
                 submitBtn.Visible = false;
-                if (AttachmentGrid.VisibleRowCount > 0)
-                {
-                    AttachmentGrid.Visible = true;
-                    attachImg.Visible = true;
-                } else
-                {
-                    AttachmentGrid.Visible = false;
-                }
-                
-
-            } else
+                editingJobID.Value = Session["editingJobID"].ToString();
+            }
+            else
             {
                 saveBtn.Visible = false;
                 submitBtn.Visible = true;
@@ -521,10 +538,9 @@ namespace MPETGO.Pages
                 UploadControl.Visible = true;
                 ASPxRoundPanel1.Visible = true;
                 attachImg.Visible = false;
-
             }
-
         }
+
 
         #region Azure Setup
         string AzureAccount
@@ -667,11 +683,9 @@ namespace MPETGO.Pages
                 FileManagerFile d = new FileManagerFile(provider, path);
                 var b = provider.GetFiles(newFolder);
                 var wut = b.Contains(d);
-
                 var f = b.ToList();
                 var wat = f.IndexOf(d);
                 var index = wat;
-
                 var value = f[index].FullName.ToString();
 
                 FileManagerFile newLocation = new FileManagerFile(provider, value);
@@ -693,7 +707,11 @@ namespace MPETGO.Pages
 
         }
 
-       
+       /// <summary>
+       /// Move the folder on Azure to created folder with WR name
+       /// </summary>
+       /// <param name="fileName"></param>
+       /// <returns></returns>
         string MoveAttachement(string fileName)
         {
             var originalUrl = "";
@@ -772,7 +790,6 @@ namespace MPETGO.Pages
                     name = Session["name"].ToString();
                 }
 
-
                 if (url != "" & name != "")
                 {
                     //Check For Job ID
@@ -790,7 +807,6 @@ namespace MPETGO.Pages
                                 jobStepID = Convert.ToInt32(Session["editingJobStepID"].ToString());
                             }
                             
-
                             if (_oAttachments.Add(Convert.ToInt32(HttpContext.Current.Session["editingJobID"].ToString()),
                                 jobStepID,
                                 _oLogon.UserID,
@@ -805,21 +821,16 @@ namespace MPETGO.Pages
                                     //Remove Old One
                                     HttpContext.Current.Session.Remove("HasAttachments");
                                 }
-
-                                
-                                    
+                               
                                 //Add New Value
                                 HttpContext.Current.Session.Add("HasAttachments", true);
 
-                                
-
                                 //Refresh Attachments
                                 AttachmentGrid.Visible = true;
-                                GetAttachments();
-                                AttachmentGrid.DataBind();
-                                ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
-
                                 
+                                AttachmentGrid.DataBind();
+                                
+                                ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);                             
                             }
                         }
                     }
@@ -956,6 +967,7 @@ namespace MPETGO.Pages
                     attachImg.ImageUrl = url;
                     attachImg.Visible = true;
                     Session.Add("attachmentImage", attachImg.ImageUrl.ToString());
+                    AttachmentGrid.Visible = true;
                 } else
                 {
                     attachImg.Visible = false;
@@ -1343,6 +1355,52 @@ namespace MPETGO.Pages
             comboBox.DataBind();
         }
 
+        protected void comboHwyRoute_OnItemsRequestedByFilterCondition_SQL(object source, ListEditItemsRequestedByFilterConditionEventArgs e)
+        {
+            ASPxComboBox comboBox = (ASPxComboBox)source;
+            HwyRouteSqlDatasource.SelectCommand =
+                @"SELECT  [n_StateRouteID] ,
+                            [StateRouteID] ,
+                            [Description]
+                    FROM    ( SELECT    StateRoutes.n_StateRouteID ,
+                                        StateRoutes.StateRouteID ,
+                                        StateRoutes.[Description] ,
+                                        ROW_NUMBER() OVER ( ORDER BY StateRoutes.[n_StateRouteID] ) AS [rn]
+                              FROM      dbo.StateRoutes AS StateRoutes
+                              WHERE     ( ( [StateRouteID] + ' ' + [Description]) LIKE @filter )
+                                        AND StateRoutes.b_IsActive = 'Y'
+                                        AND StateRoutes.n_StateRouteID > 0
+                            ) AS st
+                    WHERE   st.[rn] BETWEEN @startIndex AND @endIndex";
+
+            HwyRouteSqlDatasource.SelectParameters.Clear();
+            HwyRouteSqlDatasource.SelectParameters.Add("filter", TypeCode.String, string.Format("%{0}%", e.Filter));
+            HwyRouteSqlDatasource.SelectParameters.Add("startIndex", TypeCode.Int64, (e.BeginIndex + 1).ToString());
+            HwyRouteSqlDatasource.SelectParameters.Add("endIndex", TypeCode.Int64, (e.EndIndex + 1).ToString());
+            comboBox.DataSource = HwyRouteSqlDatasource;
+            comboBox.DataBind();
+        }
+
+        protected void comboHwyRoute_OnItemRequestedByValue_SQL(object source, ListEditItemRequestedByValueEventArgs e)
+        {
+            long value = 0;
+            if (e.Value == null || !Int64.TryParse(e.Value.ToString(), out value))
+                return;
+            ASPxComboBox comboBox = (ASPxComboBox)source;
+            HwyRouteSqlDatasource.SelectCommand = @"SELECT  tblStateRoutes.n_StateRouteID ,
+                                                            tblStateRoutes.StateRouteID ,
+                                                            tblStateRoutes.[Description],
+                                                            ROW_NUMBER() OVER ( ORDER BY tblStateRoutes.[n_StateRouteID] ) AS [rn]
+                                                    FROM    dbo.StateRoutes AS tblStateRoutes
+                                                    WHERE   ( n_StateRouteID = @ID )
+                                                    ORDER BY StateRouteID";
+
+            HwyRouteSqlDatasource.SelectParameters.Clear();
+            HwyRouteSqlDatasource.SelectParameters.Add("ID", TypeCode.Int32, e.Value.ToString());
+            comboBox.DataSource = HwyRouteSqlDatasource;
+            comboBox.DataBind();
+        }
+
 
 
         #endregion
@@ -1408,10 +1466,10 @@ namespace MPETGO.Pages
 
             //Get State Route
             var stateRouteId = -1;
-            if ((HttpContext.Current.Session["comboHwyRoute"] != null))
+            if ((HttpContext.Current.Session["ComboStateRoute"] != null))
             {
                 //Get Info From Session
-                stateRouteId = Convert.ToInt32((HttpContext.Current.Session["comboHwyRoute"].ToString()));
+                stateRouteId = Convert.ToInt32((HttpContext.Current.Session["ComboStateRoute"].ToString()));
             }
 
             //Get Milepost
@@ -1631,8 +1689,7 @@ namespace MPETGO.Pages
                                                                   
                         MoveAttachement(url);
                         AddAttachment();
-                        Session.Remove("MoveNewFile"); 
-                        
+                        Session.Remove("MoveNewFile");                         
                     }
 
                     //Set Text
@@ -1655,16 +1712,14 @@ namespace MPETGO.Pages
                     }
 
                     //Setup For Editing
-                  ////  SetupForEditing();
+                    //SetupForEditing();
 
                     //Return True
                     return true;
-
                 }
 
                 //Show Error
-                throw new SystemException(@"Error adding new Work Request - " + _oJob.LastError);
-               
+                throw new SystemException(@"Error adding new Work Request - " + _oJob.LastError);            
             }
              catch 
             {
@@ -1746,10 +1801,10 @@ namespace MPETGO.Pages
 
             //Get State Route
             var stateRouteId = -1;
-            if ((HttpContext.Current.Session["comboHwyRoute"] != null))
+            if ((HttpContext.Current.Session["ComboStateRoute"] != null))
             {
                 //Get Info From Session
-                stateRouteId = Convert.ToInt32((HttpContext.Current.Session["comboHwyRoute"].ToString()));
+                stateRouteId = Convert.ToInt32((HttpContext.Current.Session["ComboStateRoute"].ToString()));
             }
 
             //Get Milepost
@@ -1947,9 +2002,7 @@ namespace MPETGO.Pages
                         //Show Error
                         throw new SystemException(@"Could not update work request Cost Codes - " + _oJob.LastError);                     
                     }
-
                     
-
                     //Check For Value
                     if (HttpContext.Current.Session["AssignedJobID"] != null)
                     {
@@ -1963,7 +2016,6 @@ namespace MPETGO.Pages
 
                 //Show Error
                 throw new SystemException(@"Could not update work request - " + _oJob.LastError);
-
             }
             catch 
             {
@@ -2118,6 +2170,17 @@ namespace MPETGO.Pages
             {
                 //Remove Old One
                 HttpContext.Current.Session.Remove("comboHwyRoute");
+            }
+
+            //Check for prior value
+            if(Session["ComboStateRoute"] != null)
+            {
+                Session.Remove("ComboStateRoute");
+            }
+
+            if(Session["ComboStateRouteText"] != null)
+            {
+                Session.Remove("ComboStateRouteText");
             }
 
             //Check For Prior Value
@@ -2370,6 +2433,11 @@ namespace MPETGO.Pages
             {
                 //Remove Old One
                 HttpContext.Current.Session.Remove("ObjectPhoto");
+            }
+
+            if(Session["txtMilepost"] != null)
+            {
+                Session.Remove("txtMilepost");
             }
 
             if (Session["url"] != null)
@@ -2634,6 +2702,59 @@ namespace MPETGO.Pages
             }
             #endregion
 
+            #region Mile Post
+            if(txtMilepost.Text.Length > 0)
+            {
+                if(Session["txtMilepost"] != null)
+                {
+                    Session.Remove("txtMilepost");
+                }
+                Session.Add("txtMilepost", txtMilepost.Text.Trim());
+            }
+            #endregion
+
+            #region State Route
+            if(ComboStateRoute.Value != null)
+            {
+                #region Combo Value
+
+                //Check For Prior Value
+                if (HttpContext.Current.Session["ComboStateRoute"] != null)
+                {
+                    //See If Value Changed
+                    if (HttpContext.Current.Session["ComboStateRouteText"].ToString() != ComboStateRoute.Text)
+                    {
+                        //Remove Old One
+                        HttpContext.Current.Session.Remove("ComboStateRoute");
+
+                        //Add New Value
+                        HttpContext.Current.Session.Add("ComboStateRoute", ComboStateRoute.Value.ToString());
+                    }
+                }
+                else
+                {
+                    //Add New Value
+                    HttpContext.Current.Session.Add("ComboStateRoute", ComboStateRoute.Value.ToString());
+                }
+
+                #endregion
+
+                #region Combo Text
+
+                //Check For Prior Value
+                if (HttpContext.Current.Session["ComboStateRouteText"] != null)
+                {
+                    //Remove Old One
+                    HttpContext.Current.Session.Remove("ComboStateRouteText");
+                }
+
+                //Add New Value
+                HttpContext.Current.Session.Add("ComboStateRouteText", ComboStateRoute.Text.Trim());
+
+                #endregion
+            }
+            #endregion
+
             #region Lat/Long
             if (txtLat.Text.Length > 0)
             {
@@ -2663,6 +2784,7 @@ namespace MPETGO.Pages
 
         protected void submitBtn_Click(object sender, EventArgs e)
         {
+            //Save Session Data
             SaveSessionData();
             //Add Job
             AddRequest();
@@ -2688,6 +2810,7 @@ namespace MPETGO.Pages
 
             //Set Alert
             Response.Write("<script language='javascript'>window.alert('Work Request Updated. " + savedID + "');</script>");
+            AttachmentGrid.DataBind();
         }
 
         protected void LatLongBtn_Click(object sender, EventArgs e)
