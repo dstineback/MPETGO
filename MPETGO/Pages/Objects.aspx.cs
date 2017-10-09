@@ -215,7 +215,7 @@ namespace MPETGO.Pages
                         //Latitude
                         Session.Add("txtLat", _oMaintObj.Ds.Tables[0].Rows[0]["GPS_Y"]);
                         //Date Object was Created
-                        Session.Add("StartDate", _oMaintObj.Ds.Tables[0].Rows[0]["CreatedOn"]);
+                        Session.Add("startDate", _oMaintObj.Ds.Tables[0].Rows[0]["CreatedOn"]);
                         //Location associated with the object
                         Session.Add("ComboLocation", _oMaintObj.Ds.Tables[0].Rows[0]["n_locationid"]);
                             var locationValue = Session["ComboLocation"];
@@ -430,10 +430,7 @@ namespace MPETGO.Pages
         protected void UploadControl_FileUploadComplete(object sender, FileUploadCompleteEventArgs e)
         {
             // RemoveFileWithDelay(e.UploadedFile.FileNameInStorage, 5);
-            if (Session["n_objectID"] == null)
-            {
-                AddParts();
-            }
+           
             
             string name = e.UploadedFile.FileName;
             string url = GetImageUrl(e.UploadedFile.FileNameInStorage);
@@ -494,6 +491,11 @@ namespace MPETGO.Pages
             }
             else
             {
+                if(Session["AddNewImage"] != null)
+                {
+                    Session.Remove("AddNewImage");
+                }
+                Session.Add("AddNewImage", true);
                 Response.Write("<script language='javascript'>window.alert('File uploaded, Attachment Grid will be displayed after a Work Request is submitted.')</script>");
             }
         }
@@ -976,7 +978,7 @@ namespace MPETGO.Pages
 
             if(Session["ComboStreetText"] != null)
             {
-                Session.Remove("CobmoStreetText");
+                Session.Remove("ComboStreetText");
             }
 
             if (Session["n_objectID"] != null)
@@ -1402,10 +1404,20 @@ namespace MPETGO.Pages
                 HttpContext.Current.Session.Remove("txtAddDetail");
             }
 
-            
-            
+            if (Session["active"] != null)
+            {
+                Session.Remove("active");
+            }
 
-           
+            if (Session["attachmentImage"] != null)
+            {
+                Session.Remove("attachmentImage");
+            }
+            if (Session["AddNewImage"] != null)
+            {
+                Session.Remove("AddNewImage");
+            }
+
         }
         #endregion
         #region Add Part
@@ -1420,6 +1432,17 @@ namespace MPETGO.Pages
             locationID = Convert.ToInt32(ComboLocation.Value);
             areaID = Convert.ToInt32(ComboArea.Value);
             _oMaintObj = new MaintenanceObject(_connectionString, _useWeb);
+            decimal lat = 0;
+            decimal lng = 0;
+            if (txtLat.Text != null)
+            {
+                lat = Convert.ToDecimal(txtLat.Value.ToString());
+            }
+            
+            if (txtLong.Text != null)
+            {
+                lng = Convert.ToDecimal(txtLong.Value.ToString());
+            }
 
             if (_oMaintObj.Add(objectID.Text.Trim(),
                 objectDesc.Text.Trim(),
@@ -1441,8 +1464,8 @@ namespace MPETGO.Pages
                 true,
                 txtChargeRate,
                 cboFundamentalType,
-                Convert.ToDecimal(txtLat.Value),
-                Convert.ToDecimal(txtLong.Value),
+                Convert.ToDecimal(lat),
+                Convert.ToDecimal(lng),
                 txtGpsZ,
                 txtLogicalOrder,
                 idealCycle,
@@ -1492,6 +1515,11 @@ namespace MPETGO.Pages
                 }
                 Session.Add("n_objectID", n_objectID);
 
+                if(Session["AddNewImage"] != null)
+                {
+                    AddAttachment();
+                    Session.Remove("AddNewImage");
+                }
                 SavePartBtn.Visible = true;
                 AddPartBtn.Visible = false;
                 
@@ -1501,7 +1529,8 @@ namespace MPETGO.Pages
                 objectLabel.Visible = true;
                 objectLabel.Text = "Object ID: " + objectText;
 
-                Response.Write("<script language='javascript'>window.alert('Object: " + objectText + " was created. ');</script>");
+                Response.Write("<script language='javascript'>window.alert('Object: " + objectID.Text.ToString() + " was created. ');window.location='../../../index.aspx';</script>");
+                
             }       
         }
 
@@ -1682,17 +1711,12 @@ namespace MPETGO.Pages
                     desc,
                     shortName.Trim()))
             {
-                Response.Write("<script language='javascript'>window.alert('File uploaded & attached to Object.')</script>");
+                //Response.Write("<script language='javascript'>window.alert('File uploaded & attached to Object.')</script>");
             }
             else
             {
                 throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
-            }
-        
-            Response.Write("<script language='javascript'>window.alert('New Object Created and Saved.')</script>");
-            ResetSession();
-            Response.Redirect("/index.aspx",  true);
-           
+            }      
         }
 
         protected void GetAttachments()
@@ -1770,7 +1794,7 @@ namespace MPETGO.Pages
             SaveSession();
             updateParts();
             AttachmentGrid.DataBind();
-            Response.Write("<script language='javascript'>window.alert('Object Updated.');</script>");
+            //Response.Write("<script language='javascript'>window.alert('Object Updated.');</script>");
 
         }
         #endregion

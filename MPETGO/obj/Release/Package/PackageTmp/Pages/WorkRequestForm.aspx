@@ -26,77 +26,22 @@ function getLocation() {
     }
 </script>
 <script type="text/javascript">
-    //DXUploadedFilesContainer = {
-    //    nameCellStyle: "",
-    //    sizeCellStyle: "",
-    //    useExtendedPopup: false,
+  
+    function onFileUploadComplete(s, e) {
+        
 
-    //    AddFile: function (fileName, fileUrl, fileSize) {
-    //        var self = DXUploadedFilesContainer;
-    //        var builder = ["<tr>"];
-
-    //        builder.push("<td class='nameCell'");
-    //        if (self.nameCellStyle)
-    //            builder.push(" style='" + self.nameCellStyle + "'");
-    //        builder.push(">");
-    //        self.BuildLink(builder, fileName, fileUrl);
-    //        builder.push("</td>");
-
-    //        builder.push("<td class='sizeCell'");
-    //        if (self.sizeCellStyle)
-    //            builder.push(" style='" + self.sizeCellStyle + "'");
-    //        builder.push(">");
-    //        builder.push(fileSize);
-    //        builder.push("</td>");
-
-    //        builder.push("</tr>");
-
-    //        var html = builder.join("");
-    //        DXUploadedFilesContainer.AddHtml(html);
-    //    },
-    //    Clear: function () {
-    //        DXUploadedFilesContainer.ReplaceHtml("");
-    //    },
-    //    BuildLink: function (builder, text, url) {
-    //        builder.push("<a target='blank' onclick='return DXDemo.ShowScreenshotWindow(event, this, " + this.useExtendedPopup + ");'");
-    //        builder.push(" href='" + url + "'>");
-    //        builder.push(text);
-    //        builder.push("</a>");
-    //    },
-    //    AddHtml: function (html) {
-    //        var fileContainer = document.getElementById("uploadedFilesContainer"),
-    //            fullHtml = html;
-    //        if (fileContainer) {
-    //            var containerBody = fileContainer.tBodies[0];
-    //            fullHtml = containerBody.innerHTML + html;
-    //        }
-    //        DXUploadedFilesContainer.ReplaceHtml(fullHtml);
-    //    },
-    //    ReplaceHtml: function (html) {
-    //        var builder = ["<table id='uploadedFilesContainer' class='uploadedFilesContainer'><tbody>"];
-    //        builder.push(html);
-    //        builder.push("</tbody></table>");
-    //        var contentHtml = builder.join("");
-    //        window.FilesRoundPanel.SetContentHtml(contentHtml);
-    //    },
-    //    ApplySettings: function (nameCellStyle, sizeCellStyle, useExtendedPopup) {
-    //        var self = DXUploadedFilesContainer;
-    //        self.nameCellStyle = nameCellStyle;
-    //        self.sizeCellStyle = sizeCellStyle;
-    //        self.useExtendedPopup = useExtendedPopup;
-    //    }
-    //};
-
-    //function onFileUploadComplete(s, e) {
-    //    if (e.callbackData) {
-    //        var fileData = e.callbackData.split('|');
-    //        var fileName = fileData[0],
-    //            fileUrl = fileData[1],
-    //            fileSize = fileData[2];
-    //        //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
-    //        //window.AttachmentGrid.Refresh();
-    //    }
-    //}
+        if (window.AttachmentGrid === undefined)
+        {
+            FileUploaded(s, e);
+        } else
+        {
+            FileUploaded(s, e);
+            if (AttachmentGrid.Visible = true)
+            {
+                AttachmentGrid.Refresh();      
+            }
+        }
+    }
 </script>
 <script>
     var fieldSeparator = "|";
@@ -118,7 +63,8 @@ function getLocation() {
     }
 </script>
      <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
-    <dx:ASPxLabel runat="server" ID="lblHeader" Text="Work Request: " Theme="iOS"></dx:ASPxLabel>
+     <asp:HiddenField runat="server" ID="editingJobID" Value="null" />
+    <dx:ASPxLabel runat="server" ID="lblHeader" ClientInstanceName="lblHeader" Text="Work Request: " Theme="iOS"></dx:ASPxLabel>
 
         <dx:ASPxFormLayout ID="ASPxFormLayout1"
             runat="server" Theme="iOS" EnableTheming="True"  Width="100%" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit">            
@@ -274,6 +220,41 @@ function getLocation() {
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
+
+                <dx:LayoutItem Caption="State Route" CaptionSettings-Location="Top" Width="25%">
+                    <LayoutItemNestedControlCollection>
+                        <dx:LayoutItemNestedControlContainer>
+                            <dx:ASPxComboBox runat="server" ID="ComboStateRoute" Width="100%" EnableCallbackMode="true" 
+                                CallbackPageSize="10" ValueType="System.String" ValueField="n_StateRouteID" TextField="StateRouteID" TextFormatString="{0} - {1}"
+                                OnItemRequestedByValue="comboHwyRoute_OnItemRequestedByValue_SQL" 
+                                OnItemsRequestedByFilterCondition="comboHwyRoute_OnItemsRequestedByFilterCondition_SQL" 
+                                DropDownStyle="DropDown" DropDownButton-Enabled="true" 
+                                AutoPostBack="false" ClientInstanceName="ComboStateRoute" >
+                                <Columns>
+                                    <dx:ListBoxColumn FieldName="n_StateRouteID" Visible="false"></dx:ListBoxColumn>
+                                    <dx:ListBoxColumn FieldName="StateRouteID" Caption="State Route"></dx:ListBoxColumn>
+                                    <dx:ListBoxColumn FieldName="Description" Caption="Description"></dx:ListBoxColumn>
+                                </Columns>
+                            </dx:ASPxComboBox>
+                        </dx:LayoutItemNestedControlContainer>
+                    </LayoutItemNestedControlCollection>
+                </dx:LayoutItem>
+
+                 <dx:LayoutItem Caption="Milepost:" CaptionSettings-Location="Top" Width="25%">
+                    <LayoutItemNestedControlCollection>
+                        <dx:LayoutItemNestedControlContainer>
+                            <dx:ASPxTextBox ID="txtMilepost" 
+                                            ClientInstanceName="txtMilepost"
+                                            Theme="Mulberry"
+                                            Width="100%" 
+                                            runat="server">
+                                <MaskSettings Mask="<0..99999g>.<0000..9999>" IncludeLiterals="DecimalSymbol" />
+                            </dx:ASPxTextBox>
+                        </dx:LayoutItemNestedControlContainer>
+                    </LayoutItemNestedControlCollection>
+
+                    <CaptionSettings Location="Top"></CaptionSettings>
+                </dx:LayoutItem>
                 
                 <dx:LayoutItem Caption="Longitude" CaptionSettings-Location="Top" Width="50%">
                     <LayoutItemNestedControlCollection>
@@ -350,8 +331,8 @@ function getLocation() {
                                                                                                 MaxFileSize="4194304" 
                                                                                                 AllowedFileExtensions=".jpg,.jpeg,.gif,.png">
                                                                                             </ValidationSettings>
-                                                                                            <ClientSideEvents FileUploadComplete="function(s, e) { FileUploaded(s, e) }" 
-                                FilesUploadStart="function(s, e) { FileUploadStart(); }"/>
+                                                                                            <ClientSideEvents FileUploadComplete="function(s, e) { onFileUploadComplete(s, e) }" 
+                                                                                            FilesUploadStart="function(s, e) { FileUploadStart(); }"/>
                                                                                             
                                                                                         </dx:ASPxUploadControl>
                                                                                     </div>
@@ -386,7 +367,7 @@ function getLocation() {
                                                                                             Width="98%" 
                                                                                             KeyboardSupport="True" 
                                                                                             ClientInstanceName="AttachmentGrid" 
-                                                                                            AutoPostBack="true"
+                                                                                            AutoPostBack="true" 
                                                                                             
                                                                                             Settings-HorizontalScrollBarMode="Auto" 
                                                                                             SettingsPager-Mode="ShowPager" 
@@ -418,11 +399,11 @@ function getLocation() {
                                                                                                 </dx:GridViewDataTextColumn>
                                                                                                 <dx:GridViewDataTextColumn FieldName="ShortName" Caption="Name" Width="200px" VisibleIndex="3">
                                                                                                     <CellStyle Wrap="False"></CellStyle>
-                                                                                                     <DataItemTemplate>
+                                                                                                     <%--<DataItemTemplate>
                                                                                                         <dx:ASPxHyperLink ID="ASPxHyperLink1" NavigateUrl="javascript:void(0)" runat="server" Text='<%# Eval("ShortName") %>' Width="100%" Theme="Mulberry">
                                                                                                             <ClientSideEvents Click="onHyperLinkClick" />
                                                                                                         </dx:ASPxHyperLink>
-                                                                                                     </DataItemTemplate>
+                                                                                                     </DataItemTemplate>--%>
                                                                                                 </dx:GridViewDataTextColumn>
                                                                                                 <dx:GridViewDataTextColumn FieldName="DocType" Caption="Name" Width="100px" VisibleIndex="4">
                                                                                                     <CellStyle Wrap="False"></CellStyle>
@@ -432,7 +413,7 @@ function getLocation() {
                                                                                                 </dx:GridViewDataTextColumn>
                                                                                                 <dx:GridViewDataHyperLinkColumn FieldName="LocationOrURL" Caption="Location/URL" Width="600px" VisibleIndex="6">
                                                                                                     <CellStyle Wrap="False"></CellStyle>
-                                                                                                    <PropertiesHyperLinkEdit ></PropertiesHyperLinkEdit>
+                                                                                                    <PropertiesHyperLinkEdit Text="Download" ></PropertiesHyperLinkEdit>                                                                                    
                                                                                                 </dx:GridViewDataHyperLinkColumn>
                                                                                             </Columns>
                                                                                             <SettingsBehavior EnableRowHotTrack="True" AllowFocusedRow="True" AllowClientEventsOnLoad="false" ColumnResizeMode="NextColumn" />

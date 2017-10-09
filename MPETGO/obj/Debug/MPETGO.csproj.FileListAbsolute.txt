@@ -61,4 +61,3 @@ C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\Microsoft.WindowsAzure.Storage.dl
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\Microsoft.Data.Edm.dll
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\Microsoft.Data.Services.Client.dll
 C:\Users\stinebackd\Projects\MPETGO\MPETGO\bin\Microsoft.Data.OData.dll
-C:\Users\stinebackd\Projects\MPETGO\MPETGO\obj\Debug\MPETGO.csprojResolveAssemblyReference.cache

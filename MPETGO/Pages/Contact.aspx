@@ -2,21 +2,28 @@
 <asp:Content ID="Content" ContentPlaceHolderID="MainContent" runat="server">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+    function ShowPopUp() {
+        EmailPopUp.Show();
+    }
+</script>
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
 
-<body>
-    
-    <dx:ASPxFormLayout Theme="iOS" runat="server" Width="100%" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit"
-        SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800"
-        RequiredMarkDisplayMode="None">
+    <dx:ASPxPopupControl runat="server" ID="EmailPopUp" ClientInstanceName="EmailPopUp" HeaderText="Contact Four Winds Group support" Modal="true" 
+        PopupAnimationType="Fade" AllowDragging="true" AllowResize="true" CloseAction="CloseButton" PopupHorizontalAlign="WindowCenter" 
+        PopupVerticalAlign="WindowCenter" CloseOnEscape="true" 
+        OnLoad="EmailPopUp_Load" Width="100%">
+        <ClientSideEvents Init="ShowPopUp" />
+        <ContentCollection>
+            <dx:PopupControlContentControl>
+                
+                <dx:ASPxFormLayout Theme="iOS" runat="server" >
         <Items>
             <dx:LayoutItem Caption="Name:" CaptionSettings-Location="Top" Width="100%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxTextBox ID="txtName" runat="server" Width="100%">
+                        <dx:ASPxTextBox ID="txtName" runat="server" Width="300px" ClientEnabled="true" ClientInstanceName="txtName">
                             <ValidationSettings>
                                 <RequiredField IsRequired="true" ErrorText="Name Required" />
                             </ValidationSettings>
@@ -28,7 +35,7 @@
             <dx:LayoutItem RequiredMarkDisplayMode="Required" Caption="Subject" CaptionSettings-Location="Top" Width="100%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxTextBox runat="server" ID="txtSubject" Width="100%">
+                        <dx:ASPxTextBox runat="server" ID="txtSubject" Width="100%" ClientEnabled="true" ClientInstanceName="txtSubject">
                             <ValidationSettings>
                                 <RequiredField IsRequired="true" ErrorText="Subject required" />
                             </ValidationSettings>
@@ -40,7 +47,7 @@
             <dx:LayoutItem RequiredMarkDisplayMode="Required" Caption="Email" CaptionSettings-Location="Top" Width="100%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxTextBox ID="txtEmail" runat="server" Width="100%">
+                        <dx:ASPxTextBox ID="txtEmail" runat="server" Width="100%" ClientEnabled="true" ClientInstanceName="txtEmail">
                             <ValidationSettings>
                                 <RequiredField IsRequired="true" ErrorText="Email address required" />
                                 <RegularExpression ErrorText="Invalid Email Address"
@@ -55,7 +62,7 @@
             <dx:LayoutItem RequiredMarkDisplayMode="Required" Caption="Body" CaptionSettings-Location="Top" Width="100%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxTextBox ID="txtBody" runat="server" Width="100%"
+                        <dx:ASPxTextBox ID="txtBody" runat="server" ClientEnabled="true" ClientInstanceName="txtBody" Width="100%"
                             TextMode="MultiLine">
                             <ValidationSettings ErrorText="Body text required" ErrorTextPosition="Bottom">
                                 <RequiredField IsRequired="true" ErrorText=""  />
@@ -76,10 +83,8 @@
             <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="100%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer>
-                        <dx:ASPxButton ID="btnSend" runat="server" Text="Send" Width="100%"
-                            OnClick="btnSend_Click">
+                        <dx:ASPxButton ID="btnSend" runat="server" AutoPostBack="true" Text="Send" Width="100%" OnClick="btnSend_Click" >                         
                         </dx:ASPxButton>
-
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
             </dx:LayoutItem>
@@ -93,7 +98,10 @@
             </dx:LayoutItem>
         </Items>
     </dx:ASPxFormLayout>
+
+            </dx:PopupControlContentControl>
+        </ContentCollection>
+    </dx:ASPxPopupControl>
     
-</body>
-</html>
+
 </asp:Content>

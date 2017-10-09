@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Net;
 using System.Net.Mail;
-
+using System.Text;
 
 namespace MPETGO.Pages
 {
@@ -14,8 +14,11 @@ namespace MPETGO.Pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            
+            txtName.Focus();
         }
+
+        
 
         protected void btnSend_Click(object sender, EventArgs e)
         {
@@ -49,8 +52,7 @@ namespace MPETGO.Pages
             if (FileUpload1.HasFiles)
             {
                 string FileName = System.IO.Path.GetFileName(FileUpload1.PostedFile.FileName);
-                mm.Attachments.Add(new Attachment(FileUpload1.PostedFile.InputStream, FileName));
-               
+                mm.Attachments.Add(new Attachment(FileUpload1.PostedFile.InputStream, FileName));                          
             }
             mm.IsBodyHtml = true;
             SmtpClient smtp = new SmtpClient();
@@ -61,9 +63,26 @@ namespace MPETGO.Pages
             NetworkCred.Password = "FWGinc3411";
             smtp.UseDefaultCredentials = true;
             smtp.Credentials = NetworkCred;
-            smtp.Port = 587;
+            //smtp.Port = 587;
+            smtp.Port = 465;
             smtp.Send(mm);
             lblMessage.Text = "Email Sent SucessFully.";
+            //Clear();
+            Response.Write("<script language='javascript'>window.alert('Email was sucessfully sent');window.location='../../../index.aspx';</script>");
+        }
+
+        protected void Clear()
+        {
+            txtName.Value = "";
+            txtSubject.Value = "";
+            txtEmail.Value = "";
+            txtBody.Value = "";         
+        }
+
+
+        protected void EmailPopUp_Load(object sender, EventArgs e)
+        {
+            EmailPopUp.Enabled = true;
         }
     }
 }

@@ -24,7 +24,7 @@
                 <dx:GridViewDataTextColumn FieldName="A" VisibleIndex="2" Visible="false"
                     ReadOnly="True">
                 </dx:GridViewDataTextColumn>              
-                <dx:GridViewDataHyperLinkColumn FieldName ="Jobid" Caption="Job ID" EditFormCaptionStyle-HorizontalAlign="Left" Width="75px" VisibleIndex="3" FixedStyle="Left">
+                <dx:GridViewDataHyperLinkColumn SortOrder="Descending" FieldName ="Jobid" Caption="Job ID" EditFormCaptionStyle-HorizontalAlign="Left" Width="75px" VisibleIndex="3" FixedStyle="Left">
                     <PropertiesHyperLinkEdit NavigateUrlFormatString="~/Pages/WorkRequestForm.aspx?jobid={0}"></PropertiesHyperLinkEdit>
                 </dx:GridViewDataHyperLinkColumn>
                 <dx:GridViewDataTextColumn FieldName="Object ID" Caption="Object ID" Width="100px" EditFormCaptionStyle-HorizontalAlign="Left" CellStyle-HorizontalAlign="Left" 
@@ -33,7 +33,7 @@
                 <dx:GridViewDataTextColumn FieldName="Title" Caption="Description" Width="250px" CellStyle-Wrap="False" Settings-AllowEllipsisInText="True" EditFormCaptionStyle-HorizontalAlign="Left" CellStyle-HorizontalAlign="Left"
                     VisibleIndex="5">                  
                 </dx:GridViewDataTextColumn>
-                <dx:GridViewDataDateColumn FieldName="Request Date" Caption="Request Date" Width="100px" EditFormCaptionStyle-HorizontalAlign="Left" CellStyle-HorizontalAlign="Left"
+                <dx:GridViewDataDateColumn SortOrder="Descending" FieldName="Request Date" Caption="Request Date" Width="100px" EditFormCaptionStyle-HorizontalAlign="Left" CellStyle-HorizontalAlign="Left"
                     ReadOnly="True" VisibleIndex="1" FixedStyle="Left">
                 </dx:GridViewDataDateColumn>
                 <dx:GridViewDataTextColumn FieldName="AssignedGUID" Visible="false"

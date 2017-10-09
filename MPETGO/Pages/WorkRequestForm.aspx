@@ -27,14 +27,20 @@ function getLocation() {
 </script>
 <script type="text/javascript">
   
-    function onFileUploadComplete(s, e) {      
-        var editingJobID = document.getElementById("editingJobID");
-        if (document.getElementById("editingJobID") != null)
-        {
-            AttachmentGrid.Visible = true;
-            AttachmentGrid.Refresh();      
-        }
+    function onFileUploadComplete(s, e) {
+        
 
+        if (window.AttachmentGrid === undefined)
+        {
+            FileUploaded(s, e);
+        } else
+        {
+            FileUploaded(s, e);
+            if (AttachmentGrid.Visible = true)
+            {
+                AttachmentGrid.Refresh();      
+            }
+        }
     }
 </script>
 <script>

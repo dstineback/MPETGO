@@ -389,12 +389,15 @@ namespace MPETGO.Pages
                                             //Break Loop
                                             break;
                                         }
+                                        else
+                                        {
+                                            objectImg.Visible = false;
+                                        }
                                     }
                                 } else
                                 {
                                     objectImg.Visible = false;
-                                    
-                                    
+                                                                        
                                 }
                             }
                             #endregion
@@ -511,6 +514,9 @@ namespace MPETGO.Pages
                     //Set Image
                     objectImg.Visible = true;
                     objectImg.ImageUrl = HttpContext.Current.Session["ObjectPhoto"].ToString();
+                } else
+                {
+                    objectImg.Visible = false;
                 }
 
                 if (Session["attachmentImage"] != null)
@@ -1679,7 +1685,7 @@ namespace MPETGO.Pages
                     HttpContext.Current.Session.Add("editingJobID", _oJob.RecordID);
                     HttpContext.Current.Session.Add("AssignedJobID", AssignedJobId);
 
-                    if(Convert.ToBoolean(Session["MoveNewFile"]) == true)
+                    if (Convert.ToBoolean(Session["MoveNewFile"]) == true)
                     {
                         var url = "";
                         if (Session["url"] != null)
@@ -2454,6 +2460,45 @@ namespace MPETGO.Pages
             {
                 Session.Remove("attachmentImage");
             }
+
+            if (Session["fileName"] != null)
+            {
+                Session.Remove("fileName");
+            }
+
+            if (Session["MoveNewFile"] != null)
+            {
+                Session.Remove("MoveNewFile");
+            }
+            if (Session["oJob"] != null)
+            {
+                Session.Remove("oJob");
+            }
+            if (Session["OldImage"] != null)
+            {
+                Session.Remove("OldImage");
+            }
+            if (Session["OriginalUrl"] != null)
+            {
+                Session.Remove("OriginalUrl");
+            }
+            if (Session["shortName"] != null)
+            {
+                Session.Remove("ShortName");
+            }
+            if (Session["txtLat"] != null)
+            {
+                Session.Remove("txtLat");
+            }
+            if (Session["txtLong"] != null)
+            {
+                Session.Remove("txtLong");
+            }
+            if (Session["txtWorkRequstDate"] != null)
+            {
+                Session.Remove("txtWorkRequestDate");
+            }
+
         }
 
         protected void SaveSessionData()
@@ -2791,11 +2836,12 @@ namespace MPETGO.Pages
                      
             //set lable header text to Work Request ID
             var savedID = Session["AssignedJobID"];
+            //Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');</script>");
             lblHeader.Text = savedID.ToString();
-
+            var jobID = Session["editingJobID"];
             //Set Alert
-            //Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');window.location='./../../index.aspx';</script>");
-            Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');</script>");
+            Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');window.location='../../../index.aspx';</script>");
+           
         }
 
         protected void saveBtn_Click(object sender, EventArgs e)

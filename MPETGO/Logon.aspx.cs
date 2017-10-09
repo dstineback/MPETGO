@@ -26,11 +26,7 @@ namespace MPETGO
             else
             {
                 LogonPopUp.Enabled = true;
-            }
-
-
-            
-
+            }         
         }
 
         protected void Page_Init()

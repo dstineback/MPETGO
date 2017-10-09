@@ -13,6 +13,15 @@ namespace MPETGO.Pages {
     public partial class Contact {
         
         /// <summary>
+        /// EmailPopUp control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxPopupControl EmailPopUp;
+        
+        /// <summary>
         /// txtName control.
         /// </summary>
         /// <remarks>

@@ -51,7 +51,10 @@
         }
     </script>
     <dx:ASPxHiddenField runat="server" ID="GetLocation"><ClientSideEvents Init="getLocation" /></dx:ASPxHiddenField>
-    <dx:ASPxPopupControl runat="server" ID="LogonPopUp" ClientInstanceName="LogonPopUp" HeaderText="Logon" Modal="true" PopupAnimationType="Fade" AllowDragging="true" AllowResize="true" CloseAction="CloseButton" PopupHorizontalAlign="WindowCenter" PopupVerticalAlign="WindowCenter" CloseOnEscape="true" OnLoad="LogonPopUp_Load" >
+    <dx:ASPxPopupControl runat="server" ID="LogonPopUp" ClientInstanceName="LogonPopUp" HeaderText="Logon" 
+        Modal="true" PopupAnimationType="Fade" AllowDragging="true" AllowResize="true" 
+        CloseAction="CloseButton" PopupHorizontalAlign="WindowCenter" 
+        PopupVerticalAlign="WindowCenter" CloseOnEscape="true" OnLoad="LogonPopUp_Load" >
         <ClientSideEvents Init="ShowPopUp" />             
         
         <ContentCollection >

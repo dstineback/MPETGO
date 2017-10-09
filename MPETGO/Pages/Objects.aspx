@@ -25,8 +25,17 @@
 <script>
   
     function onFileUploadComplete(s, e) {  
-        AttachmentGrid.Visible = true;
-        AttachmentGrid.Refresh();
+
+        if (window.AttachmentGrid === undefined)
+        {
+            FileUploaded(s, e);
+        } else
+        {
+            FileUploaded(s, e);
+            AttachmentGrid.Visible = true;
+            AttachmentGrid.Refresh();
+        }
+
     }
 </script>
 <script>

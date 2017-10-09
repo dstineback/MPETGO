@@ -21,88 +21,22 @@
         txtLong.SetValue(long); 
         txtLong.SetText(long);
     }
-    //function onFileUploadComplete(s, e) {
-    //    if (e.callbackData) {
-    //        var fileData = e.callbackData.split('|');
-    //        var fileName = fileData[0],
-    //            fileUrl = fileData[1],
-    //            fileSize = fileData[2];
-    //        DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
-    //    }
-    //}
 </script>
 <script>
-    //DXUploadedFilesContainer = {
-    //    nameCellStyle: "",
-    //    sizeCellStyle: "",
-    //    useExtendedPopup: false,
+  
+    function onFileUploadComplete(s, e) {  
 
-    //    AddFile: function (fileName, fileUrl, fileSize) {
-    //        var self = DXUploadedFilesContainer;
-    //        var builder = ["<tr>"];
+        if (window.AttachmentGrid === undefined)
+        {
+            FileUploaded(s, e);
+        } else
+        {
+            FileUploaded(s, e);
+            AttachmentGrid.Visible = true;
+            AttachmentGrid.Refresh();
+        }
 
-    //        builder.push("<td class='nameCell'");
-    //        if (self.nameCellStyle)
-    //            builder.push(" style='" + self.nameCellStyle + "'");
-    //        builder.push(">");
-    //        self.BuildLink(builder, fileName, fileUrl);
-    //        builder.push("</td>");
-
-    //        builder.push("<td class='sizeCell'");
-    //        if (self.sizeCellStyle)
-    //            builder.push(" style='" + self.sizeCellStyle + "'");
-    //        builder.push(">");
-    //        builder.push(fileSize);
-    //        builder.push("</td>");
-
-    //        builder.push("</tr>");
-
-    //        var html = builder.join("");
-    //        DXUploadedFilesContainer.AddHtml(html);
-    //    },
-    //    Clear: function () {
-    //        DXUploadedFilesContainer.ReplaceHtml("");
-    //    },
-    //    BuildLink: function (builder, text, url) {
-    //        builder.push("<a target='blank' onclick='return DXDemo.ShowScreenshotWindow(event, this, " + this.useExtendedPopup + ");'");
-    //        builder.push(" href='" + url + "'>");
-    //        builder.push(text);
-    //        builder.push("</a>");
-    //    },
-    //    AddHtml: function (html) {
-    //        var fileContainer = document.getElementById("uploadedFilesContainer"),
-    //            fullHtml = html;
-    //        if (fileContainer) {
-    //            var containerBody = fileContainer.tBodies[0];
-    //            fullHtml = containerBody.innerHTML + html;
-    //        }
-    //        DXUploadedFilesContainer.ReplaceHtml(fullHtml);
-    //    },
-    //    ReplaceHtml: function (html) {
-    //        var builder = ["<table id='uploadedFilesContainer' class='uploadedFilesContainer'><tbody>"];
-    //        builder.push(html);
-    //        builder.push("</tbody></table>");
-    //        var contentHtml = builder.join("");
-    //        window.FilesRoundPanel.SetContentHtml(contentHtml);
-    //    },
-    //    ApplySettings: function (nameCellStyle, sizeCellStyle, useExtendedPopup) {
-    //        var self = DXUploadedFilesContainer;
-    //        self.nameCellStyle = nameCellStyle;
-    //        self.sizeCellStyle = sizeCellStyle;
-    //        self.useExtendedPopup = useExtendedPopup;
-    //    }
-    //};
-
-    //function onFileUploadComplete(s, e) {
-    //    if (e.callbackData) {
-    //        var fileData = e.callbackData.split('|');
-    //        var fileName = fileData[0],
-    //            fileUrl = fileData[1],
-    //            fileSize = fileData[2];
-            //DXUploadedFilesContainer.AddFile(fileName, fileUrl, fileSize);
-            //window.AttachmentGrid.Refresh();
-        //}
-    //}
+    }
 </script>
 <script>
     var fieldSeparator = "|";
@@ -279,7 +213,7 @@
                              
                             <AdvancedModeSettings EnableMultiSelect="true" EnableDragAndDrop="true" EnableFileList="true"></AdvancedModeSettings>
                             <ValidationSettings MaxFileSize="4194304" AllowedFileExtensions=".jpg, .jpeg, .gif, .png"></ValidationSettings>
-                            <ClientSideEvents FileUploadComplete="function(s, e) { FileUploaded(s, e) }" 
+                            <ClientSideEvents FileUploadComplete="function(s, e) { onFileUploadComplete(s, e) }" 
                                 FilesUploadStart="function(s, e) { FileUploadStart(); }"
                                  />
                         </dx:ASPxUploadControl>
