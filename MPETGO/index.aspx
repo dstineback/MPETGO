@@ -29,7 +29,7 @@
 
     <dx:ASPxHiddenField runat="server" ID="getLatValue" ClientInstanceName="getLatValue" ClientSideEvents-Init="getValue"><ClientSideEvents Init="getValue" /></dx:ASPxHiddenField>
    <div>
-       <h1>Welcom To M-PET Go</h1> 
+       <h1>Welcome To M-PET Go</h1> 
        <div>
            
 

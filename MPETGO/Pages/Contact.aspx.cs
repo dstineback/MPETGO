@@ -5,8 +5,9 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Net;
-using System.Net.Mail;
+//using System.Net.Mail;
 using System.Text;
+using EASendMail;
 
 namespace MPETGO.Pages
 {
@@ -45,27 +46,45 @@ namespace MPETGO.Pages
             //        smtp.Send(mail);
             //    }
             //}
+            SmtpMail oMail = new SmtpMail("Tryit");
+            SmtpClient oSmtp = new SmtpClient();
+            //MailMessage mm = new MailMessage(txtEmail.Text.ToString(), "developerFWG@gmail.com");
 
-            MailMessage mm = new MailMessage(txtEmail.Text.ToString(), "developerFWG@gmail.com");
-            mm.Subject = txtSubject.Text;
-            mm.Body = "Name: " + txtName.Text + "<br /><br />Email: " + txtEmail.Text + "<br />" + txtBody.Text;
+            oMail.To = "developerFWG@gmail.com";
+            oMail.From = txtEmail.Text.ToString();
+            oMail.Subject = txtSubject.Text.ToString();
+            var body = "Name: " + txtName.Text + "<br /><br />Email: " + txtEmail.Text + "<br />" + txtBody.Text;
+            oMail.TextBody = body.ToString();
+            
+            //mm.Subject = txtSubject.Text;
+            //mm.Body = "Name: " + txtName.Text + "<br /><br />Email: " + txtEmail.Text + "<br />" + txtBody.Text;
             if (FileUpload1.HasFiles)
             {
                 string FileName = System.IO.Path.GetFileName(FileUpload1.PostedFile.FileName);
-                mm.Attachments.Add(new Attachment(FileUpload1.PostedFile.InputStream, FileName));                          
+                //mm.Attachments.Add(new Attachment(FileUpload1.PostedFile.InputStream, FileName)); 
+                oMail.AddAttachment(FileName);
             }
-            mm.IsBodyHtml = true;
-            SmtpClient smtp = new SmtpClient();
-            smtp.Host = "smtp.gmail.com";
-            smtp.EnableSsl = true;
-            System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
-            NetworkCred.UserName = "developerFWG@gmail.com";
-            NetworkCred.Password = "FWGinc3411";
-            smtp.UseDefaultCredentials = true;
-            smtp.Credentials = NetworkCred;
+            //mm.IsBodyHtml = true;
+            //SmtpClient smtp = new SmtpClient();
+            //smtp.Host = "smtp.gmail.com";
+            SmtpServer oServer = new SmtpServer("smtp.gmail.com");
+            oServer.Port = 465;
+            oServer.ConnectType = SmtpConnectType.ConnectDirectSSL;
+            oServer.User = "developerFWG@gmail.com";
+            oServer.Password = "FWGinc3411";
+            oSmtp.SendMail(oServer, oMail);
+            //smtp.EnableSsl = true;
+            //System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
+            //NetworkCred.UserName = "developerFWG@gmail.com";
+            //NetworkCred.Password = "FWGinc3411";
+            //smtp.UseDefaultCredentials = true;
+            //smtp.Credentials = NetworkCred;
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
             //smtp.Port = 587;
-            smtp.Port = 465;
-            smtp.Send(mm);
+            //smtp.Port = 465;
+            
+            //smtp.Port = 25;
+            //smtp.Send(mm);
             lblMessage.Text = "Email Sent SucessFully.";
             //Clear();
             Response.Write("<script language='javascript'>window.alert('Email was sucessfully sent');window.location='../../../index.aspx';</script>");
