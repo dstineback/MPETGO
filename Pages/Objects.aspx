@@ -35,7 +35,6 @@
             AttachmentGrid.Visible = true;
             AttachmentGrid.Refresh();
         }
-
     }
 </script>
 <script>
