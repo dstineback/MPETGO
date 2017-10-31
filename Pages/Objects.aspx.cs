@@ -1529,7 +1529,7 @@ namespace MPETGO.Pages
                 objectLabel.Visible = true;
                 objectLabel.Text = "Object ID: " + objectText;
 
-                Response.Write("<script language='javascript'>window.alert('Object: " + objectID.Text.ToString() + " was created. ');window.location.href='https://m-pet.net/mpetgo-CKR/index.aspx';</script>");
+                Response.Write("<script language='javascript'>window.alert('Object: " + objectID.Text.ToString() + " was created. ');window.location='..';</script>");
                 
             }       
         }

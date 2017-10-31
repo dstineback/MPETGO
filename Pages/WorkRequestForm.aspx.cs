@@ -675,7 +675,7 @@ namespace MPETGO.Pages
                 Session.Remove("fileName");
             }
             Session.Add("fileName", tempfileName);
-            FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachements");
+            FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
             FileManagerFile file = new FileManagerFile(provider, fileName);
             var newFolderName = "";
             if (Session["AssignedJobID"] != null)
@@ -705,9 +705,10 @@ namespace MPETGO.Pages
                 }
                 Session.Add("MoveNewFile", true);
                 var folderPath = Path.Combine(folder.Name.ToString(), file.Name.ToString());
-                provider.MoveFile(file, folder);
-                FileManagerFile newFilePath = new FileManagerFile(provider, folderPath);
-                FileManagerFile[] filesWithNoWRID = new FileManagerFile[] { newFilePath };
+                //provider.MoveFile(file, folder);
+               
+                FileManagerFile newFilePath = new FileManagerFile(provider, file.FullName );
+                FileManagerFile[] filesWithNoWRID = new FileManagerFile[] { file };
                 return provider.GetDownloadUrl(filesWithNoWRID);
             }
 
@@ -720,6 +721,7 @@ namespace MPETGO.Pages
        /// <returns></returns>
         string MoveAttachement(string fileName)
         {
+            
             var originalUrl = "";
             if (Session["OriginalUrl"] != null)
             {
@@ -738,36 +740,41 @@ namespace MPETGO.Pages
             {
                  Console.WriteLine("No Azzure Account");
             }
-            var tempFileName = Session["fileName"];
+            var tempFileName = Session["fileName"].ToString();
+            FileManagerFile x = new FileManagerFile(provider, tempFileName);
             
-            
-            FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachements");
-            var originalFile = Path.Combine(folder.Name.ToString(), tempFileName.ToString());
-            FileManagerFile file = new FileManagerFile(provider, originalFile);
+            FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
+            //var originalFile = Path.Combine(folder.Name.ToString(), tempFileName.ToString());
+            FileManagerFile file = new FileManagerFile(provider, tempFileName);
             var newFolderName = Session["AssignedJobID"].ToString();
             var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
-            FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
             provider.CreateFolder(folder, newFolderName);
+            FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
             
             try
             {
-
-            provider.MoveFile(file, newFolder);       
+                provider.MoveFile(x, newFolder);
+            //provider.MoveFile(file, newFolder);       
             }
             catch
             {
 
             }
+            
+            FileManagerFolder attachments = new FileManagerFolder(provider, "attachments");
             var path = Path.Combine(folder.Name.ToString(),  newFolder.Name.ToString(), file.Name.ToString());
             FileManagerFile newFilePathItem = new FileManagerFile(provider, path);
-            var fileList = provider.GetFiles(newFolder);
-            var newWut = fileList.Contains(newFilePathItem);
-            var list = fileList.ToList();
-            var index = list.IndexOf(newFilePathItem);
-            var value = list[index].FullName.ToString();
 
-            FileManagerFile newLocation = new FileManagerFile(provider, value);
-            //FileManagerFile newLocation1 = new FileManagerFile(provider, filePath);
+            var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName , folderPath, originalUrl).Replace("\\","/");
+            //var fileList = provider.GetFiles(newFolder);
+            //var newWut = fileList.Contains(newFilePathItem);
+            //var list = fileList.ToList();
+            //var index = list.IndexOf(newFilePathItem);
+            //var value = list[index].FullName.ToString();
+            
+
+            FileManagerFile newLocation = new FileManagerFile(provider, newFilePathItem.FullName.ToString());
+            ////FileManagerFile newLocation1 = new FileManagerFile(provider, filePath);
             FileManagerFile[] files = new FileManagerFile[] { newLocation };
 
             
@@ -777,7 +784,8 @@ namespace MPETGO.Pages
                 Session.Remove("url");
             }
 
-            string url = provider.GetDownloadUrl(files);
+            string url = testPath;
+            //string url = provider.GetDownloadUrl(files);
             Session.Add("url", url);
 
             return url;
@@ -2841,7 +2849,8 @@ namespace MPETGO.Pages
             lblHeader.Text = savedID.ToString();
             var jobID = Session["editingJobID"];
             //Set Alert
-            Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');window.location.href='https://m-pet.net/mpetgo-CKR/index.aspx';</script>");
+            
+            Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');window.location='..';</script>");
             //Response.Redirect("~/index.aspx");
          }
 

@@ -87,7 +87,7 @@ namespace MPETGO.Pages
             //smtp.Send(mm);
             lblMessage.Text = "Email Sent SucessFully.";
             //Clear();
-            Response.Write("<script language='javascript'>window.alert('Email was sucessfully sent');window.location.href='https://m-pet.net/mpetgo-CKR/index.aspx';</script>");
+            Response.Write("<script language='javascript'>window.alert('Email was sucessfully sent');window.location'..';</script>");
         }
 
         protected void Clear()
