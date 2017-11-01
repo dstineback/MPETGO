@@ -496,7 +496,7 @@ namespace MPETGO.Pages
                     Session.Remove("AddNewImage");
                 }
                 Session.Add("AddNewImage", true);
-                Response.Write("<script language='javascript'>window.alert('File uploaded, Attachment Grid will be displayed after a Work Request is submitted.')</script>");
+                Response.Write("<script language='javascript'>window.alert('File uploaded, Attachment Grid will be displayed after a Object ID is created is submitted.')</script>");
             }
         }
 
@@ -529,19 +529,23 @@ namespace MPETGO.Pages
             FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
 
             provider.MoveFile(file, newFolder);
-            var path = Path.Combine(folder.Name.ToString(), newFolder.Name.ToString(), file.Name.ToString());
-            FileManagerFile d = new FileManagerFile(provider, path);
-            var b = provider.GetFiles(newFolder);
-            var wut = b.Contains(d);           
-            var f = b.ToList();
-            var wat = f.IndexOf(d);
-            var index = wat;
+
+            var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, folderPath, fileName).Replace("\\", "/");
+
+            //var path = Path.Combine(folder.Name.ToString(), newFolder.Name.ToString(), file.Name.ToString());
+            //FileManagerFile d = new FileManagerFile(provider, path);
+            //var b = provider.GetFiles(newFolder);
+            //var wut = b.Contains(d);           
+            //var f = b.ToList();
+            //var wat = f.IndexOf(d);
+            //var index = wat;
             
-            var value = f[index].FullName.ToString();
-            FileManagerFile newLocation = new FileManagerFile(provider, value );
-            FileManagerFile[] files = new FileManagerFile[] { newLocation };
-            
-            return provider.GetDownloadUrl(files);           
+            //var value = f[index].FullName.ToString();
+            //FileManagerFile newLocation = new FileManagerFile(provider, value );
+            //FileManagerFile[] files = new FileManagerFile[] { newLocation };
+
+            string url = testPath;
+            return url;           
         }
 
         protected void DeleteAttachmentButton_Click(object sender, EventArgs e)
@@ -1434,12 +1438,12 @@ namespace MPETGO.Pages
             _oMaintObj = new MaintenanceObject(_connectionString, _useWeb);
             decimal lat = 0;
             decimal lng = 0;
-            if (txtLat.Text != null)
+            if (txtLat.Text.Length > 0)
             {
                 lat = Convert.ToDecimal(txtLat.Value.ToString());
             }
             
-            if (txtLong.Text != null)
+            if (txtLong.Text.Length > 0)
             {
                 lng = Convert.ToDecimal(txtLong.Value.ToString());
             }
@@ -1625,41 +1629,41 @@ namespace MPETGO.Pages
                 {
                     var objectText = objectID.Text.ToString();
                     Response.Write("<script language='javascript'>window.alert('Object: " + objectText + " was updated. ');</script>");
-                    var file = "";
-                    if (Session["url"] != null)
-                    {
+                    //var file = "";
+                    //if (Session["url"] != null)
+                    //{
 
-                        file = Session["url"].ToString();
-                    }
+                    //    file = Session["url"].ToString();
+                    //}
 
-                    if (Session["name"] != null)
-                    {
-                        shortName = Session["name"].ToString();
-                    }
+                    //if (Session["name"] != null)
+                    //{
+                    //    shortName = Session["name"].ToString();
+                    //}
 
-                    if (file != "")
-                    {
-                        maintObjectId = objTypeID;
-                        creator = _oLogon.UserID;
-                        fullPath = file;
+                    //if (file != "")
+                    //{
+                    //    maintObjectId = objTypeID;
+                    //    creator = _oLogon.UserID;
+                    //    fullPath = file;
 
-                        desc = "M-PET GO upload";
+                    //    desc = "M-PET GO upload";
 
-                        if (_oObjAttachments.Add(recordID,
-                            creator,
-                            fullPath,
-                            docType,
-                            desc,
-                            shortName.Trim()))
-                        {
-                            objectImg.Visible = true;
-                            objectImg.ImageUrl = Session["ObjectPhoto"].ToString();
-                        }
-                        else
-                        {
-                            throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
-                        }
-                    }
+                    //    if (_oObjAttachments.Add(recordID,
+                    //        creator,
+                    //        fullPath,
+                    //        docType,
+                    //        desc,
+                    //        shortName.Trim()))
+                    //    {
+                    //        objectImg.Visible = true;
+                    //        objectImg.ImageUrl = Session["ObjectPhoto"].ToString();
+                    //    }
+                    //    else
+                    //    {
+                    //        throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
+                    //    }
+                    //}
 
                     //Response.Redirect("/pages/parts.aspx?n_objectID=" + recordID, true);
                     

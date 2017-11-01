@@ -28,7 +28,7 @@ function getLocation() {
 <script type="text/javascript">
   
     function onFileUploadComplete(s, e) {
-        
+        document.body.style.cursor = "wait";
 
         if (window.AttachmentGrid === undefined)
         {
@@ -41,6 +41,11 @@ function getLocation() {
                 AttachmentGrid.Refresh();      
             }
         }
+        document.body.style.cursor = "default";
+    }
+
+    function changeCursor() {
+        document.body.style.cursor = "wait";
     }
 </script>
 <script>
@@ -322,7 +327,7 @@ function getLocation() {
                                                                                             ShowUploadButton="True" 
                                                                                             ShowProgressPanel="True"
                                                                                             OnFileUploadComplete="UploadControl_FileUploadComplete" 
-                                                                                            ShowAddRemoveButtons="True">
+                                                                                            ShowAddRemoveButtons="True" ProgressBarStyle-Cursor="wait">
                                                                                             
                                                                                             <AzureSettings 
                                                                                                 StorageAccountName="aspdemo" 
@@ -330,6 +335,7 @@ function getLocation() {
                                                                                             
                                                                                             <BrowseButton Text="Browse">
                                                                                             </BrowseButton>
+                                                                                            <UploadButton></UploadButton>
                                                                                             <AdvancedModeSettings 
                                                                                                 EnableDragAndDrop="True" 
                                                                                                 EnableFileList="false" 
@@ -342,7 +348,7 @@ function getLocation() {
                                                                                             </ValidationSettings>
                                                                                             <ClientSideEvents FileUploadComplete="function(s, e) { onFileUploadComplete(s, e) }" 
                                                                                             FilesUploadStart="function(s, e) { FileUploadStart(); }"/>
-                                                                                            
+                                                                                            <ProgressBarSettings DisplayMode="Percentage" />
                                                                                         </dx:ASPxUploadControl>
                                                                                     </div>
                                                                                 </div>
@@ -422,7 +428,7 @@ function getLocation() {
                                                                                                 </dx:GridViewDataTextColumn>
                                                                                                 <dx:GridViewDataHyperLinkColumn FieldName="LocationOrURL" Caption="Location/URL" Width="600px" VisibleIndex="6">
                                                                                                     <CellStyle Wrap="False"></CellStyle>
-                                                                                                    <PropertiesHyperLinkEdit Text="Download" ></PropertiesHyperLinkEdit>                                                                                    
+                                                                                                    <PropertiesHyperLinkEdit Text="Download" Target="_blank" ></PropertiesHyperLinkEdit>                                                                                    
                                                                                                 </dx:GridViewDataHyperLinkColumn>
                                                                                             </Columns>
                                                                                             <SettingsBehavior EnableRowHotTrack="True" AllowFocusedRow="True" AllowClientEventsOnLoad="false" ColumnResizeMode="NextColumn" />
@@ -452,7 +458,7 @@ function getLocation() {
                         <dx:LayoutItemNestedControlContainer runat="server">
 
                             <dx:ASPxButton runat="server" Text="Submit" ID="submitBtn" Width="50%"
-                                OnClick="submitBtn_Click">
+                                OnClick="submitBtn_Click">                               
                             </dx:ASPxButton>
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
@@ -461,7 +467,7 @@ function getLocation() {
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer runat="server">
                           
-                            <dx:ASPxButton runat="server" Text="Save" ID="saveBtn" OnClick="saveBtn_Click">                            
+                            <dx:ASPxButton runat="server"  Text="Save" ID="saveBtn" OnClick="saveBtn_Click">                                                                                        
                             </dx:ASPxButton>
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>

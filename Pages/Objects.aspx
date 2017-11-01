@@ -248,7 +248,7 @@
                                                                                             Width="98%" 
                                                                                             KeyboardSupport="True" 
                                                                                             ClientInstanceName="AttachmentGrid" 
-                                                                                            AutoPostBack="true" 
+                                                                                            AutoPostBack="false" 
                                                                                             
                                                                                             Settings-HorizontalScrollBarMode="Auto" 
                                                                                             SettingsPager-Mode="ShowPager" 

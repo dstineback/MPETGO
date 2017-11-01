@@ -5,7 +5,8 @@
    
         <dx:ASPxGridView ID="WorkRequestGrid" runat="server" Theme="iOS" SettingsPager-PageSize="50"
             AutoGenerateColumns="False"
-            KeyFieldName="n_Jobid">                                
+            KeyFieldName="n_Jobid" >
+                                           
             <SettingsAdaptivity AdaptivityMode="HideDataCells" 
                 AllowOnlyOneAdaptiveDetailExpanded="true"              
                 AdaptiveDetailColumnCount="1"></SettingsAdaptivity>
@@ -90,7 +91,7 @@
                 <dx:GridViewDataDateColumn FieldName="Modified On" Caption="Modified On" Visible="false"
                     ReadOnly="True" VisibleIndex="30"></dx:GridViewDataDateColumn>
             </Columns>
-            
+            <SettingsSearchPanel Visible="true" ShowApplyButton="true" ShowClearButton="true"  />
         </dx:ASPxGridView>
     <asp:SqlDataSource runat="server" ID="WorkRequestListDS"
         ConnectionString='<%$ ConnectionStrings:ClientConnectionString %>'

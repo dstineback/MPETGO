@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,6 +16,7 @@ using System.Web.UI.HtmlControls;
 using DevExpress.Web;
 using MPETDSFactory;
 using MPETGO;
+
 
 namespace MPETGO.Pages
 {
@@ -576,6 +578,9 @@ namespace MPETGO.Pages
 
         protected void UploadControl_FileUploadComplete(object sender, FileUploadCompleteEventArgs e)
         {
+            
+            Cursor.Current = Cursors.Cross;
+
             // RemoveFileWithDelay(e.UploadedFile.FileNameInStorage, 5);
 
             string name = e.UploadedFile.FileName;
@@ -621,6 +626,8 @@ namespace MPETGO.Pages
                         jobStepID = Convert.ToInt32(Session["editingJobStepID"].ToString());
                     }
 
+                    MoveAttachement(url);
+
                     if (_oAttachments.Add(Convert.ToInt32(HttpContext.Current.Session["editingJobID"].ToString()),
                         jobStepID,
                         _oLogon.UserID,
@@ -653,6 +660,7 @@ namespace MPETGO.Pages
             {
                 Response.Write("<script language='javascript'>window.alert('File uploaded, Attachment Grid will be displayed after a Work Request is submitted.')</script>");
             }
+            Cursor.Current = Cursors.Default;
         }
 
         string GetImageUrl(string fileName)
@@ -677,40 +685,19 @@ namespace MPETGO.Pages
             Session.Add("fileName", tempfileName);
             FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
             FileManagerFile file = new FileManagerFile(provider, fileName);
-            var newFolderName = "";
-            if (Session["AssignedJobID"] != null)
+            
+            if(Session["MoveNewFile"] != null)
             {
-                newFolderName = Session["AssignedJobID"].ToString();
-                var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
-                FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
-
-                provider.MoveFile(file, newFolder);
-                var path = Path.Combine(folder.Name.ToString(), newFolder.Name.ToString(), file.Name.ToString());
-                FileManagerFile d = new FileManagerFile(provider, path);
-                var b = provider.GetFiles(newFolder);
-                var wut = b.Contains(d);
-                var f = b.ToList();
-                var wat = f.IndexOf(d);
-                var index = wat;
-                var value = f[index].FullName.ToString();
-
-                FileManagerFile newLocation = new FileManagerFile(provider, value);
-                FileManagerFile[] files = new FileManagerFile[] { newLocation };
-                return provider.GetDownloadUrl(files);
-            } else
-            {
-                if(Session["MoveNewFile"] != null)
-                {
-                    Session.Remove("MoveNewFile");
-                }
-                Session.Add("MoveNewFile", true);
-                var folderPath = Path.Combine(folder.Name.ToString(), file.Name.ToString());
-                //provider.MoveFile(file, folder);
-               
-                FileManagerFile newFilePath = new FileManagerFile(provider, file.FullName );
-                FileManagerFile[] filesWithNoWRID = new FileManagerFile[] { file };
-                return provider.GetDownloadUrl(filesWithNoWRID);
+                Session.Remove("MoveNewFile");
             }
+            Session.Add("MoveNewFile", true);
+            var folderPath = Path.Combine(folder.Name.ToString(), file.Name.ToString());
+           
+               
+            // newFilePath = new FileManagerFile(provider, file.FullName );
+            FileManagerFile[] filesWithNoWRID = new FileManagerFile[] { file };
+            return provider.GetDownloadUrl(filesWithNoWRID);
+            
 
         }
 
@@ -753,39 +740,21 @@ namespace MPETGO.Pages
             
             try
             {
-                provider.MoveFile(x, newFolder);
-            //provider.MoveFile(file, newFolder);       
+                provider.MoveFile(x, newFolder);               
             }
             catch
             {
-
+                Response.Write("Error Saving file");   
             }
-            
-            FileManagerFolder attachments = new FileManagerFolder(provider, "attachments");
-            var path = Path.Combine(folder.Name.ToString(),  newFolder.Name.ToString(), file.Name.ToString());
-            FileManagerFile newFilePathItem = new FileManagerFile(provider, path);
-
             var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName , folderPath, originalUrl).Replace("\\","/");
-            //var fileList = provider.GetFiles(newFolder);
-            //var newWut = fileList.Contains(newFilePathItem);
-            //var list = fileList.ToList();
-            //var index = list.IndexOf(newFilePathItem);
-            //var value = list[index].FullName.ToString();
-            
-
-            FileManagerFile newLocation = new FileManagerFile(provider, newFilePathItem.FullName.ToString());
-            ////FileManagerFile newLocation1 = new FileManagerFile(provider, filePath);
-            FileManagerFile[] files = new FileManagerFile[] { newLocation };
-
             
             if( Session["url"] != null)
-            {
-                
+            {               
                 Session.Remove("url");
             }
 
             string url = testPath;
-            //string url = provider.GetDownloadUrl(files);
+            
             Session.Add("url", url);
 
             return url;
@@ -2838,6 +2807,7 @@ namespace MPETGO.Pages
 
         protected void submitBtn_Click(object sender, EventArgs e)
         {
+            
             //Save Session Data
             SaveSessionData();
             //Add Job
@@ -2849,13 +2819,15 @@ namespace MPETGO.Pages
             lblHeader.Text = savedID.ToString();
             var jobID = Session["editingJobID"];
             //Set Alert
-            
+          
             Response.Write("<script language='javascript'>window.alert('Work Request Created. " + savedID + "');window.location='..';</script>");
-            //Response.Redirect("~/index.aspx");
+            
          }
 
         protected void saveBtn_Click(object sender, EventArgs e)
         {
+             
+
             SaveSessionData();
             //Update Job
             UpdateRequest();
@@ -2863,10 +2835,12 @@ namespace MPETGO.Pages
             //set lable header text to Work Request ID
             var savedID = Session["AssignedJobID"];
             lblHeader.Text = savedID.ToString();
-
+           
             //Set Alert
             Response.Write("<script language='javascript'>window.alert('Work Request Updated. " + savedID + "');</script>");
             AttachmentGrid.DataBind();
+
+            
         }
 
         protected void LatLongBtn_Click(object sender, EventArgs e)
