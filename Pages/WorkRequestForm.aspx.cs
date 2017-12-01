@@ -24,7 +24,6 @@ namespace MPETGO.Pages
     {
         private WorkOrder _oJob;
 
-
         private LogonObject _oLogon;
         private JobIdGenerator _oJobIdGenerator;
         private AttachmentObject _oAttachments;
@@ -582,10 +581,22 @@ namespace MPETGO.Pages
             Cursor.Current = Cursors.Cross;
 
             // RemoveFileWithDelay(e.UploadedFile.FileNameInStorage, 5);
+            string name = "";
+            var originalUrl = "";
+            string url = "";
+            if(Session["editingJobID"] != null)
+            {
+                 name = e.UploadedFile.FileName;
+                 originalUrl = e.UploadedFile.FileNameInStorage;
+                 url = GetImageUrlNoJobID(e.UploadedFile.FileNameInStorage);
+            } else
+            {
+                name = e.UploadedFile.FileName;
+                originalUrl = e.UploadedFile.FileNameInStorage;
+                url = GetImageUrl(e.UploadedFile.FileNameInStorage);
 
-            string name = e.UploadedFile.FileName;
-            var originalUrl = e.UploadedFile.FileNameInStorage;
-            string url = GetImageUrl(e.UploadedFile.FileNameInStorage);
+            }
+
             long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
             string sizeText = sizeInKilobytes + " KB";
             e.CallbackData = name + "|" + url + "|" + sizeText;
@@ -647,7 +658,7 @@ namespace MPETGO.Pages
                         HttpContext.Current.Session.Add("HasAttachments", true);
 
 
-
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "uploadComplete", " refresh()", true);
                         //Refresh Attachments
                         AttachmentGrid.Visible = true;
                         GetAttachments();
@@ -661,6 +672,26 @@ namespace MPETGO.Pages
                 Response.Write("<script language='javascript'>window.alert('File uploaded, Attachment Grid will be displayed after a Work Request is submitted.')</script>");
             }
             Cursor.Current = Cursors.Default;
+        }
+
+        string GetImageUrlNoJobID(string filename)
+        {
+            var url = "";
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+            {
+                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+            }
+            else
+            {
+
+            }
+
+            url = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, filename).Replace("\\", "/");
+            return url;
         }
 
         string GetImageUrl(string fileName)
@@ -683,21 +714,24 @@ namespace MPETGO.Pages
                 Session.Remove("fileName");
             }
             Session.Add("fileName", tempfileName);
-            FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
-            FileManagerFile file = new FileManagerFile(provider, fileName);
+//FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
+            //FileManagerFile file = new FileManagerFile(provider, fileName);
             
             if(Session["MoveNewFile"] != null)
             {
                 Session.Remove("MoveNewFile");
             }
             Session.Add("MoveNewFile", true);
-            var folderPath = Path.Combine(folder.Name.ToString(), file.Name.ToString());
+            //var folderPath = Path.Combine(folder.Name.ToString(), file.Name.ToString());
            
                
             // newFilePath = new FileManagerFile(provider, file.FullName );
-            FileManagerFile[] filesWithNoWRID = new FileManagerFile[] { file };
-            return provider.GetDownloadUrl(filesWithNoWRID);
-            
+           // FileManagerFile[] filesWithNoWRID = new FileManagerFile[] { file };
+            //return provider.GetDownloadUrl(filesWithNoWRID);
+
+             var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, fileName).Replace("\\", "/");
+            return testPath;
+
 
         }
 
@@ -725,9 +759,9 @@ namespace MPETGO.Pages
             }
             else
             {
-                 Console.WriteLine("No Azzure Account");
+                 Console.WriteLine("No Azure Account");
             }
-            var tempFileName = Session["fileName"].ToString();
+            var tempFileName = originalUrl.ToString();
             FileManagerFile x = new FileManagerFile(provider, tempFileName);
             
             FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
@@ -735,12 +769,24 @@ namespace MPETGO.Pages
             FileManagerFile file = new FileManagerFile(provider, tempFileName);
             var newFolderName = Session["AssignedJobID"].ToString();
             var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
-            provider.CreateFolder(folder, newFolderName);
+            //provider.CreateFolder(folder, newFolderName);
             FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
             
             try
             {
-                provider.MoveFile(x, newFolder);               
+                provider.MoveFile(x, newFolder);
+
+
+                _oAttachments.GetAttachments(Convert.ToInt32(editingJobID));
+
+                ///Need to write the logic to update LocationOrUrl location once it is moved.
+                
+                
+                
+
+                
+
+                              
             }
             catch
             {

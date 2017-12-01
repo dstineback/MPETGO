@@ -26,6 +26,9 @@ function getLocation() {
     }
 </script>
 <script type="text/javascript">
+    function refresh() {
+        AttachmentGrid.Refresh();
+    }
   
     function onFileUploadComplete(s, e) {
         document.body.style.cursor = "wait";
@@ -347,7 +350,7 @@ function getLocation() {
                                                                                                 AllowedFileExtensions=".jpg,.jpeg,.gif,.png">
                                                                                             </ValidationSettings>
                                                                                             <ClientSideEvents FileUploadComplete="function(s, e) { onFileUploadComplete(s, e) }" 
-                                                                                            FilesUploadStart="function(s, e) { FileUploadStart(); }"/>
+                                                                                            FilesUploadStart="function(s, e) { FileUploadStart(); }" />
                                                                                             <ProgressBarSettings DisplayMode="Percentage" />
                                                                                         </dx:ASPxUploadControl>
                                                                                     </div>
