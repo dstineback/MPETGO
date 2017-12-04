@@ -22,7 +22,7 @@
                 <dx:PanelContent runat="server" SupportsDisabledAttribute="True">
                         <div class="headerTop">
                             <div class="templateTitle">
-                                <a id="TitleLink" href="~/" runat="server">M-PET Go</a> <br />
+                                <a id="TitleLink" href="index.aspx" runat="server">M-PET Go</a> <br />
                                 <dx:ASPxLabel runat="server" ID="logonLable" Text="Signed in as: "></dx:ASPxLabel>
                                 <dx:ASPxLabel runat="server" ID="userNameLable" Text=""></dx:ASPxLabel>
                             </div>

@@ -118,6 +118,14 @@ namespace MPETGO.Pages
                 LatLongBtn.Visible = true;
             }
 
+#if DEBUG
+            //Debug Mode only
+            if (HttpContext.Current.IsDebuggingEnabled)
+            {
+                LatLongBtn.Visible = true;
+            }
+#endif
+
             if (HttpContext.Current.Session["TxtWorkRequestDate"] != null)
             {
                 //Get Info From Session
@@ -594,7 +602,6 @@ namespace MPETGO.Pages
                 name = e.UploadedFile.FileName;
                 originalUrl = e.UploadedFile.FileNameInStorage;
                 url = GetImageUrl(e.UploadedFile.FileNameInStorage);
-
             }
 
             long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
@@ -642,7 +649,7 @@ namespace MPETGO.Pages
                     if (_oAttachments.Add(Convert.ToInt32(HttpContext.Current.Session["editingJobID"].ToString()),
                         jobStepID,
                         _oLogon.UserID,
-                        url,
+                        Session["url"].ToString(),
                         "JPG",
                         "Mobile Web Attachment",
                         name.Trim()))
@@ -657,9 +664,8 @@ namespace MPETGO.Pages
                         //Add New Value
                         HttpContext.Current.Session.Add("HasAttachments", true);
 
-
-                        Page.ClientScript.RegisterStartupScript(this.GetType(), "uploadComplete", " refresh()", true);
                         //Refresh Attachments
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "uploadComplete", " refresh()", true);
                         AttachmentGrid.Visible = true;
                         GetAttachments();
                         AttachmentGrid.DataBind();
@@ -714,7 +720,7 @@ namespace MPETGO.Pages
                 Session.Remove("fileName");
             }
             Session.Add("fileName", tempfileName);
-//FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
+            //FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
             //FileManagerFile file = new FileManagerFile(provider, fileName);
             
             if(Session["MoveNewFile"] != null)
@@ -731,7 +737,6 @@ namespace MPETGO.Pages
 
              var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, fileName).Replace("\\", "/");
             return testPath;
-
 
         }
 
@@ -774,19 +779,7 @@ namespace MPETGO.Pages
             
             try
             {
-                provider.MoveFile(x, newFolder);
-
-
-                _oAttachments.GetAttachments(Convert.ToInt32(editingJobID));
-
-                ///Need to write the logic to update LocationOrUrl location once it is moved.
-                
-                
-                
-
-                
-
-                              
+                provider.MoveFile(x, newFolder);                 
             }
             catch
             {

@@ -135,13 +135,21 @@ namespace MPETGO.Pages
                     AzureAccountContainerName = AzureContainer;
                 }
 
-                #endregion
-                
+            #endregion
+
+
             if (HttpContext.Current.Request.IsSecureConnection == false)
             {
                 LatLongBtn.Visible = false;
             }
 
+#if DEBUG
+            //Debug Mode only
+            if(HttpContext.Current.IsDebuggingEnabled)
+            {
+                LatLongBtn.Visible = true;
+            }
+#endif
             if (IsPostBack)
             {
                 
@@ -151,8 +159,8 @@ namespace MPETGO.Pages
             {       
                 ResetSession();
                 startDate.Value = DateTime.Now;
-                activeCheckBox.Checked = true;     
-            
+                activeCheckBox.Checked = true;
+                UploadControl.Enabled = false;
                 #region Check for Object id from string
             if (!String.IsNullOrEmpty(Request.QueryString["n_objectID"]))
             {
@@ -375,8 +383,9 @@ namespace MPETGO.Pages
                 SavePartBtn.Visible = false;
                 AttachmentGrid.Visible = false;
                 ASPxRoundPanel1.Visible = true;
-                UploadControl.Visible = true;
+                UploadControl.Enabled = false;
                 objectImg.Visible = false;
+                objectID.Focus();
             }
          
         #endregion
@@ -454,6 +463,10 @@ namespace MPETGO.Pages
                     //Get Logon Info From Session
                     _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
                     var n_objectID = Convert.ToInt32(Session["n_objectID"]);
+
+                    var folderName = "Maintenance Object Attachments";
+                    moveFile(url);
+
                     if (_oObjAttachments.Add(n_objectID,
                         _oLogon.UserID,
                         url,
@@ -498,6 +511,27 @@ namespace MPETGO.Pages
                 Session.Add("AddNewImage", true);
                 Response.Write("<script language='javascript'>window.alert('File uploaded, Attachment Grid will be displayed after a Object ID is created is submitted.')</script>");
             }
+        }
+
+
+
+        private void moveFile(string url)
+        {
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+            {
+                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+            }
+            else
+            {
+                Console.WriteLine("No Azure Account");
+            }
+
+
+
         }
 
         string GetImageUrl(string fileName)

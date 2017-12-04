@@ -12,22 +12,29 @@
 
 
 <script>
-    var lat = localStorage.getItem("Lat");
-    var lng = localStorage.getItem("Lng");
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+    function showPosition(position) {
+        lat = position.coords.latitude;
+        long = position.coords.longitude;
+        localStorage.setItem("lat", lat.ToString());
+        localStorage.setItem("long", long.ToString());
+        localStorage.setItem("testLat", JSON.stringify(lat));
+        localStorage.setItem("testLong", JSON.stringify(long));
+    }
+  
    
 
 </script>
-<script>
-    function getValue() {
-        var latValue = document.getElementById("latValue");
-        var lngValue = document.getElementById("lngValue");
-        latValue.value = lat;
-        lngValue.value = lng;
-    }
-</script>
 
 
-    <dx:ASPxHiddenField runat="server" ID="getLatValue" ClientInstanceName="getLatValue" ClientSideEvents-Init="getValue"><ClientSideEvents Init="getValue" /></dx:ASPxHiddenField>
+
+    <dx:ASPxHiddenField runat="server" ID="getLatValue" ClientInstanceName="getLatValue" ClientSideEvents-Init="getLocation"><ClientSideEvents Init="getLocation" /></dx:ASPxHiddenField>
    <div>
        <h1>Welcome To M-PET Go</h1> 
        <div>
