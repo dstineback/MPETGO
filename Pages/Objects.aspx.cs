@@ -15,6 +15,7 @@ using System.Web.UI.WebControls;
 using System.Reflection;
 using Microsoft.WindowsAzure.Storage.Blob;
 using MPETDSFactory;
+using DevExpress.Office.Utils;
 
 namespace MPETGO.Pages
 {
@@ -98,6 +99,8 @@ namespace MPETGO.Pages
         private string AzureAccountContainerName = "";
 
         private object ses = HttpContext.Current.Session;
+
+        List<Image> imageList = new List<Image> ();
        
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -160,7 +163,7 @@ namespace MPETGO.Pages
                 ResetSession();
                 startDate.Value = DateTime.Now;
                 activeCheckBox.Checked = true;
-                UploadControl.Enabled = false;
+                //UploadControl.Enabled = false;
                 #region Check for Object id from string
             if (!String.IsNullOrEmpty(Request.QueryString["n_objectID"]))
             {
@@ -383,9 +386,11 @@ namespace MPETGO.Pages
                 SavePartBtn.Visible = false;
                 AttachmentGrid.Visible = false;
                 ASPxRoundPanel1.Visible = true;
-                UploadControl.Enabled = false;
+                UploadControl.Enabled = true;
+                   // UploadControl.Visible = false;
                 objectImg.Visible = false;
                 objectID.Focus();
+                objectID.BackColor = System.Drawing.Color.LightGray;
             }
          
         #endregion
@@ -442,7 +447,30 @@ namespace MPETGO.Pages
            
             
             string name = e.UploadedFile.FileName;
-            string url = GetImageUrl(e.UploadedFile.FileNameInStorage);
+            var url = "";
+            if(Session["n_objectID"] != null)
+            {
+                 url = GetImageUrl(e.UploadedFile.FileNameInStorage);
+
+            }else
+            {
+                url = GetImageUrlNoObjectID(e.UploadedFile.FileNameInStorage);
+                if(Session["imageList"] != null)
+                {
+                    imageList.Add(new Image() {ImageUrl = url.ToString(), ID = e.UploadedFile.FileName  });
+                    
+                }
+                Session.Add("imageList", imageList);
+            }
+            if(url == "")
+            {
+                Response.Write("<script language='javascript'>alert('Object ID is required for image upload');</script>");
+                UploadControl.NullText = "Object ID is required for image upload";
+                objectID.Focus();
+                
+                
+                return;
+            }
             long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
             string sizeText = sizeInKilobytes + " KB";
             e.CallbackData = name + "|" + url + "|" + sizeText;
@@ -464,14 +492,14 @@ namespace MPETGO.Pages
                     _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
                     var n_objectID = Convert.ToInt32(Session["n_objectID"]);
 
-                    var folderName = "Maintenance Object Attachments";
-                    moveFile(url);
+                   
+                    //moveFile(url);
 
                     if (_oObjAttachments.Add(n_objectID,
                         _oLogon.UserID,
                         url,
                         "JPG",
-                        "Mobile Web Attachment",
+                        "M-PET Go upload",
                         name.Trim()))
                     {
                         //Check For Prior Value
@@ -495,6 +523,7 @@ namespace MPETGO.Pages
                         }
 
                         //Refresh Attachments
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "uploadComplete", " refresh()", true);
                         AttachmentGrid.Visible = true;
                         AttachmentGrid.DataBind();
                         ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);
@@ -515,7 +544,7 @@ namespace MPETGO.Pages
 
 
 
-        private void moveFile(string url)
+        string moveFile(string url)
         {
             AzureFileSystemProvider provider = new AzureFileSystemProvider("");
 
@@ -530,8 +559,63 @@ namespace MPETGO.Pages
                 Console.WriteLine("No Azure Account");
             }
 
+            var tempFileName = url;
+            FileManagerFile x = new FileManagerFile(provider, tempFileName);
+
+            FileManagerFolder folder = new FileManagerFolder(provider, "Maintenance Object Attachments");
+           
+            var newFolderName = Session["AssignedJobID"].ToString();
+            var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
+           
+            FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
+
+            try
+            {
+                provider.MoveFile(x, newFolder);
+            }
+            catch
+            {
+                Response.Write("Error Saving file");
+            }
+            var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, folderPath, url).Replace("\\", "/");
+
+            if (Session["url"] != null)
+            {
+                Session.Remove("url");
+            }
+
+             url = testPath;
+
+            Session.Add("url", url);
+
+            return url;
+
+        }
+
+        string GetImageUrlNoObjectID(string filename)
+        {
+            var url = "";
+            if(objectID.Text.Length > 0)
+            {
+                AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+                if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+                {
+                    provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                    provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                    provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+                }
+                else
+                {
+                    throw new Exception();
+                }
+
+                var tempURL = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, filename).Replace("\\", "/");
+                url = tempURL;
+            }
 
 
+            return url;
         }
 
         string GetImageUrl(string fileName)
@@ -558,6 +642,7 @@ namespace MPETGO.Pages
             {
                 provider.DeleteFile(file);
                 objectID.Focus();
+                return "";
             }
             var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
             FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
@@ -565,18 +650,6 @@ namespace MPETGO.Pages
             provider.MoveFile(file, newFolder);
 
             var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, folderPath, fileName).Replace("\\", "/");
-
-            //var path = Path.Combine(folder.Name.ToString(), newFolder.Name.ToString(), file.Name.ToString());
-            //FileManagerFile d = new FileManagerFile(provider, path);
-            //var b = provider.GetFiles(newFolder);
-            //var wut = b.Contains(d);           
-            //var f = b.ToList();
-            //var wat = f.IndexOf(d);
-            //var index = wat;
-            
-            //var value = f[index].FullName.ToString();
-            //FileManagerFile newLocation = new FileManagerFile(provider, value );
-            //FileManagerFile[] files = new FileManagerFile[] { newLocation };
 
             string url = testPath;
             return url;           
@@ -1555,6 +1628,7 @@ namespace MPETGO.Pages
 
                 if(Session["AddNewImage"] != null)
                 {
+                   
                     AddAttachment();
                     Session.Remove("AddNewImage");
                 }
@@ -1714,47 +1788,89 @@ namespace MPETGO.Pages
         
         }
 
+        private void GetPictureList()
+        {
+            var count = UploadControl.FileInputCount;
+            if (count > 0)
+            {
+                var n_objectID = -1;
+                if (Session["n_objectID"] != null)
+                {
+                    n_objectID = Convert.ToInt32(Session["n_objectID"]);
+                }
+
+                desc = "M-PET GO upload";
+                creator = _oLogon.UserID;
+                maintObjectId = Convert.ToInt32(ComboObjectType.Value);
+                var imgcount = 0;
+                foreach (var img in UploadControl.UploadedFiles)
+                {
+                    var x = UploadControl.UploadedFiles[imgcount];
+                    var fullpath = x.FileNameInStorage;
+                    var fileName = x.FileName;                 
+                    var b = UploadControl.UploadedFiles.GetValue(imgcount);
+                   
+
+                    imgcount++;
+
+                }
+            }
+        }
+
         private void AddAttachment()
         {
-            var n_objectID = -1;
-            if(Session["n_objectID"] != null)
+            try
             {
-                n_objectID = Convert.ToInt32(Session["n_objectID"]);
-            }
+                var n_objectID = -1;
+                if (Session["n_objectID"] != null)
+                {
+                    n_objectID = Convert.ToInt32(Session["n_objectID"]);
+                }
 
-            var file = "";
-            if (Session["url"] != null)
-            {
-                file = Session["url"].ToString();
-            }
-
-            if (Session["name"] != null)
-            {
-                shortName = Session["name"].ToString();
-            }
-
-            if (file != "")
-            {
-                maintObjectId = objTypeID;
+                var file = "";
                 creator = _oLogon.UserID;
-                fullPath = file;
-                desc = "M-PET GO upload";
+                var fullPath = "";
+                
+                imageList = Session["imageList"] as List<Image>;
+                if(imageList.Count > 0)
+                {
+
+                foreach (var img in imageList)
+                {
+                    file = img.ImageUrl;
+                    shortName = img.ID;
+                    fullPath = moveFile(file);
+                    _oObjAttachments.Add(n_objectID, creator, fullPath, "JPG", "M-PET GO upload", shortName.Trim());
+
+                }
+                } else
+                {
+                     GetAzureAttachments();
+                }
+            }
+            catch
+            {
+                throw new SystemException(@"Error adding image URL to database." + _oObjAttachments.LastError);
+            }
+        }
+
+        private void GetAzureAttachments()
+        {
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+            {
+                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
             }
 
+            FileManagerFolder folder = new FileManagerFolder(provider, "Maintenance Object Attachments");
+            //FileManagerFile file = new FileManagerFile(provider, fileName);
+            var x = provider.GetFiles(folder);
+           
+            ////need to add the logic to finish uploading the images and adding them to the DB.
 
-            if (_oObjAttachments.Add(n_objectID,
-                    creator,
-                    fullPath,
-                    docType,
-                    desc,
-                    shortName.Trim()))
-            {
-                //Response.Write("<script language='javascript'>window.alert('File uploaded & attached to Object.')</script>");
-            }
-            else
-            {
-                throw new SystemException(@"Error adding attachment - " + _oObjAttachments.LastError);
-            }      
         }
 
         protected void GetAttachments()
@@ -1822,19 +1938,46 @@ namespace MPETGO.Pages
 
         #region Submit/Save Buttons
         protected void AddPartBtn_Click(object sender, EventArgs e)
-        {
+            
+       {
             SaveSession();
             AddParts();
         }
 
         protected void SavePartBtn_Click(object sender, EventArgs e)
         {
+            GetPictureList();
             SaveSession();
             updateParts();
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "uploadComplete", " refresh()", true);
             AttachmentGrid.DataBind();
             //Response.Write("<script language='javascript'>window.alert('Object Updated.');</script>");
 
         }
         #endregion
+
+      
+
+        [System.Web.Services.WebMethod]
+        public static string GetValidation(string value)
+        {
+            var result = "";
+            if(value.Length > 0 )
+            {
+                bool results = true;
+                return results.ToString();
+            } else
+            {
+                result = "Must have Valid Object ID.";                                                 
+            return result;
+            }
+        }
+
+        
+
+        protected void UploadControl_CustomJSProperties(object sender, CustomJSPropertiesEventArgs e)
+        {
+
+        }
     }
 }

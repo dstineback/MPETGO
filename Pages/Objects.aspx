@@ -24,6 +24,10 @@
 </script>
 <script>
   
+    function refresh() {
+        AttachmentGrid.Refresh();
+    }
+
     function onFileUploadComplete(s, e) {  
 
         if (window.AttachmentGrid === undefined)
@@ -39,8 +43,8 @@
 </script>
 <script>
     var fieldSeparator = "|";
-    function FileUploadStart() {
-        document.getElementById("uploadedListFiles").innerHTML = "";
+    function FileUploadStart() {  
+        document.getElementById("uploadedListFiles").innerHTML = "";       
     }
 
     function FileUploaded(s, e) {
@@ -60,9 +64,11 @@
 
 </script>
 
-    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
+    <%--<asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />--%>
+    <asp:ScriptManager ID="ScriptManager2" runat="server" EnablePageMethods="true"></asp:ScriptManager>
     <dx:ASPxLabel runat="server" ID="objectLabel" Theme="iOS" Text="Object ID:" Visible="false"></dx:ASPxLabel>
     <dx:ASPxFormLayout ID="PartsForm" runat="server" Width="100%" Theme="iOS" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800">
+<SettingsAdaptivity AdaptivityMode="SingleColumnWindowLimit" SwitchToSingleColumnAtWindowInnerWidth="800"></SettingsAdaptivity>
         <Items>
             <dx:LayoutItem Caption="Active">
                 <LayoutItemNestedControlCollection>
@@ -75,9 +81,14 @@
             <dx:LayoutItem Caption="Object ID" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
                     <dx:LayoutItemNestedControlContainer runat="server">
-                        <dx:ASPxTextBox runat="server" ID="objectID" Width="100%"></dx:ASPxTextBox>
+                        <dx:ASPxTextBox runat="server" ID="objectID" ClientInstanceName="objectID" 
+                            Width="100%"> 
+                            <ValidationSettings><RequiredField IsRequired="true" ErrorText="Object ID Required" /></ValidationSettings>                     
+                        </dx:ASPxTextBox>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
             </dx:LayoutItem>
             <dx:LayoutItem Caption="Object/Asset Name" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
@@ -95,9 +106,12 @@
                                 <dx:ListBoxColumn FieldName="objtypeid" Width="75px" Caption="Object Type" ToolTip="M-PET Go Object Type"></dx:ListBoxColumn>
                                 <dx:ListBoxColumn FieldName="descr" Width="150px" Caption="Description" ToolTip="M-PET go Object Type Description"></dx:ListBoxColumn>
                             </Columns>
+                            <ValidationSettings><RequiredField IsRequired="true" ErrorText="Description Required" /></ValidationSettings>
                         </dx:ASPxComboBox>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
             </dx:LayoutItem>
             <dx:LayoutItem Caption="Description" CaptionSettings-Location="Top" Width="50%" Paddings-PaddingBottom="5px">
                 <LayoutItemNestedControlCollection>
@@ -106,6 +120,10 @@
                         </dx:ASPxMemo>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
+
+<Paddings PaddingBottom="5px"></Paddings>
             </dx:LayoutItem>
             <dx:LayoutItem Caption="" HelpText="" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
@@ -160,6 +178,8 @@
                         </dx:ASPxComboBox>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
             </dx:LayoutItem>
             
            <dx:LayoutItem Caption="Location" CaptionSettings-Location="Top" Width="50%">
@@ -180,6 +200,8 @@
                         </dx:ASPxComboBox>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
             </dx:LayoutItem>
             <dx:LayoutItem Caption="As Of" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
@@ -188,6 +210,8 @@
                         </dx:ASPxDateEdit>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
             </dx:LayoutItem>
             <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
@@ -199,13 +223,13 @@
                             ID="UploadControl" 
                             ClientInstanceName="UploadControl" 
                             ShowTextBox="true" 
-                            NullText="Upload image" 
+                            NullText="Object ID required to upload image" 
                             UploadStorage="Azure" 
                             UploadMode="Auto" FileInputCount="2"
-                            FileUploadMode="OnPageLoad" 
+                            FileUploadMode="OnPageLoad" AdvancedModeSettings-EnableMultiSelect="true"
                             ShowUploadButton="true" 
-                            ShowProgressPanel="true" on 
-                            OnFileUploadComplete="UploadControl_FileUploadComplete" 
+                            ShowProgressPanel="true"
+                            OnFileUploadComplete="UploadControl_FileUploadComplete" OnCustomJSProperties="UploadControl_CustomJSProperties"
                             ShowAddRemoveButtons="true"> 
                             
                            <%--<AzureSettings AccountName="UploadAzureAccount" ContainerName="attachments" />--%>
@@ -220,6 +244,8 @@
                         </div>                      
                     </dx:LayoutItemNestedControlContainer>                  
                 </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
             </dx:LayoutItem> 
             <dx:LayoutItem Caption="" Width="50%" CaptionSettings-Location="Top">
                 <LayoutItemNestedControlCollection>
@@ -233,6 +259,8 @@
                         </dx:ASPxRoundPanel>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
             </dx:LayoutItem>
                    
             <dx:LayoutItem Caption="" ShowCaption="False"  CaptionSettings-Location="Top">
@@ -322,6 +350,8 @@
                         </dx:ASPxTextBox>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
             </dx:LayoutItem>
             <dx:LayoutItem Caption="Longitude" CaptionSettings-Location="Top" Width="50%">
                 <LayoutItemNestedControlCollection>
@@ -329,6 +359,8 @@
                         <dx:ASPxTextBox runat="server" Width="100%" ID="txtLong" ClientInstanceName="txtLong" AutoPostBack="false"></dx:ASPxTextBox>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
             </dx:LayoutItem>
             <%--<dx:EmptyLayoutItem Width="50%">
 
@@ -341,6 +373,8 @@
                             </dx:ASPxButton>
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
              </dx:LayoutItem>
             <%--<dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>--%>
                
@@ -351,6 +385,8 @@
                         </dx:ASPxButton>
                     </dx:LayoutItemNestedControlContainer>
                 </LayoutItemNestedControlCollection>
+
+<CaptionSettings Location="Top"></CaptionSettings>
             </dx:LayoutItem>
             <dx:LayoutItem Caption="">
                 <LayoutItemNestedControlCollection>
