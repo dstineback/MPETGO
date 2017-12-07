@@ -36,8 +36,10 @@
         } else
         {
             FileUploaded(s, e);
-            AttachmentGrid.Visible = true;
-            AttachmentGrid.Refresh();
+            if (AttachmentGrid.Visible = true) {
+
+                AttachmentGrid.Refresh();
+            }
         }
     }
 </script>
@@ -64,8 +66,7 @@
 
 </script>
 
-    <%--<asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />--%>
-    <asp:ScriptManager ID="ScriptManager2" runat="server" EnablePageMethods="true"></asp:ScriptManager>
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
     <dx:ASPxLabel runat="server" ID="objectLabel" Theme="iOS" Text="Object ID:" Visible="false"></dx:ASPxLabel>
     <dx:ASPxFormLayout ID="PartsForm" runat="server" Width="100%" Theme="iOS" SettingsAdaptivity-AdaptivityMode="SingleColumnWindowLimit" SettingsAdaptivity-SwitchToSingleColumnAtWindowInnerWidth="800">
 <SettingsAdaptivity AdaptivityMode="SingleColumnWindowLimit" SwitchToSingleColumnAtWindowInnerWidth="800"></SettingsAdaptivity>
@@ -229,8 +230,8 @@
                             FileUploadMode="OnPageLoad" AdvancedModeSettings-EnableMultiSelect="true"
                             ShowUploadButton="true" 
                             ShowProgressPanel="true"
-                            OnFileUploadComplete="UploadControl_FileUploadComplete" OnCustomJSProperties="UploadControl_CustomJSProperties"
-                            ShowAddRemoveButtons="true"> 
+                            OnFileUploadComplete="UploadControl_FileUploadComplete" 
+                            ShowAddRemoveButtons="true" ProgressBarStyle-Cursor="wait"> 
                             
                            <%--<AzureSettings AccountName="UploadAzureAccount" ContainerName="attachments" />--%>
                              
@@ -318,7 +319,7 @@
                                                                                                 </dx:GridViewDataTextColumn>
                                                                                                 <dx:GridViewDataHyperLinkColumn FieldName="LocationOrURL" Caption="Location/URL" Width="150px" VisibleIndex="6">
                                                                                                     <CellStyle Wrap="False"></CellStyle>
-                                                                                                    <PropertiesHyperLinkEdit Text="Download" ></PropertiesHyperLinkEdit>
+                                                                                                    <PropertiesHyperLinkEdit Text="Download" Target="_blank" ></PropertiesHyperLinkEdit>
                                                                                                 </dx:GridViewDataHyperLinkColumn>
                                                                                             </Columns>
                                                                                             <SettingsBehavior EnableRowHotTrack="True" AllowFocusedRow="True" AllowClientEventsOnLoad="false" ColumnResizeMode="NextColumn" />

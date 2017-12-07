@@ -455,12 +455,11 @@ namespace MPETGO.Pages
             }else
             {
                 url = GetImageUrlNoObjectID(e.UploadedFile.FileNameInStorage);
-                if(Session["imageList"] != null)
-                {
-                    imageList.Add(new Image() {ImageUrl = url.ToString(), ID = e.UploadedFile.FileName  });
+                
+                    //imageList.Add(new Image() {ImageUrl = url.ToString(), ID = e.UploadedFile.FileName  });
                     
-                }
-                Session.Add("imageList", imageList);
+                
+                //Session.Add("imageList", imageList);
             }
             if(url == "")
             {
@@ -595,26 +594,28 @@ namespace MPETGO.Pages
         string GetImageUrlNoObjectID(string filename)
         {
             var url = "";
-            if(objectID.Text.Length > 0)
+            
+            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
             {
-                AzureFileSystemProvider provider = new AzureFileSystemProvider("");
-
-                if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
-                {
-                    provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
-                    provider.AccessKey = UploadControl.AzureSettings.AccessKey;
-                    provider.ContainerName = UploadControl.AzureSettings.ContainerName;
-                }
-                else
-                {
-                    throw new Exception();
-                }
-
-                var tempURL = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, filename).Replace("\\", "/");
-                url = tempURL;
+                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+            }
+            else
+            {
+                throw new Exception();
             }
 
-
+            FileManagerFolder folder = new FileManagerFolder(provider, "temp");
+            FileManagerFile file = new FileManagerFile(provider, filename);
+   
+            provider.MoveFile(file, folder);
+            
+            var tempURL = Path.Combine(folder.ToString(), filename).Replace("\\", "/");
+                 
+            url = tempURL;         
             return url;
         }
 
@@ -1788,89 +1789,55 @@ namespace MPETGO.Pages
         
         }
 
-        private void GetPictureList()
-        {
-            var count = UploadControl.FileInputCount;
-            if (count > 0)
-            {
-                var n_objectID = -1;
-                if (Session["n_objectID"] != null)
-                {
-                    n_objectID = Convert.ToInt32(Session["n_objectID"]);
-                }
-
-                desc = "M-PET GO upload";
-                creator = _oLogon.UserID;
-                maintObjectId = Convert.ToInt32(ComboObjectType.Value);
-                var imgcount = 0;
-                foreach (var img in UploadControl.UploadedFiles)
-                {
-                    var x = UploadControl.UploadedFiles[imgcount];
-                    var fullpath = x.FileNameInStorage;
-                    var fileName = x.FileName;                 
-                    var b = UploadControl.UploadedFiles.GetValue(imgcount);
-                   
-
-                    imgcount++;
-
-                }
-            }
-        }
 
         private void AddAttachment()
         {
             try
             {
-                var n_objectID = -1;
+                var n_objectID = 0;
+                AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+                if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
+                {
+                    provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                    provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                    provider.ContainerName = UploadControl.AzureSettings.ContainerName;
+                }
+
                 if (Session["n_objectID"] != null)
                 {
                     n_objectID = Convert.ToInt32(Session["n_objectID"]);
-                }
 
-                var file = "";
-                creator = _oLogon.UserID;
-                var fullPath = "";
-                
-                imageList = Session["imageList"] as List<Image>;
-                if(imageList.Count > 0)
-                {
+                    FileManagerFolder folder = new FileManagerFolder(provider, "temp");
+                    FileManagerFolder MOAFolder = new FileManagerFolder(provider, "Maintenance Object Attachments");
+                    FileManagerFolder idFolder = new FileManagerFolder(provider, objectID.Text.ToString());
+                    var newFolderPath = Path.Combine(MOAFolder.ToString(),idFolder.ToString());
+                    FileManagerFolder movedFolderPath = new FileManagerFolder(provider, newFolderPath);
+                    
+                    var x = provider.GetFiles(folder);
 
-                foreach (var img in imageList)
-                {
-                    file = img.ImageUrl;
-                    shortName = img.ID;
-                    fullPath = moveFile(file);
-                    _oObjAttachments.Add(n_objectID, creator, fullPath, "JPG", "M-PET GO upload", shortName.Trim());
+                    foreach (var file in x)
+                    {
+                        var name = file.Name;
+                        var path = file.FullName;
+                        var modName = name.Split('_');
+                        var shortName = modName[1];
+                        FileManagerFile oldPath = new FileManagerFile(provider, path);
 
-                }
-                } else
-                {
-                     GetAzureAttachments();
+                        provider.MoveFile(oldPath, movedFolderPath);
+
+                        fullPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, MOAFolder.ToString(), idFolder.ToString(), name).Replace("\\", "/");
+
+                        _oObjAttachments.Add(n_objectID, creator, fullPath, "JPG", "M-PET GO upload", shortName.Trim());
+
+
+                    }
                 }
             }
             catch
             {
                 throw new SystemException(@"Error adding image URL to database." + _oObjAttachments.LastError);
             }
-        }
-
-        private void GetAzureAttachments()
-        {
-            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
-
-            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
-            {
-                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
-                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
-                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
-            }
-
-            FileManagerFolder folder = new FileManagerFolder(provider, "Maintenance Object Attachments");
-            //FileManagerFile file = new FileManagerFile(provider, fileName);
-            var x = provider.GetFiles(folder);
-           
-            ////need to add the logic to finish uploading the images and adding them to the DB.
-
         }
 
         protected void GetAttachments()
@@ -1946,7 +1913,7 @@ namespace MPETGO.Pages
 
         protected void SavePartBtn_Click(object sender, EventArgs e)
         {
-            GetPictureList();
+            
             SaveSession();
             updateParts();
             Page.ClientScript.RegisterStartupScript(this.GetType(), "uploadComplete", " refresh()", true);
@@ -1955,29 +1922,6 @@ namespace MPETGO.Pages
 
         }
         #endregion
-
       
-
-        [System.Web.Services.WebMethod]
-        public static string GetValidation(string value)
-        {
-            var result = "";
-            if(value.Length > 0 )
-            {
-                bool results = true;
-                return results.ToString();
-            } else
-            {
-                result = "Must have Valid Object ID.";                                                 
-            return result;
-            }
-        }
-
-        
-
-        protected void UploadControl_CustomJSProperties(object sender, CustomJSPropertiesEventArgs e)
-        {
-
-        }
     }
 }

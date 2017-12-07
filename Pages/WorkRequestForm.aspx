@@ -341,7 +341,7 @@ function getLocation() {
                                                                                             <UploadButton></UploadButton>
                                                                                             <AdvancedModeSettings 
                                                                                                 EnableDragAndDrop="True" 
-                                                                                                EnableFileList="false" 
+                                                                                                EnableFileList="true" 
                                                                                                 EnableMultiSelect="true">
                                                                                                 <FileListItemStyle CssClass="pending dxucFileListItem"></FileListItemStyle>
                                                                                             </AdvancedModeSettings>

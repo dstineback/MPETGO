@@ -585,53 +585,43 @@ namespace MPETGO.Pages
 
         protected void UploadControl_FileUploadComplete(object sender, FileUploadCompleteEventArgs e)
         {
-            
+
             Cursor.Current = Cursors.Cross;
 
-            // RemoveFileWithDelay(e.UploadedFile.FileNameInStorage, 5);
             string name = "";
             var originalUrl = "";
             string url = "";
-            if(Session["editingJobID"] != null)
-            {
-                 name = e.UploadedFile.FileName;
-                 originalUrl = e.UploadedFile.FileNameInStorage;
-                 url = GetImageUrlNoJobID(e.UploadedFile.FileNameInStorage);
-            } else
+            if (Session["editingJobID"] != null)
             {
                 name = e.UploadedFile.FileName;
                 originalUrl = e.UploadedFile.FileNameInStorage;
                 url = GetImageUrl(e.UploadedFile.FileNameInStorage);
-            }
-
-            long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
-            string sizeText = sizeInKilobytes + " KB";
-            e.CallbackData = name + "|" + url + "|" + sizeText;
-
-            if (Session["url"] != null)
-            {
-                Session.Remove("url");
-            }
-            Session.Add("url", url);
-
-            if (Session["OriginalUrl"] != null)
-            {
-                Session.Remove("OriginalUrl");
-            }
-            Session.Add("OriginalUrl", originalUrl);
-
-            if (Session["name"] != null)
-            {
-                Session.Remove("name");
-            }
-            Session.Add("name", name);
-
-            ASPxRoundPanel1.Visible = true;
 
 
-            //Check For Job ID
-            if (HttpContext.Current.Session["editingJobID"] != null)
-            {
+                long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
+                string sizeText = sizeInKilobytes + " KB";
+                e.CallbackData = name + "|" + url + "|" + sizeText;
+
+                if (Session["url"] != null)
+                {
+                    Session.Remove("url");
+                }
+                Session.Add("url", url);
+
+                if (Session["OriginalUrl"] != null)
+                {
+                    Session.Remove("OriginalUrl");
+                }
+                Session.Add("OriginalUrl", originalUrl);
+
+                if (Session["name"] != null)
+                {
+                    Session.Remove("name");
+                }
+                Session.Add("name", name);
+
+                ASPxRoundPanel1.Visible = true;
+                
                 //Check For Previous Session Variable
                 if (HttpContext.Current.Session["LogonInfo"] != null)
                 {
@@ -644,14 +634,14 @@ namespace MPETGO.Pages
                         jobStepID = Convert.ToInt32(Session["editingJobStepID"].ToString());
                     }
 
-                    MoveAttachement(url);
+                    //MoveAttachement(url);
 
                     if (_oAttachments.Add(Convert.ToInt32(HttpContext.Current.Session["editingJobID"].ToString()),
                         jobStepID,
                         _oLogon.UserID,
-                        Session["url"].ToString(),
+                        url,
                         "JPG",
-                        "Mobile Web Attachment",
+                        "M-PET Go upload",
                         name.Trim()))
                     {
                         //Check For Prior Value
@@ -673,13 +663,24 @@ namespace MPETGO.Pages
 
                     }
                 }
+
+                Cursor.Current = Cursors.Default;                
             } else
             {
-                Response.Write("<script language='javascript'>window.alert('File uploaded, Attachment Grid will be displayed after a Work Request is submitted.')</script>");
+                url = GetImageUrlNoJobID(e.UploadedFile.FileNameInStorage);
+                name = e.UploadedFile.FileName;
+
+                long sizeInKilobytes = e.UploadedFile.ContentLength / 1024;
+                string sizeText = sizeInKilobytes + " KB";
+                e.CallbackData = name + "|" + url + "|" + sizeText;
             }
-            Cursor.Current = Cursors.Default;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
         string GetImageUrlNoJobID(string filename)
         {
             var url = "";
@@ -693,10 +694,22 @@ namespace MPETGO.Pages
             }
             else
             {
-
+                throw new Exception();
             }
 
-            url = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, filename).Replace("\\", "/");
+            FileManagerFolder folder = new FileManagerFolder(provider, "temp");
+            FileManagerFile file = new FileManagerFile(provider, filename);
+
+            provider.MoveFile(file, folder);
+
+            if (Session["MoveNewFile"] != null)
+            {
+                Session.Remove("MoveNewFile");
+            }
+            Session.Add("MoveNewFile", true);
+
+            url = Path.Combine(folder.ToString(), filename).Replace("\\", "/");
+            
             return url;
         }
 
@@ -714,154 +727,102 @@ namespace MPETGO.Pages
             {
 
             }
-            var tempfileName = fileName;
-            if(Session["fileName"] != null)
-            {
-                Session.Remove("fileName");
-            }
-            Session.Add("fileName", tempfileName);
-            //FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
-            //FileManagerFile file = new FileManagerFile(provider, fileName);
             
-            if(Session["MoveNewFile"] != null)
-            {
-                Session.Remove("MoveNewFile");
-            }
-            Session.Add("MoveNewFile", true);
-            //var folderPath = Path.Combine(folder.Name.ToString(), file.Name.ToString());
-           
-               
-            // newFilePath = new FileManagerFile(provider, file.FullName );
-           // FileManagerFile[] filesWithNoWRID = new FileManagerFile[] { file };
-            //return provider.GetDownloadUrl(filesWithNoWRID);
+            FileManagerFile file = new FileManagerFile(provider, fileName);
 
-             var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, fileName).Replace("\\", "/");
+            FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
+            var newFolderName = Session["AssignedJobID"].ToString();
+            var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
+           
+            FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
+
+            try
+            {
+                provider.MoveFile(file, newFolder);
+            }
+            catch
+            {
+                Response.Write("Error Saving file");
+            }
+            
+
+
+            var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, newFolder.ToString() ,fileName).Replace("\\", "/");
             return testPath;
 
         }
 
-       /// <summary>
-       /// Move the folder on Azure to created folder with WR name
-       /// </summary>
-       /// <param name="fileName"></param>
-       /// <returns></returns>
-        string MoveAttachement(string fileName)
-        {
-            
-            var originalUrl = "";
-            if (Session["OriginalUrl"] != null)
-            {
-               originalUrl =  Session["OriginalUrl"].ToString();
-            };
-            
-            AzureFileSystemProvider provider = new AzureFileSystemProvider("");
-
-            if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
-            {
-                provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
-                provider.AccessKey = UploadControl.AzureSettings.AccessKey;
-                provider.ContainerName = UploadControl.AzureSettings.ContainerName;
-            }
-            else
-            {
-                 Console.WriteLine("No Azure Account");
-            }
-            var tempFileName = originalUrl.ToString();
-            FileManagerFile x = new FileManagerFile(provider, tempFileName);
-            
-            FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
-            //var originalFile = Path.Combine(folder.Name.ToString(), tempFileName.ToString());
-            FileManagerFile file = new FileManagerFile(provider, tempFileName);
-            var newFolderName = Session["AssignedJobID"].ToString();
-            var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
-            //provider.CreateFolder(folder, newFolderName);
-            FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
-            
-            try
-            {
-                provider.MoveFile(x, newFolder);                 
-            }
-            catch
-            {
-                Response.Write("Error Saving file");   
-            }
-            var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName , folderPath, originalUrl).Replace("\\","/");
-            
-            if( Session["url"] != null)
-            {               
-                Session.Remove("url");
-            }
-
-            string url = testPath;
-            
-            Session.Add("url", url);
-
-            return url;
-
-        }
         
-        protected bool AddAttachment()
+        protected void AddAttachment()
         {
             try
             {
                 var url = "";
                 var name = "";
-                if(Session["url"] != null && Session["name"] != null)
+
+                AzureFileSystemProvider provider = new AzureFileSystemProvider("");
+
+                if (WebConfigurationManager.AppSettings["StorageAccount"] != null)
                 {
-                     url = Session["url"].ToString();
-                    name = Session["name"].ToString();
+                    provider.StorageAccountName = UploadControl.AzureSettings.StorageAccountName;
+                    provider.AccessKey = UploadControl.AzureSettings.AccessKey;
+                    provider.ContainerName = UploadControl.AzureSettings.ContainerName;
                 }
 
-                if (url != "" & name != "")
-                {
-                    //Check For Job ID
-                    if (HttpContext.Current.Session["editingJobID"] != null)
+                //Check For Job ID
+                if (HttpContext.Current.Session["editingJobID"] != null)
                     {
-                        //Check For Previous Session Variable
-                        if (HttpContext.Current.Session["LogonInfo"] != null)
-                        {
-                            //Get Logon Info From Session
-                            _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
+                    //Check For Previous Session Variable
+                    if (HttpContext.Current.Session["LogonInfo"] != null)
+                    {
+                        //Get Logon Info From Session
+                        _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
 
-                            var jobStepID = -1;
-                            if (Session["editingJobStepID"] != null)
-                            {
-                                jobStepID = Convert.ToInt32(Session["editingJobStepID"].ToString());
-                            }
-                            
-                            if (_oAttachments.Add(Convert.ToInt32(HttpContext.Current.Session["editingJobID"].ToString()),
+                        var jobStepID = -1;
+                        if (Session["editingJobStepID"] != null)
+                        {
+                            jobStepID = Convert.ToInt32(Session["editingJobStepID"].ToString());
+                        }
+
+                        FileManagerFolder folder = new FileManagerFolder(provider, "temp");
+                        FileManagerFolder WRAFolder = new FileManagerFolder(provider, "Work Request Attachments");
+                        FileManagerFolder idFolder = new FileManagerFolder(provider, Session["AssignedJobID"].ToString());
+                        var newFolderPath = Path.Combine(WRAFolder.ToString(), idFolder.ToString());
+                        FileManagerFolder movedFolderPath = new FileManagerFolder(provider, newFolderPath);
+                        
+                        var x = provider.GetFiles(folder);
+
+                        foreach (var file in x)
+                        {
+                            name = file.Name;
+                            var path = file.FullName;
+                            var modName = name.Split('_');
+                            var shortName = modName[1];
+                            FileManagerFile oldPath = new FileManagerFile(provider, path);
+
+                            provider.MoveFile(oldPath, movedFolderPath);
+
+                            url = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, WRAFolder.ToString(), idFolder.ToString(), name).Replace("\\", "/");
+
+
+                            _oAttachments.Add(Convert.ToInt32(HttpContext.Current.Session["editingJobID"].ToString()),
                                 jobStepID,
                                 _oLogon.UserID,
                                 url,
                                 "JPG",
-                                "Mobile Web Attachment",
-                                name.Trim()))
-                            {
-                                //Check For Prior Value
-                                if (HttpContext.Current.Session["HasAttachments"] != null)
-                                {
-                                    //Remove Old One
-                                    HttpContext.Current.Session.Remove("HasAttachments");
-                                }
-                               
-                                //Add New Value
-                                HttpContext.Current.Session.Add("HasAttachments", true);
-
-                                //Refresh Attachments
-                                AttachmentGrid.Visible = true;
-                                
-                                AttachmentGrid.DataBind();
-                                
-                                ScriptManager.RegisterStartupScript(this, GetType(), "refreshAttachments", "refreshAttachments();", true);                             
+                                "M-PET Go upload",
+                                shortName.Trim());
+                                        
                             }
-                        }
+                        
                     }
-                }
-                return true;
+                    }
+                
+                
             } catch
             {
                 Response.Write("<script language='javascript'>window.alert('Error, Could not attach photo')</script>");
-                return false;
+                
             }
 
         }
@@ -1703,13 +1664,9 @@ namespace MPETGO.Pages
 
                     if (Convert.ToBoolean(Session["MoveNewFile"]) == true)
                     {
-                        var url = "";
-                        if (Session["url"] != null)
-                        {
-                         url = Session["url"].ToString();
-                        }
+                       
                                                                   
-                        MoveAttachement(url);
+                        //MoveAttachement();
                         AddAttachment();
                         Session.Remove("MoveNewFile");                         
                     }
