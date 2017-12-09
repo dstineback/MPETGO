@@ -163,7 +163,8 @@ namespace MPETGO.Pages
                 ResetSession();
                 startDate.Value = DateTime.Now;
                 activeCheckBox.Checked = true;
-                //UploadControl.Enabled = false;
+               
+                
                 #region Check for Object id from string
             if (!String.IsNullOrEmpty(Request.QueryString["n_objectID"]))
             {
@@ -370,6 +371,7 @@ namespace MPETGO.Pages
                 AttachmentGrid.Visible = true;
                 ASPxRoundPanel1.Visible = true;
                 UploadControl.Visible = true;
+                    PhotoContainer.Visible = true;
 
                 if (Session["ObjectPhoto"] != null)
                 {
@@ -385,9 +387,9 @@ namespace MPETGO.Pages
                 AddPartBtn.Visible = true;
                 SavePartBtn.Visible = false;
                 AttachmentGrid.Visible = false;
-                ASPxRoundPanel1.Visible = true;
-                UploadControl.Enabled = true;
-                   // UploadControl.Visible = false;
+                ASPxRoundPanel1.Visible = false;
+                UploadControl.Visible = false;
+                    PhotoContainer.Visible = false;
                 objectImg.Visible = false;
                 objectID.Focus();
                 objectID.BackColor = System.Drawing.Color.LightGray;
@@ -443,7 +445,7 @@ namespace MPETGO.Pages
         #region Upload Image
         protected void UploadControl_FileUploadComplete(object sender, FileUploadCompleteEventArgs e)
         {
-            // RemoveFileWithDelay(e.UploadedFile.FileNameInStorage, 5);
+            
            
             
             string name = e.UploadedFile.FileName;
@@ -608,12 +610,12 @@ namespace MPETGO.Pages
                 throw new Exception();
             }
 
-            FileManagerFolder folder = new FileManagerFolder(provider, "temp");
-            FileManagerFile file = new FileManagerFile(provider, filename);
+            //FileManagerFolder folder = new FileManagerFolder(provider, "temp");
+            //FileManagerFile file = new FileManagerFile(provider, filename);
    
-            provider.MoveFile(file, folder);
+            //provider.MoveFile(file, folder);
             
-            var tempURL = Path.Combine(folder.ToString(), filename).Replace("\\", "/");
+            var tempURL = Path.Combine(/*folder.ToString(),*/ filename).Replace("\\", "/");
                  
             url = tempURL;         
             return url;
@@ -632,25 +634,25 @@ namespace MPETGO.Pages
             else
             {
             }
-            FileManagerFolder folder = new FileManagerFolder(provider, "Maintenance Object Attachments");
-            FileManagerFile file = new FileManagerFile(provider, fileName);
-            var newFolderName = "";
-            if(objectID.Text.Length > 0)
-            {
-                newFolderName = objectID.Text;
-            }
-            else
-            {
-                provider.DeleteFile(file);
-                objectID.Focus();
-                return "";
-            }
-            var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
-            FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
+            //FileManagerFolder folder = new FileManagerFolder(provider, "Maintenance Object Attachments");
+            //FileManagerFile file = new FileManagerFile(provider, fileName);
+            //var newFolderName = "";
+            //if(objectID.Text.Length > 0)
+            //{
+            //    newFolderName = objectID.Text;
+            //}
+            //else
+            //{
+            //    provider.DeleteFile(file);
+            //    objectID.Focus();
+            //    return "";
+            //}
+            //var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
+            //FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
 
-            provider.MoveFile(file, newFolder);
+            //provider.MoveFile(file, newFolder);
 
-            var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, folderPath, fileName).Replace("\\", "/");
+            var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, /*folderPath,*/ fileName).Replace("\\", "/");
 
             string url = testPath;
             return url;           
@@ -1804,35 +1806,35 @@ namespace MPETGO.Pages
                     provider.ContainerName = UploadControl.AzureSettings.ContainerName;
                 }
 
-                if (Session["n_objectID"] != null)
-                {
-                    n_objectID = Convert.ToInt32(Session["n_objectID"]);
+                //if (Session["n_objectID"] != null)
+                //{
+                //    n_objectID = Convert.ToInt32(Session["n_objectID"]);
 
-                    FileManagerFolder folder = new FileManagerFolder(provider, "temp");
-                    FileManagerFolder MOAFolder = new FileManagerFolder(provider, "Maintenance Object Attachments");
-                    FileManagerFolder idFolder = new FileManagerFolder(provider, objectID.Text.ToString());
-                    var newFolderPath = Path.Combine(MOAFolder.ToString(),idFolder.ToString());
-                    FileManagerFolder movedFolderPath = new FileManagerFolder(provider, newFolderPath);
+                //    FileManagerFolder folder = new FileManagerFolder(provider, "temp");
+                //    FileManagerFolder MOAFolder = new FileManagerFolder(provider, "Maintenance Object Attachments");
+                //    FileManagerFolder idFolder = new FileManagerFolder(provider, objectID.Text.ToString());
+                //    var newFolderPath = Path.Combine(MOAFolder.ToString(),idFolder.ToString());
+                //    FileManagerFolder movedFolderPath = new FileManagerFolder(provider, newFolderPath);
                     
-                    var x = provider.GetFiles(folder);
+                //    var x = provider.GetFiles(folder);
 
-                    foreach (var file in x)
-                    {
-                        var name = file.Name;
-                        var path = file.FullName;
-                        var modName = name.Split('_');
-                        var shortName = modName[1];
-                        FileManagerFile oldPath = new FileManagerFile(provider, path);
+                //    foreach (var file in x)
+                //    {
+                //        var name = file.Name;
+                //        var path = file.FullName;
+                //        var modName = name.Split('_');
+                //        var shortName = modName[1];
+                //        FileManagerFile oldPath = new FileManagerFile(provider, path);
 
-                        provider.MoveFile(oldPath, movedFolderPath);
+                //        provider.MoveFile(oldPath, movedFolderPath);
 
-                        fullPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, MOAFolder.ToString(), idFolder.ToString(), name).Replace("\\", "/");
+                //        fullPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, MOAFolder.ToString(), idFolder.ToString(), name).Replace("\\", "/");
 
-                        _oObjAttachments.Add(n_objectID, creator, fullPath, "JPG", "M-PET GO upload", shortName.Trim());
+                //        _oObjAttachments.Add(n_objectID, creator, fullPath, "JPG", "M-PET GO upload", shortName.Trim());
 
 
-                    }
-                }
+                //    }
+                //}
             }
             catch
             {

@@ -544,15 +544,20 @@ namespace MPETGO.Pages
                 saveBtn.Visible = true;
                 submitBtn.Visible = false;
                 editingJobID.Value = Session["editingJobID"].ToString();
+                UploadControl.Visible = true;
+                AttachmentGrid.Visible = true;
+                ASPxRoundPanel1.Visible = true;
+                PhotoContainer.Visible = true;
             }
             else
             {
                 saveBtn.Visible = false;
                 submitBtn.Visible = true;
                 AttachmentGrid.Visible = false;
-                UploadControl.Visible = true;
-                ASPxRoundPanel1.Visible = true;
+                UploadControl.Visible = false;
+                ASPxRoundPanel1.Visible = false;
                 attachImg.Visible = false;
+                PhotoContainer.Visible = false;
             }
         }
 
@@ -697,10 +702,17 @@ namespace MPETGO.Pages
                 throw new Exception();
             }
 
-            FileManagerFolder folder = new FileManagerFolder(provider, "temp");
-            FileManagerFile file = new FileManagerFile(provider, filename);
 
+            FileManagerFolder folder = new FileManagerFolder(provider, "temp");
+            FileManagerFolder att = new FileManagerFolder(provider, provider.ContainerName);
+            var allFolders = provider.GetFolders(att);
+            FileManagerFile file = new FileManagerFile(provider, filename);
+            if (allFolders.Contains(folder))
+            {
             provider.MoveFile(file, folder);
+
+            }
+
 
             if (Session["MoveNewFile"] != null)
             {
@@ -727,27 +739,27 @@ namespace MPETGO.Pages
             {
 
             }
-            
-            FileManagerFile file = new FileManagerFile(provider, fileName);
 
-            FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
-            var newFolderName = Session["AssignedJobID"].ToString();
-            var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
-           
-            FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
+            //FileManagerFile file = new FileManagerFile(provider, fileName);
 
-            try
-            {
-                provider.MoveFile(file, newFolder);
-            }
-            catch
-            {
-                Response.Write("Error Saving file");
-            }
-            
+            //FileManagerFolder folder = new FileManagerFolder(provider, "Work Request Attachments");
+            //var newFolderName = Session["AssignedJobID"].ToString();
+            //var folderPath = Path.Combine(folder.Name.ToString(), newFolderName);
+
+            //FileManagerFolder newFolder = new FileManagerFolder(provider, folderPath);
+
+            //try
+            //{
+            //    provider.MoveFile(file, newFolder);
+            //}
+            //catch
+            //{
+            //    Response.Write("Error Saving file");
+            //}
 
 
-            var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, newFolder.ToString() ,fileName).Replace("\\", "/");
+
+            var testPath = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, /*newFolder.ToString(),*/ fileName).Replace("\\", "/");
             return testPath;
 
         }
@@ -773,49 +785,49 @@ namespace MPETGO.Pages
                 if (HttpContext.Current.Session["editingJobID"] != null)
                     {
                     //Check For Previous Session Variable
-                    if (HttpContext.Current.Session["LogonInfo"] != null)
-                    {
-                        //Get Logon Info From Session
-                        _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
+                    //if (HttpContext.Current.Session["LogonInfo"] != null)
+                    //{
+                    //    //Get Logon Info From Session
+                    //    _oLogon = ((LogonObject)HttpContext.Current.Session["LogonInfo"]);
 
-                        var jobStepID = -1;
-                        if (Session["editingJobStepID"] != null)
-                        {
-                            jobStepID = Convert.ToInt32(Session["editingJobStepID"].ToString());
-                        }
+                    //    var jobStepID = -1;
+                    //    if (Session["editingJobStepID"] != null)
+                    //    {
+                    //        jobStepID = Convert.ToInt32(Session["editingJobStepID"].ToString());
+                    //    }
 
-                        FileManagerFolder folder = new FileManagerFolder(provider, "temp");
-                        FileManagerFolder WRAFolder = new FileManagerFolder(provider, "Work Request Attachments");
-                        FileManagerFolder idFolder = new FileManagerFolder(provider, Session["AssignedJobID"].ToString());
-                        var newFolderPath = Path.Combine(WRAFolder.ToString(), idFolder.ToString());
-                        FileManagerFolder movedFolderPath = new FileManagerFolder(provider, newFolderPath);
+                    //    FileManagerFolder folder = new FileManagerFolder(provider, "temp");
+                    //    FileManagerFolder WRAFolder = new FileManagerFolder(provider, "Work Request Attachments");
+                    //    FileManagerFolder idFolder = new FileManagerFolder(provider, Session["AssignedJobID"].ToString());
+                    //    var newFolderPath = Path.Combine(WRAFolder.ToString(), idFolder.ToString());
+                    //    FileManagerFolder movedFolderPath = new FileManagerFolder(provider, newFolderPath);
                         
-                        var x = provider.GetFiles(folder);
+                    //    var x = provider.GetFiles(folder);
 
-                        foreach (var file in x)
-                        {
-                            name = file.Name;
-                            var path = file.FullName;
-                            var modName = name.Split('_');
-                            var shortName = modName[1];
-                            FileManagerFile oldPath = new FileManagerFile(provider, path);
+                    //    foreach (var file in x)
+                    //    {
+                    //        name = file.Name;
+                    //        var path = file.FullName;
+                    //        var modName = name.Split('_');
+                    //        var shortName = modName[1];
+                    //        FileManagerFile oldPath = new FileManagerFile(provider, path);
 
-                            provider.MoveFile(oldPath, movedFolderPath);
+                    //        provider.MoveFile(oldPath, movedFolderPath);
 
-                            url = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, WRAFolder.ToString(), idFolder.ToString(), name).Replace("\\", "/");
+                    //        url = Path.Combine("https://" + UploadControl.AzureSettings.StorageAccountName + ".blob.core.windows.net", provider.ContainerName, WRAFolder.ToString(), idFolder.ToString(), name).Replace("\\", "/");
 
 
-                            _oAttachments.Add(Convert.ToInt32(HttpContext.Current.Session["editingJobID"].ToString()),
-                                jobStepID,
-                                _oLogon.UserID,
-                                url,
-                                "JPG",
-                                "M-PET Go upload",
-                                shortName.Trim());
+                    //        _oAttachments.Add(Convert.ToInt32(HttpContext.Current.Session["editingJobID"].ToString()),
+                    //            jobStepID,
+                    //            _oLogon.UserID,
+                    //            url,
+                    //            "JPG",
+                    //            "M-PET Go upload",
+                    //            shortName.Trim());
                                         
-                            }
+                    //        }
                         
-                    }
+                    //}
                     }
                 
                 
