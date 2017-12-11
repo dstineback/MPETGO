@@ -202,7 +202,10 @@ namespace MPETGO.Pages
 
                             #endregion
 
-
+                            #region Setup Lat/Long
+                            Session.Add("GPSX", _oJob.Ds.Tables[0].Rows[0]["GPS_X"]);
+                            Session.Add("GPSY", _oJob.Ds.Tables[0].Rows[0]["GPS_Y"]);
+                            #endregion
                             #region Setup Object Info
 
                             HttpContext.Current.Session.Add("ObjectIDCombo",
@@ -532,6 +535,16 @@ namespace MPETGO.Pages
                 {
                     attachImg.ImageUrl = Session["attachmentImage"].ToString();
                 }
+
+                if(Session["GPSY"] != null)
+                {
+                    txtLong.Value = Session["GPSY"].ToString();
+                }
+
+                if (Session["GPSX"] != null)
+                {
+                    txtLat.Value = Session["GPSX"].ToString();
+                }
             }
             #endregion
             #endregion
@@ -548,6 +561,7 @@ namespace MPETGO.Pages
                 AttachmentGrid.Visible = true;
                 ASPxRoundPanel1.Visible = true;
                 PhotoContainer.Visible = true;
+                
             }
             else
             {
@@ -558,6 +572,7 @@ namespace MPETGO.Pages
                 ASPxRoundPanel1.Visible = false;
                 attachImg.Visible = false;
                 PhotoContainer.Visible = false;
+                
             }
         }
 
@@ -1581,18 +1596,26 @@ namespace MPETGO.Pages
 
             //Get GPS X
             decimal gpsX = 0;
-            if (HttpContext.Current.Session["GPSX"] != null)
+            //if (HttpContext.Current.Session["GPSX"] != null)
+            //{
+            //    //Get Info From Session
+            //    gpsX = Convert.ToDecimal((HttpContext.Current.Session["GPSX"].ToString()));
+            //}
+            if(Convert.ToDecimal(txtLat.Value.ToString()) != 0)
             {
-                //Get Info From Session
-                gpsX = Convert.ToDecimal((HttpContext.Current.Session["GPSX"].ToString()));
+                gpsX = Convert.ToDecimal(txtLat.Value.ToString());
             }
 
             //Get GPS Y
             decimal gpsY = 0;
-            if (HttpContext.Current.Session["GPSY"] != null)
+            //if (HttpContext.Current.Session["GPSY"] != null)
+            //{
+            //    //Get Info From Session
+            //    gpsY = Convert.ToDecimal((HttpContext.Current.Session["GPSY"].ToString()));
+            //}
+            if (Convert.ToDecimal(txtLong.Value.ToString()) != 0)
             {
-                //Get Info From Session
-                gpsY = Convert.ToDecimal((HttpContext.Current.Session["GPSY"].ToString()));
+                gpsY = Convert.ToDecimal(txtLong.Value.ToString());
             }
 
             //Get GPS Z
@@ -1744,20 +1767,45 @@ namespace MPETGO.Pages
             }
 
             //Get GPS X
+            //decimal gpsX = 0;
+            //if (HttpContext.Current.Session["GPSX"] != null)
+            //{
+            //    //Get Info From Session
+            //    gpsX = Convert.ToDecimal((HttpContext.Current.Session["GPSX"].ToString()));
+            //}
+
+            ////Get GPS Y
+            //decimal gpsY = 0;
+            //if (HttpContext.Current.Session["GPSY"] != null)
+            //{
+            //    //Get Info From Session
+            //    gpsY = Convert.ToDecimal((HttpContext.Current.Session["GPSY"].ToString()));
+            //}
+
+            //Get GPS X
             decimal gpsX = 0;
-            if (HttpContext.Current.Session["GPSX"] != null)
+            //if (HttpContext.Current.Session["GPSX"] != null)
+            //{
+            //    //Get Info From Session
+            //    gpsX = Convert.ToDecimal((HttpContext.Current.Session["GPSX"].ToString()));
+            //}
+            if (Convert.ToDecimal(txtLat.Value.ToString()) != 0)
             {
-                //Get Info From Session
-                gpsX = Convert.ToDecimal((HttpContext.Current.Session["GPSX"].ToString()));
+                gpsX = Convert.ToDecimal(txtLat.Value.ToString());
             }
 
             //Get GPS Y
             decimal gpsY = 0;
-            if (HttpContext.Current.Session["GPSY"] != null)
+            //if (HttpContext.Current.Session["GPSY"] != null)
+            //{
+            //    //Get Info From Session
+            //    gpsY = Convert.ToDecimal((HttpContext.Current.Session["GPSY"].ToString()));
+            //}
+            if (Convert.ToDecimal(txtLong.Value.ToString()) != 0)
             {
-                //Get Info From Session
-                gpsY = Convert.ToDecimal((HttpContext.Current.Session["GPSY"].ToString()));
+                gpsY = Convert.ToDecimal(txtLong.Value.ToString());
             }
+
 
             //Get GPS Z
             decimal gpsZ = 0;
@@ -2787,27 +2835,27 @@ namespace MPETGO.Pages
             #endregion
 
             #region Lat/Long
-            if (txtLat.Text.Length > 0)
+            if (txtLong.Text.Length > 0)
             {
                 //Check for session value
-                if(Session["txtLat"] != null)
+                if(Session["GPSY"] != null)
                 {
                     //Remove session Value before adding new value
-                    Session.Remove("txtLat");
+                    Session.Remove("GPSY");
                 }
                 //Add Value from texBox
-                Session.Add("txtLat", txtLat.Text.Trim());
+                Session.Add("GPSY", txtLong.Text.Trim());
             }
 
-            if(txtLong.Text.Length > 0)
+            if(txtLat.Text.Length > 0)
             {   //Check for Session Value
-                if(Session["txtLong"] != null)
+                if(Session["GPSX"] != null)
                 {
                     //Remove Session Value before adding new value
-                    Session.Remove("txtLong");
+                    Session.Remove("GPSX");
                 }
                 //Add new value to session from textBox
-                Session.Add("txtLong", txtLong.Text.Trim());
+                Session.Add("GPSX", txtLat.Text.Trim());
             }
             #endregion
 

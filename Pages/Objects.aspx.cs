@@ -298,12 +298,12 @@ namespace MPETGO.Pages
                         //Set Object latitude value
                         if (Session["txtLat"] != null)
                         {
-                            txtLat.Text = Session["txtLat"].ToString();
+                            txtLong.Text = Session["txtLat"].ToString();
                         }
                         //Set Object longitude value
                         if (Session["txtLong"] != null)
                         {
-                            txtLong.Value = Session["txtLong"].ToString();
+                            txtLat.Value = Session["txtLong"].ToString();
                         }
 
                         //Set Object Created date
@@ -1548,12 +1548,12 @@ namespace MPETGO.Pages
             _oMaintObj = new MaintenanceObject(_connectionString, _useWeb);
             decimal lat = 0;
             decimal lng = 0;
-            if (txtLat.Text.Length > 0)
+            if (Convert.ToDecimal(txtLat.Value.ToString()) !=  0)
             {
                 lat = Convert.ToDecimal(txtLat.Value.ToString());
             }
             
-            if (txtLong.Text.Length > 0)
+            if (Convert.ToDecimal(txtLong.Value.ToString()) != 0)
             {
                 lng = Convert.ToDecimal(txtLong.Value.ToString());
             }
@@ -1662,14 +1662,14 @@ namespace MPETGO.Pages
             var txtObjectid = objectID.Text.ToString();
             var txtObjectDesc = objectDesc.Text.ToString();
             decimal lat = 0;
-            if(txtLat.Text != null)
+            if(Convert.ToDecimal(txtLat.Value.ToString()) != 0)
             {
                 lat = Convert.ToDecimal(txtLat.Value.ToString());
             }
             decimal lng = 0;
-            if(txtLong.Text != null)
+            if(Convert.ToDecimal(txtLong.Value.ToString()) != 0)
             {
-                lng = Convert.ToDecimal(txtLat.Value.ToString());
+                lng = Convert.ToDecimal(txtLong.Value.ToString());
             }
 
             try

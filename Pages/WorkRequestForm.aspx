@@ -264,6 +264,16 @@ function getLocation() {
                     <CaptionSettings Location="Top"></CaptionSettings>
                 </dx:LayoutItem>
                 
+                 <dx:LayoutItem Caption="Latitude" CaptionSettings-Location="Top" Width="50%"> 
+                    <LayoutItemNestedControlCollection>
+                        <dx:LayoutItemNestedControlContainer>
+                            <dx:ASPxTextBox runat="server" ID="txtLat" ClientInstanceName="txtLat" AutoPostBack="false" Width="100%">
+                            </dx:ASPxTextBox>
+                        </dx:LayoutItemNestedControlContainer>
+                    </LayoutItemNestedControlCollection>
+                </dx:LayoutItem>
+
+                <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>
                 <dx:LayoutItem Caption="Longitude" CaptionSettings-Location="Top" Width="50%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer>
@@ -273,16 +283,8 @@ function getLocation() {
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
-                <dx:EmptyLayoutItem Width="50%"></dx:EmptyLayoutItem>
               
-                <dx:LayoutItem Caption="Latitude" CaptionSettings-Location="Top" Width="50%"> 
-                    <LayoutItemNestedControlCollection>
-                        <dx:LayoutItemNestedControlContainer>
-                            <dx:ASPxTextBox runat="server" ID="txtLat" ClientInstanceName="txtLat" AutoPostBack="false" Width="100%">
-                            </dx:ASPxTextBox>
-                        </dx:LayoutItemNestedControlContainer>
-                    </LayoutItemNestedControlCollection>
-                </dx:LayoutItem>
+               
                 <dx:LayoutItem Caption="" CaptionSettings-Location="Top" Width="50%">
                     <LayoutItemNestedControlCollection>
                         <dx:LayoutItemNestedControlContainer>
@@ -313,7 +315,7 @@ function getLocation() {
                         </dx:LayoutItemNestedControlContainer>
                     </LayoutItemNestedControlCollection>
                 </dx:LayoutItem>
-                <dx:LayoutItem Caption="Add an image" ShowCaption="true" CaptionSettings-Location="Top">
+                <dx:LayoutItem Caption="" CaptionSettings-Location="Top">
                                                                         <LayoutItemNestedControlCollection >
                                                                             <dx:LayoutItemNestedControlContainer>
                                                                                 <div id="PhotoContainer" runat="server">
@@ -321,7 +323,7 @@ function getLocation() {
                                                                                         <dx:ASPxUploadControl 
                                                                                             
                                                                                             ID="UploadControl" 
-                                                                                            runat="server" 
+                                                                                            runat="server"  
                                                                                             ClientInstanceName="UploadControl" 
                                                                                             Width="98%" 
                                                                                             UploadMode="Auto" 
